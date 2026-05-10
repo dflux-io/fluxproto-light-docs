@@ -6,5 +6,7 @@ dist/
 .DS_Store
 .vercel/
 
-# Generated at build time by scripts/build-search-index.mjs
+# Generated at build time by scripts in scripts/
 public/search-index.json
+public/sitemap.xml
+public/robots.txt

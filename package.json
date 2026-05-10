@@ -5,12 +5,12 @@
   "type": "module",
   "description": "Documentation site for fluxproto-light. React + TypeScript + Tailwind. Pages authored as JSX.",
   "scripts": {
-    "dev": "node scripts/build-search-index.mjs && vite",
-    "predev": "node scripts/build-search-index.mjs",
-    "build": "node scripts/build-search-index.mjs && tsc -b && vite build",
+    "dev": "node scripts/build-search-index.mjs && node scripts/build-sitemap.mjs && vite",
+    "build": "node scripts/build-search-index.mjs && node scripts/build-sitemap.mjs && tsc -b && vite build",
     "preview": "vite preview",
     "typecheck": "tsc -b --noEmit",
-    "build:search": "node scripts/build-search-index.mjs"
+    "build:search": "node scripts/build-search-index.mjs",
+    "build:sitemap": "node scripts/build-sitemap.mjs"
   },
   "dependencies": {
     "highlight.js": "^11.10.0",

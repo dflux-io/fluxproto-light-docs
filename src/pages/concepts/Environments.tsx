@@ -25,6 +25,30 @@ transports:
 </ul>
 <p>NFs reference transports by ID. Multiple NFs can share a transport (two MMEs on one Diameter peer pool). Most labs use one NF per transport for clarity.</p>
 <p>This split is deliberate. The same Diameter transport can serve multiple Diameter-side NFs without duplicating peer tables; the same gNB-properties block can pair with different NGAP transports across envs.</p>
+<p>A typical multi-NF env, visualised — two gNBs sharing one NGAP transport, plus an MME on its own Diameter transport, plus a remote UDM on SBI:</p>
+<Mermaid code={`flowchart LR
+    subgraph NFs[" nfs: "]
+        gnb1[gnb-1]
+        gnb2[gnb-2]
+        mme[mme-1]
+        udm[udm-1]
+    end
+
+    subgraph Transports[" transports: "]
+        T1[ngap-out<br/><span style='font-size:10px'>protocol: ngap</span>]
+        T2[diameter-mme<br/><span style='font-size:10px'>protocol: diameter</span>]
+        T3[sbi-udm<br/><span style='font-size:10px'>protocol: sbi</span>]
+    end
+
+    gnb1 --> T1
+    gnb2 --> T1
+    mme --> T2
+    udm --> T3
+
+    classDef nf fill:#1a1a1f,stroke:#3b82f6,stroke-width:1.5px,color:#ededf0
+    classDef tr fill:#131217,stroke:#2a2a30,stroke-width:1px,color:#a1a1aa
+    class gnb1,gnb2,mme,udm nf
+    class T1,T2,T3 tr`} />
 <h2 id="nf-roles">NF roles</h2>
 <p>Twelve roles ship today, covering 5G core, 4G EPC, and a generic external escape hatch:</p>
 <CodeBlock lang="" code={`5G core:    gnb, amf, smf, ausf, udm, pcf, nrf, upf

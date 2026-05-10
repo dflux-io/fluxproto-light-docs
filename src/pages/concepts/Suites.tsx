@@ -1,5 +1,6 @@
 import DocPage from '../../components/DocPage';
 import CodeBlock from '../../components/CodeBlock';
+import Mermaid from '../../components/Mermaid';
 import { Link } from 'react-router-dom';
 
 export default function Suites() {
@@ -30,6 +31,21 @@ steps:
 <li>One <code>{`SuiteReportEntity`}</code> (cycle-level summary)</li>
 <li>One child <code>{`ReportEntity`}</code> per executed step (the same shape as a standalone <code>{`run-flow`}</code> report)</li>
 </ul>
+<p>One cycle of a typical provision/load/cleanup suite, end to end:</p>
+<Mermaid code={`flowchart LR
+    Start([Cycle start]) --> S1["install_pcc<br/><span style='font-size:10px'>flow: install_rule</span>"]
+    S1 -->|pass| S2["load_test<br/><span style='font-size:10px'>flow: pdu_session_setup<br/>repetitions: 100</span>"]
+    S1 -->|fail + stop_on_failure| Cleanup
+    S2 -->|pass| Cleanup["cleanup<br/><span style='font-size:10px'>flow: delete_rule<br/>always_run: true</span>"]
+    S2 -->|fail + stop_on_failure| Cleanup
+    Cleanup --> End([Cycle done])
+
+    classDef step fill:#1a1a1f,stroke:#3b82f6,stroke-width:1.5px,color:#ededf0
+    classDef finally fill:#1a1a1f,stroke:#10b981,stroke-width:1.5px,color:#ededf0
+    classDef edge fill:#131217,stroke:#2a2a30,color:#a1a1aa
+    class S1,S2 step
+    class Cleanup finally
+    class Start,End edge`} />
 <h2 id="stop_on_failure">stop_on_failure</h2>
 <p>Default <code>{`true`}</code>. If a step's <code>{`EngineResult.AllPassed`}</code> is false, the cycle aborts before the next non-<code>{`always_run`}</code> step. The aborted cycle's <code>{`SuiteResult.Aborted`}</code> is true; CI gets a non-zero exit.</p>
 <p>Override with <code>{`stop_on_failure: false`}</code> for steps that are expected to fail intermittently:</p>
