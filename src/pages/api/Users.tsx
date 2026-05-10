@@ -1,12 +1,11 @@
 import DocPage from '../../components/DocPage';
+import HttpMethod from '../../components/HttpMethod';
 import CodeBlock from '../../components/CodeBlock';
 import { Link } from 'react-router-dom';
 
 export default function ApiUsers() {
   return (
-    <DocPage slug="api/users">
-<h1>Users</h1>
-<p>User management. Every endpoint here requires <code>{`role: admin`}</code>.</p>
+    <DocPage slug="api/users" lede="User management. Every endpoint here requires role: admin.">
 <p>The daemon seeds a single root user on first start (<code>{`root`}</code> / <code>{`toor`}</code>); see <Link to="/api/overview">Authentication</Link> for first-login flow. After that, admins create additional users via <code>{`POST /users`}</code>.</p>
 <h2 id="endpoints">Endpoints</h2>
 <table>
@@ -18,11 +17,11 @@ export default function ApiUsers() {
 <tr><td>DELETE</td><td><code>{`/api/v1/users/{id}`}</code></td><td>Soft-delete</td></tr>
 <tr><td>POST</td><td><code>{`/api/v1/users/{id}/reset-password`}</code></td><td>Reset password</td></tr></tbody>
 </table>
-<h2 id="get-apiv1users">GET /api/v1/users</h2>
+<h2 id="get-apiv1users" className="flex items-center gap-2"><HttpMethod method="GET" /><code>{`/api/v1/users`}</code></h2>
 <CodeBlock lang="http" code={`GET /api/v1/users
 Authorization: Bearer <token>`} />
 <p>Returns an array of <code>{`UserEntity`}</code>. Includes both active and inactive users.</p>
-<h2 id="post-apiv1users">POST /api/v1/users</h2>
+<h2 id="post-apiv1users" className="flex items-center gap-2"><HttpMethod method="POST" /><code>{`/api/v1/users`}</code></h2>
 <p>Create a new user. The new user is created with <code>{`must_change_pass: true`}</code> — they're forced to set their own password on first login.</p>
 <CodeBlock lang="http" code={`POST /api/v1/users
 Authorization: Bearer <token>
@@ -47,10 +46,10 @@ Content-Type: application/json
 <tbody><tr><td>400</td><td>Missing fields, role not admin/viewer, validation failure</td></tr>
 <tr><td>409</td><td>Username already exists</td></tr></tbody>
 </table>
-<h2 id="get-apiv1users123id125">GET /api/v1/users/&#123;id&#125;</h2>
+<h2 id="get-apiv1users123id125" className="flex items-center gap-2"><HttpMethod method="GET" /><code>{`/api/v1/users/&#123;id&#125;`}</code></h2>
 <CodeBlock lang="http" code={`GET /api/v1/users/<uuid>
 Authorization: Bearer <token>`} />
-<h2 id="put-apiv1users123id125">PUT /api/v1/users/&#123;id&#125;</h2>
+<h2 id="put-apiv1users123id125" className="flex items-center gap-2"><HttpMethod method="PUT" /><code>{`/api/v1/users/&#123;id&#125;`}</code></h2>
 <p>Update display name, role, or active flag. Each field is optional — only provided fields are updated.</p>
 <CodeBlock lang="http" code={`PUT /api/v1/users/<uuid>
 Authorization: Bearer <token>
@@ -73,7 +72,7 @@ Content-Type: application/json
 <tr><td>404</td><td>User not found</td></tr>
 <tr><td>409</td><td>Last-admin guard tripped</td></tr></tbody>
 </table>
-<h2 id="delete-apiv1users123id125">DELETE /api/v1/users/&#123;id&#125;</h2>
+<h2 id="delete-apiv1users123id125" className="flex items-center gap-2"><HttpMethod method="DELETE" /><code>{`/api/v1/users/&#123;id&#125;`}</code></h2>
 <p>Soft-delete: sets <code>{`active: false`}</code>. Username and ID are preserved so historical reports still resolve who triggered them.</p>
 <CodeBlock lang="http" code={`DELETE /api/v1/users/<uuid>
 Authorization: Bearer <token>`} />
@@ -90,7 +89,7 @@ Authorization: Bearer <token>`} />
 <tr><td>409</td><td>Last-admin guard tripped</td></tr></tbody>
 </table>
 <p>Returns <code>{`204 No Content`}</code> on success.</p>
-<h2 id="post-apiv1users123id125reset-password">POST /api/v1/users/&#123;id&#125;/reset-password</h2>
+<h2 id="post-apiv1users123id125reset-password" className="flex items-center gap-2"><HttpMethod method="POST" /><code>{`/api/v1/users/&#123;id&#125;/reset-password`}</code></h2>
 <p>Force a password reset on a target user. The target's <code>{`must_change_pass`}</code> is set to true; they're forced to change again on next login.</p>
 <CodeBlock lang="http" code={`POST /api/v1/users/<uuid>/reset-password
 Authorization: Bearer <token>

@@ -3,9 +3,7 @@ import CodeBlock from '../../components/CodeBlock';
 
 export default function MultiProtocolFlows() {
   return (
-    <DocPage slug="guides/multi-protocol-flows">
-<h1>Multi-protocol flows</h1>
-<p>A multi-protocol flow drives more than one wire protocol from a single FSM on a single UE. Use it to model end-to-end procedures that span the radio plane and the policy plane simultaneously — for example, attaching a UE on NGAP while an MME concurrently fetches subscription data over S6a Diameter. This guide covers when to reach for multi-protocol flows, how to wire them up in YAML, and how to configure the env so each protocol's transport is reachable.</p>
+    <DocPage slug="guides/multi-protocol-flows" lede="A multi-protocol flow drives more than one wire protocol from a single FSM on a single UE. Use it to model end-to-end procedures that span the radio plane and the policy plane simultaneously — for example, attaching a UE on NGAP while an MME concurrently fetches subscription data over S6a Diameter. This guide covers when to reach for multi-protocol flows, how to wire them up in YAML, and how to configure the env so each protocol's transport is reachable.">
 <h2 id="when-to-use-one">When to use one</h2>
 <p>Most flows are single-protocol: NGAP gNB-side, Diameter S6a MME-side, SBI client/server. Reach for a multi-protocol flow when the test really needs cross-protocol semantics on one UE — when correctness depends on the order of arrivals across protocols, or when one UE's state evolves under inputs from multiple protocols.</p>
 <p>The shipped reference is <code>{`templates/multinf/ngap_plus_diameter.yaml`}</code> — the gNB starts NGAP registration <em>and</em> an MME-side S6a <code>{`ULR`}</code> in the same transition, then waits for either response to land first and continues only when both have echoed back.</p>

@@ -1,12 +1,11 @@
 import DocPage from '../../components/DocPage';
+import HttpMethod from '../../components/HttpMethod';
 import CodeBlock from '../../components/CodeBlock';
 import { Link } from 'react-router-dom';
 
 export default function ApiExecutions() {
   return (
-    <DocPage slug="api/executions">
-<h1>Executions</h1>
-<p>Trigger and inspect in-flight runs. An execution is one engine invocation against one (flow, env) pair — the same shape a CLI <code>{`run-flow`}</code> produces.</p>
+    <DocPage slug="api/executions" lede="Trigger and inspect in-flight runs. An execution is one engine invocation against one (flow, env) pair — the same shape a CLI run-flow produces.">
 <h2 id="endpoints">Endpoints</h2>
 <table>
 <thead><tr><th>Method</th><th>Path</th><th>Description</th></tr></thead>
@@ -16,7 +15,7 @@ export default function ApiExecutions() {
 <tr><td>GET</td><td><code>{`/api/v1/executions/{id}`}</code></td><td>Detail / status</td></tr>
 <tr><td>DELETE</td><td><code>{`/api/v1/executions/{id}`}</code></td><td>Cancel queued or running</td></tr></tbody>
 </table>
-<h2 id="post-apiv1execute">POST /api/v1/execute</h2>
+<h2 id="post-apiv1execute" className="flex items-center gap-2"><HttpMethod method="POST" /><code>{`/api/v1/execute`}</code></h2>
 <p>Queue an execution. The daemon runs it as soon as resources permit.</p>
 <CodeBlock lang="http" code={`POST /api/v1/execute
 Authorization: Bearer <token>
@@ -59,7 +58,7 @@ Content-Type: application/json
 <tbody><tr><td>400</td><td>Missing <code>{`flow_id`}</code> or <code>{`environment_id`}</code>, or fields fail validation</td></tr>
 <tr><td>404</td><td>Flow or environment not found</td></tr></tbody>
 </table>
-<h2 id="get-apiv1executions">GET /api/v1/executions</h2>
+<h2 id="get-apiv1executions" className="flex items-center gap-2"><HttpMethod method="GET" /><code>{`/api/v1/executions`}</code></h2>
 <p>List recent executions across all states.</p>
 <CodeBlock lang="http" code={`GET /api/v1/executions?limit=50
 Authorization: Bearer <token>`} />
@@ -89,7 +88,7 @@ Authorization: Bearer <token>`} />
 <li><code>{`failed`}</code> — finished with <code>{`AllPassed: false`}</code></li>
 <li><code>{`canceled`}</code> — DELETE before completion</li>
 </ul>
-<h2 id="get-apiv1executionsqueue">GET /api/v1/executions/queue</h2>
+<h2 id="get-apiv1executionsqueue" className="flex items-center gap-2"><HttpMethod method="GET" /><code>{`/api/v1/executions/queue`}</code></h2>
 <p>Live queue snapshot.</p>
 <CodeBlock lang="http" code={`GET /api/v1/executions/queue
 Authorization: Bearer <token>`} />
@@ -100,7 +99,7 @@ Authorization: Bearer <token>`} />
     { "execution_id": "<uuid>", "queued_at": "...", "flow_id": "..." }
   ]
 }`} />
-<h2 id="get-apiv1executions123id125">GET /api/v1/executions/&#123;id&#125;</h2>
+<h2 id="get-apiv1executions123id125" className="flex items-center gap-2"><HttpMethod method="GET" /><code>{`/api/v1/executions/&#123;id&#125;`}</code></h2>
 <CodeBlock lang="http" code={`GET /api/v1/executions/<uuid>
 Authorization: Bearer <token>`} />
 <h3 id="response-4">Response</h3>
@@ -117,7 +116,7 @@ Authorization: Bearer <token>`} />
   "report_id": ""
 }`} />
 <p>After completion, <code>{`report_id`}</code> points at the persisted <code>{`ReportEntity`}</code> — fetch it via <Link to="/api/executions">Reports</Link>.</p>
-<h2 id="delete-apiv1executions123id125">DELETE /api/v1/executions/&#123;id&#125;</h2>
+<h2 id="delete-apiv1executions123id125" className="flex items-center gap-2"><HttpMethod method="DELETE" /><code>{`/api/v1/executions/&#123;id&#125;`}</code></h2>
 <p>Cancel a queued or running execution. Best-effort: in-flight UEs may continue briefly; the engine cancels the parent context and any UE blocked in a <code>{`wait_*`}</code> state will land in <code>{`failed`}</code> via <code>{`on_timeout`}</code> shortly.</p>
 <CodeBlock lang="http" code={`DELETE /api/v1/executions/<uuid>
 Authorization: Bearer <token>`} />
@@ -141,7 +140,7 @@ Authorization: Bearer <token>`} />
 <tbody><tr><td>GET</td><td><code>{`/api/v1/reports`}</code></td><td>List</td></tr>
 <tr><td>GET</td><td><code>{`/api/v1/reports/{id}`}</code></td><td>Detail</td></tr></tbody>
 </table>
-<h2 id="get-apiv1reports">GET /api/v1/reports</h2>
+<h2 id="get-apiv1reports" className="flex items-center gap-2"><HttpMethod method="GET" /><code>{`/api/v1/reports`}</code></h2>
 <p>List recent reports. Supports filtering by flow and schedule.</p>
 <CodeBlock lang="http" code={`GET /api/v1/reports?limit=50&flow_id=registration&schedule_id=<uuid>
 Authorization: Bearer <token>`} />
@@ -168,7 +167,7 @@ Authorization: Bearer <token>`} />
 ]`} />
 <p>The list view returns metadata only. Fetch the full report (with steps, event log, message-type breakdown, post-checks) via <code>{`/api/v1/reports/{id}`}</code>.</p>
 <p><code>{`suite_execution_id`}</code> is non-empty only for reports produced by suite steps; the suite-level summary lives at a separate <code>{`SuiteReportEntity`}</code> (no public API in v1; surfaced in the web UI's Reports page and via <code>{`report show-suite`}</code> on the CLI).</p>
-<h2 id="get-apiv1reports123id125">GET /api/v1/reports/&#123;id&#125;</h2>
+<h2 id="get-apiv1reports123id125" className="flex items-center gap-2"><HttpMethod method="GET" /><code>{`/api/v1/reports/&#123;id&#125;`}</code></h2>
 <p>Full report detail.</p>
 <CodeBlock lang="http" code={`GET /api/v1/reports/<uuid>
 Authorization: Bearer <token>`} />

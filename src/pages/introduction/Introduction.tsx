@@ -3,9 +3,7 @@ import { Link } from 'react-router-dom';
 
 export default function Introduction() {
   return (
-    <DocPage slug="introduction">
-<h1>What is fluxproto-light</h1>
-<p>fluxproto-light is a 5G/4G protocol load and conformance tester. One Go binary that simulates network elements (gNB, AMF, MME, UDM, AUSF, SMF/UPF, …) and drives deterministic procedures over NGAP, Diameter, SBI, REST, and PFCP — plus GTP-U user-plane traffic on N3 — against real or simulated cores.</p>
+    <DocPage slug="introduction" lede="fluxproto-light is a 5G/4G protocol load and conformance tester. One Go binary that simulates network elements (gNB, AMF, MME, UDM, AUSF, SMF/UPF, …) and drives deterministic procedures over NGAP, Diameter, SBI, REST, and PFCP — plus GTP-U user-plane traffic on N3 — against real or simulated cores.">
 <p>It is for the test/integration engineer who needs to gate a build with a registration smoke run, lean on an AMF for an hour with a hundred concurrent UEs, exercise a vendor's policy plane via Diameter Gx and Rx, or terminate user-plane traffic on a clean receiver and read the throughput back.</p>
 <h2 id="what-ships">What ships</h2>
 <ul>

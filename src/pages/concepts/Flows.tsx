@@ -5,9 +5,7 @@ import { Link } from 'react-router-dom';
 
 export default function Flows() {
   return (
-    <DocPage slug="concepts/flows">
-<h1>Flows</h1>
-<p>A flow is the unit fluxproto-light executes. It encodes one protocol procedure as a finite-state machine in YAML. This page is the conceptual core of the docs — read it first, then <Link to="/concepts/flows">States and transitions</Link>, then <Link to="/concepts/flows">Actions</Link>.</p>
+    <DocPage slug="concepts/flows" lede="A flow is the unit fluxproto-light executes. It encodes one protocol procedure as a finite-state machine in YAML. This page is the conceptual core of the docs — read it first, then States and transitions, then Actions.">
 <h2 id="the-shape-of-a-procedure">The shape of a procedure</h2>
 <p>5G/4G procedures share the same cadence: wait for an event, check it, send the next message. Registration is <code>{`Start → InitialUEMessage → wait AuthRequest → check + AuthResponse → wait SecurityModeCommand → check + SecurityModeComplete → wait RegistrationAccept → check + InitialContextSetupResponse + RegistrationComplete → registered`}</code>. PDU session establishment, deregistration, paging, handover all follow the same pattern.</p>
 <p>A finite-state machine captures that cadence directly. Each state is a "wait for" point. Each transition out of the state is an "if X happens, do Y, go to Z" rule. The whole procedure is a directed graph from <code>{`initial_state`}</code> to one of the <code>{`final_states`}</code>.</p>

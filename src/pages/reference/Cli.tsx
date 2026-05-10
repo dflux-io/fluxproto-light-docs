@@ -4,9 +4,7 @@ import { Link } from 'react-router-dom';
 
 export default function Cli() {
   return (
-    <DocPage slug="reference/cli">
-<h1>CLI reference</h1>
-<p><code>{`fluxproto-light`}</code> is one binary that runs as a daemon (no subcommand) or as a CLI tool with a subcommand. This page documents every subcommand and every flag.</p>
+    <DocPage slug="reference/cli" lede="fluxproto-light is one binary that runs as a daemon (no subcommand) or as a CLI tool with a subcommand. This page documents every subcommand and every flag.">
 <h2 id="synopsis">Synopsis</h2>
 <CodeBlock lang="" code={`fluxproto-light                                       # run as daemon
 fluxproto-light run-flow -flow <name> -templates <dir> -c <config> [opts]

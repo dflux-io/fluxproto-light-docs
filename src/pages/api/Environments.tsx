@@ -1,12 +1,10 @@
 import DocPage from '../../components/DocPage';
+import HttpMethod from '../../components/HttpMethod';
 import CodeBlock from '../../components/CodeBlock';
-import { Link } from 'react-router-dom';
 
 export default function ApiEnvironments() {
   return (
-    <DocPage slug="api/environments">
-<h1>Environments</h1>
-<p>CRUD for stored environment configs. An environment is the same YAML shape the CLI loads from <code>{`-c &lt;file&gt;`}</code> — see <Link to="/reference/config-schema">config schema</Link>. The daemon stores them as DB rows so <code>{`/execute`}</code> and <code>{`/schedules`}</code> can reference them by ID.</p>
+    <DocPage slug="api/environments" lede="CRUD for stored environment configs. An environment is the same YAML shape the CLI loads from -c <file> — see config schema. The daemon stores them as DB rows so /execute and /schedules can reference them by ID.">
 <h2 id="endpoints">Endpoints</h2>
 <table>
 <thead><tr><th>Method</th><th>Path</th><th>Description</th></tr></thead>
@@ -16,7 +14,7 @@ export default function ApiEnvironments() {
 <tr><td>PUT</td><td><code>{`/api/v1/environments/{id}`}</code></td><td>Update</td></tr>
 <tr><td>DELETE</td><td><code>{`/api/v1/environments/{id}`}</code></td><td>Delete</td></tr></tbody>
 </table>
-<h2 id="get-apiv1environments">GET /api/v1/environments</h2>
+<h2 id="get-apiv1environments" className="flex items-center gap-2"><HttpMethod method="GET" /><code>{`/api/v1/environments`}</code></h2>
 <CodeBlock lang="http" code={`GET /api/v1/environments
 Authorization: Bearer <token>`} />
 <h3 id="response">Response</h3>
@@ -30,7 +28,7 @@ Authorization: Bearer <token>`} />
   }
 ]`} />
 <p>The list view returns metadata only — call <code>{`/api/v1/environments/{id}`}</code> for the full YAML body.</p>
-<h2 id="post-apiv1environments">POST /api/v1/environments</h2>
+<h2 id="post-apiv1environments" className="flex items-center gap-2"><HttpMethod method="POST" /><code>{`/api/v1/environments`}</code></h2>
 <p>Create from YAML. Validated through the same parser CLI runs use.</p>
 <CodeBlock lang="http" code={`POST /api/v1/environments
 Authorization: Bearer <token>
@@ -65,11 +63,11 @@ Content-Type: application/json
 <tbody><tr><td>400</td><td>YAML parse / validation failure (error names the offending field)</td></tr>
 <tr><td>409</td><td>Name already exists</td></tr></tbody>
 </table>
-<h2 id="get-apiv1environments123id125">GET /api/v1/environments/&#123;id&#125;</h2>
+<h2 id="get-apiv1environments123id125" className="flex items-center gap-2"><HttpMethod method="GET" /><code>{`/api/v1/environments/&#123;id&#125;`}</code></h2>
 <CodeBlock lang="http" code={`GET /api/v1/environments/<uuid>
 Authorization: Bearer <token>`} />
 <p>Returns the full record including the YAML body.</p>
-<h2 id="put-apiv1environments123id125">PUT /api/v1/environments/&#123;id&#125;</h2>
+<h2 id="put-apiv1environments123id125" className="flex items-center gap-2"><HttpMethod method="PUT" /><code>{`/api/v1/environments/&#123;id&#125;`}</code></h2>
 <p>Update. Same body shape as <code>{`POST`}</code>. Re-validates the YAML.</p>
 <CodeBlock lang="http" code={`PUT /api/v1/environments/<uuid>
 Authorization: Bearer <token>
@@ -87,7 +85,7 @@ Content-Type: application/json
 <tr><td>404</td><td>Env not found</td></tr>
 <tr><td>409</td><td>Renaming to an existing name</td></tr></tbody>
 </table>
-<h2 id="delete-apiv1environments123id125">DELETE /api/v1/environments/&#123;id&#125;</h2>
+<h2 id="delete-apiv1environments123id125" className="flex items-center gap-2"><HttpMethod method="DELETE" /><code>{`/api/v1/environments/&#123;id&#125;`}</code></h2>
 <CodeBlock lang="http" code={`DELETE /api/v1/environments/<uuid>
 Authorization: Bearer <token>`} />
 <p>Returns <code>{`204 No Content`}</code>.</p>

@@ -4,9 +4,7 @@ import { Link } from 'react-router-dom';
 
 export default function Quickstart() {
   return (
-    <DocPage slug="introduction/quickstart">
-<h1>Quickstart</h1>
-<p>By the end of this guide you will have built fluxproto-light, run the canonical <code>{`registration`}</code> flow against an AMF you reach over the lab network, and read back the report. About 10 minutes start to finish, assuming you already have an AMF reachable on <code>{`192.168.1.139:38412`}</code> (3GPP TS 38.413, NGAP).</p>
+    <DocPage slug="introduction/quickstart" lede="By the end of this guide you will have built fluxproto-light, run the canonical registration flow against an AMF you reach over the lab network, and read back the report. About 10 minutes start to finish, assuming you already have an AMF reachable on 192.168.1.139:38412 (3GPP TS 38.413, NGAP).">
 <p>If you want the conceptual model before the hands-on walk-through, read <Link to="/concepts/architecture">Concepts overview</Link> first — the rest of this page assumes you're happy to learn by doing.</p>
 <h2 id="prerequisites">Prerequisites</h2>
 <ul>

@@ -4,9 +4,7 @@ import { Link } from 'react-router-dom';
 
 export default function FlowSchema() {
   return (
-    <DocPage slug="reference/flow-schema">
-<h1>Flow schema reference</h1>
-<p>Authoritative schema for <code>{`kind: flow`}</code> YAML. Every field, every action type, every check op. For prose on the authoring model, see <Link to="/guides/writing">writing-flows</Link> and <Link to="/concepts/flows">explanation/flow-authoring-model</Link>.</p>
+    <DocPage slug="reference/flow-schema" lede="Authoritative schema for kind: flow YAML. Every field, every action type, every check op. For prose on the authoring model, see writing-flows and explanation/flow-authoring-model.">
 <h2 id="synopsis">Synopsis</h2>
 <CodeBlock lang="yaml" code={`kind: flow
 name: registration

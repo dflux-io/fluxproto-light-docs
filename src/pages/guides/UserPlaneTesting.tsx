@@ -3,9 +3,7 @@ import CodeBlock from '../../components/CodeBlock';
 
 export default function UserPlaneTesting() {
   return (
-    <DocPage slug="guides/user-plane-testing">
-<h1>User-plane testing</h1>
-<p>GTP-U user-plane testing is separate from signalling. Once a UE has its PDU session established (via the NGAP <code>{`pdu_session_setup`}</code> flow), the gNB can drive real IP traffic through the UPF on N3 (3GPP TS 29.281) and measure throughput, latency, jitter, and drop. fluxproto-light has two user-plane backends — userspace kernel sockets for portability, DPDK for line-rate. This guide covers both.</p>
+    <DocPage slug="guides/user-plane-testing" lede="GTP-U user-plane testing is separate from signalling. Once a UE has its PDU session established (via the NGAP pdu_session_setup flow), the gNB can drive real IP traffic through the UPF on N3 (3GPP TS 29.281) and measure throughput, latency, jitter, and drop. fluxproto-light has two user-plane backends — userspace kernel sockets for portability, DPDK for line-rate. This guide covers both.">
 <h2 id="two-backends">Two backends</h2>
 <table>
 <thead><tr><th>Backend</th><th>When to pick</th></tr></thead>

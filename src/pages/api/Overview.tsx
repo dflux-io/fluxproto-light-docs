@@ -1,12 +1,11 @@
 import DocPage from '../../components/DocPage';
+import HttpMethod from '../../components/HttpMethod';
 import CodeBlock from '../../components/CodeBlock';
 import { Link } from 'react-router-dom';
 
 export default function ApiOverview() {
   return (
-    <DocPage slug="api/overview">
-<h1>API overview</h1>
-<p>The fluxproto-light daemon exposes a JSON-over-HTTP REST API at <code>{`/api/v1/`}</code>. Every resource has its own page in this section. This page documents the cross-cutting conventions: authentication, errors, CORS.</p>
+    <DocPage slug="api/overview" lede="The fluxproto-light daemon exposes a JSON-over-HTTP REST API at /api/v1/. Every resource has its own page in this section. This page documents the cross-cutting conventions: authentication, errors, CORS.">
 <h2 id="base-url">Base URL</h2>
 <CodeBlock lang="" code={`http://<host>:<port>/api/v1`} />
 <p>The daemon binds <code>{`0.0.0.0:8199`}</code> by default. Override with <code>{`-host`}</code> and <code>{`-port`}</code>. The web UI (<code>{`-web`}</code>) shares the same port and proxies API calls to itself.</p>
@@ -78,7 +77,7 @@ GET /api/v1/health`} />
 </ul>
 <p>Login, password change, and the current-user endpoint. Tokens are 24-hour HS256 JWTs; the signing secret is generated per daemon start and held in memory only — a restart invalidates every outstanding token.</p>
 <p>For the cross-cutting auth model (roles, locked-account flow, header shape), see <Link to="/api/overview#authentication">API overview</Link>.</p>
-<h2 id="post-apiv1authlogin">POST /api/v1/auth/login</h2>
+<h2 id="post-apiv1authlogin" className="flex items-center gap-2"><HttpMethod method="POST" /><code>{`/api/v1/auth/login`}</code></h2>
 <p>Exchange username + password for a bearer token. Public — no auth header required.</p>
 <h3 id="request">Request</h3>
 <CodeBlock lang="http" code={`POST /api/v1/auth/login
@@ -123,7 +122,7 @@ Content-Type: application/json
 <p>The error message is the same for unknown user and wrong password (<code>{`invalid credentials`}</code>) — username enumeration is not possible.</p>
 <h3 id="first-time-login">First-time login</h3>
 <p>The seeded admin (<code>{`root`}</code> / <code>{`toor`}</code>) is created with <code>{`must_change_pass: true`}</code>. The login response surfaces this in <code>{`must_change_password`}</code>. Until you change it, every authenticated endpoint except <code>{`/auth/me`}</code> and <code>{`/auth/change-password`}</code> returns <code>{`423 Locked`}</code>.</p>
-<h2 id="get-apiv1authme">GET /api/v1/auth/me</h2>
+<h2 id="get-apiv1authme" className="flex items-center gap-2"><HttpMethod method="GET" /><code>{`/api/v1/auth/me`}</code></h2>
 <p>Return the authenticated user.</p>
 <h3 id="request-2">Request</h3>
 <CodeBlock lang="http" code={`GET /api/v1/auth/me
@@ -149,7 +148,7 @@ Content-Type: application/json
 <thead><tr><th>Code</th><th>Cause</th></tr></thead>
 <tbody><tr><td>401</td><td>Missing, invalid, or expired token; user disabled</td></tr></tbody>
 </table>
-<h2 id="post-apiv1authchange-password">POST /api/v1/auth/change-password</h2>
+<h2 id="post-apiv1authchange-password" className="flex items-center gap-2"><HttpMethod method="POST" /><code>{`/api/v1/auth/change-password`}</code></h2>
 <p>Change the authenticated user's password. Clears <code>{`must_change_pass`}</code>.</p>
 <h3 id="request-3">Request</h3>
 <CodeBlock lang="http" code={`POST /api/v1/auth/change-password
@@ -184,7 +183,7 @@ Content-Type: application/json
 <li>For programmatic clients, store the token in memory or a secret store — never persist it on disk.</li>
 </ul>
 <p>Probe connectivity for every transport in an env. Equivalent to the CLI <code>{`fluxproto-light check -c &lt;file&gt;`}</code> plus a Diameter-side CER/CEA probe.</p>
-<h2 id="post-apiv1transport">POST /api/v1/transport</h2>
+<h2 id="post-apiv1transport" className="flex items-center gap-2"><HttpMethod method="POST" /><code>{`/api/v1/transport`}</code></h2>
 <CodeBlock lang="http" code={`POST /api/v1/transport
 Authorization: Bearer <token>
 Content-Type: application/json

@@ -3,9 +3,7 @@ import CodeBlock from '../../components/CodeBlock';
 
 export default function CiIntegration() {
   return (
-    <DocPage slug="guides/ci-integration">
-<h1>CI integration</h1>
-<p>fluxproto-light is built to gate CI pipelines: deterministic exit codes, structured JSON output, no interactive prompts. This guide covers exit-code semantics, JSON output, useful CI flags, and snippet templates for GitHub Actions and GitLab CI.</p>
+    <DocPage slug="guides/ci-integration" lede="fluxproto-light is built to gate CI pipelines: deterministic exit codes, structured JSON output, no interactive prompts. This guide covers exit-code semantics, JSON output, useful CI flags, and snippet templates for GitHub Actions and GitLab CI.">
 <h2 id="exit-codes">Exit codes</h2>
 <p>Two outcomes:</p>
 <table>

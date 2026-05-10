@@ -1,11 +1,36 @@
+import {
+  BookOpen,
+  Lightbulb,
+  GraduationCap,
+  Wrench,
+  Library,
+  Plug,
+  Book,
+  type LucideIcon,
+} from 'lucide-react';
 import type { Manifest, ManifestGroup, ManifestPage } from './types';
 
 // Single source of truth for the docs IA. Edit this file to add, rename,
-// or reorder a page; the sidebar renders from the groups, and prev/next
-// derive from the flat ordered list. Routes live in App.tsx — they must
-// stay in sync with the slugs here.
+// or reorder a page; the sidebar renders from the groups, prev/next
+// derive from the flat ordered list, and DocPage looks up icon + section
+// for the page header. Routes live in App.tsx — they must stay in sync
+// with the slugs here.
 
 const projectName = 'fluxproto-light';
+
+interface SectionMeta {
+  Icon: LucideIcon;
+}
+
+const sections: Record<string, SectionMeta> = {
+  Introduction: { Icon: BookOpen },
+  Concepts:     { Icon: Lightbulb },
+  Tutorials:    { Icon: GraduationCap },
+  Guides:       { Icon: Wrench },
+  Reference:    { Icon: Library },
+  API:          { Icon: Plug },
+  Glossary:     { Icon: Book },
+};
 
 const groups: ManifestGroup[] = [
   {
@@ -101,4 +126,8 @@ export function neighbors(slug: string): { prev?: ManifestPage; next?: ManifestP
     prev: idx > 0 ? manifest.pages[idx - 1] : undefined,
     next: idx < manifest.pages.length - 1 ? manifest.pages[idx + 1] : undefined,
   };
+}
+
+export function sectionMeta(group: string): SectionMeta {
+  return sections[group] ?? { Icon: BookOpen };
 }

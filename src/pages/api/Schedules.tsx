@@ -1,12 +1,11 @@
 import DocPage from '../../components/DocPage';
+import HttpMethod from '../../components/HttpMethod';
 import CodeBlock from '../../components/CodeBlock';
 import { Link } from 'react-router-dom';
 
 export default function ApiSchedules() {
   return (
-    <DocPage slug="api/schedules">
-<h1>Schedules</h1>
-<p>Cron-style and one-shot scheduled executions. Each fire produces a normal <code>{`ReportEntity`}</code> indistinguishable from a manual <code>{`/execute`}</code> (apart from <code>{`schedule_id`}</code> stamped on it).</p>
+    <DocPage slug="api/schedules" lede="Cron-style and one-shot scheduled executions. Each fire produces a normal ReportEntity indistinguishable from a manual /execute (apart from schedule_id stamped on it).">
 <h2 id="endpoints">Endpoints</h2>
 <table>
 <thead><tr><th>Method</th><th>Path</th><th>Description</th></tr></thead>
@@ -24,7 +23,7 @@ export default function ApiSchedules() {
 <li><strong><code>{`cron`}</code></strong> — fires on a 5-field standard cron expression (<code>{`m h dom mon dow`}</code>) in the schedule's <code>{`timezone:`}</code> (default <code>{`UTC`}</code>).</li>
 </ul>
 <p>The cron parser is <code>{`github.com/robfig/cron/v3`}</code> with the standard <code>{`Minute | Hour | Dom | Month | Dow`}</code> set — no seconds field, no descriptors like <code>{`@daily`}</code>.</p>
-<h2 id="get-apiv1schedules">GET /api/v1/schedules</h2>
+<h2 id="get-apiv1schedules" className="flex items-center gap-2"><HttpMethod method="GET" /><code>{`/api/v1/schedules`}</code></h2>
 <CodeBlock lang="http" code={`GET /api/v1/schedules?type=cron&enabled=true
 Authorization: Bearer <token>`} />
 <table>
@@ -57,7 +56,7 @@ Authorization: Bearer <token>`} />
     "updated_at": "..."
   }
 ]`} />
-<h2 id="post-apiv1schedules">POST /api/v1/schedules</h2>
+<h2 id="post-apiv1schedules" className="flex items-center gap-2"><HttpMethod method="POST" /><code>{`/api/v1/schedules`}</code></h2>
 <p>Create.</p>
 <CodeBlock lang="http" code={`POST /api/v1/schedules
 Authorization: Bearer <token>
@@ -115,10 +114,10 @@ Content-Type: application/json
 <tbody><tr><td>400</td><td>Cross-field validation failure (missing run_at, bad cron, bad timezone, ...)</td></tr>
 <tr><td>404</td><td>Environment not found</td></tr></tbody>
 </table>
-<h2 id="get-apiv1schedules123id125">GET /api/v1/schedules/&#123;id&#125;</h2>
+<h2 id="get-apiv1schedules123id125" className="flex items-center gap-2"><HttpMethod method="GET" /><code>{`/api/v1/schedules/&#123;id&#125;`}</code></h2>
 <CodeBlock lang="http" code={`GET /api/v1/schedules/<uuid>
 Authorization: Bearer <token>`} />
-<h2 id="put-apiv1schedules123id125">PUT /api/v1/schedules/&#123;id&#125;</h2>
+<h2 id="put-apiv1schedules123id125" className="flex items-center gap-2"><HttpMethod method="PUT" /><code>{`/api/v1/schedules/&#123;id&#125;`}</code></h2>
 <p>Replace. Same body shape as <code>{`POST`}</code> (the daemon cancels the old heap entry and re-enqueues internally).</p>
 <CodeBlock lang="http" code={`PUT /api/v1/schedules/<uuid>
 Authorization: Bearer <token>
@@ -131,12 +130,12 @@ Content-Type: application/json
 <tbody><tr><td>400</td><td>Validation failure</td></tr>
 <tr><td>404</td><td>Schedule not found</td></tr></tbody>
 </table>
-<h2 id="delete-apiv1schedules123id125">DELETE /api/v1/schedules/&#123;id&#125;</h2>
+<h2 id="delete-apiv1schedules123id125" className="flex items-center gap-2"><HttpMethod method="DELETE" /><code>{`/api/v1/schedules/&#123;id&#125;`}</code></h2>
 <p>Cancel + delete. Best-effort against in-memory heap; an in-flight fire completes and its report still persists.</p>
 <CodeBlock lang="http" code={`DELETE /api/v1/schedules/<uuid>
 Authorization: Bearer <token>`} />
 <p>Returns <code>{`204 No Content`}</code>.</p>
-<h2 id="post-apiv1schedules123id125run">POST /api/v1/schedules/&#123;id&#125;/run</h2>
+<h2 id="post-apiv1schedules123id125run" className="flex items-center gap-2"><HttpMethod method="POST" /><code>{`/api/v1/schedules/&#123;id&#125;/run`}</code></h2>
 <p>Fire an immediate one-shot copy of the schedule. Doesn't change the parent's <code>{`next_run_at`}</code> or state — the trigger is recorded as a separate execution.</p>
 <CodeBlock lang="http" code={`POST /api/v1/schedules/<uuid>/run
 Authorization: Bearer <token>`} />

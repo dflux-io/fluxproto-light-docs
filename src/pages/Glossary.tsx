@@ -3,9 +3,7 @@ import { Link } from 'react-router-dom';
 
 export default function Glossary() {
   return (
-    <DocPage slug="glossary">
-<h1>Glossary</h1>
-<p>Product-specific terms used throughout this documentation. 3GPP terminology (NGAP, NAS, AMF, gNB, etc.) is assumed and not redefined here.</p>
+    <DocPage slug="glossary" lede="Product-specific terms used throughout this documentation. 3GPP terminology (NGAP, NAS, AMF, gNB, etc.) is assumed and not redefined here.">
 <h2 id="terms">Terms</h2>
 <p><strong>Flow</strong>
 : A finite-state machine encoding one protocol procedure. Defined as YAML (<code>{`kind: flow`}</code>) with <code>{`states`}</code>, <code>{`transitions`}</code>, <code>{`actions`}</code>, and <code>{`final_states`}</code>. The unit fluxproto-light executes — <code>{`run-flow -flow registration`}</code> runs one flow against one or more UEs.</p>

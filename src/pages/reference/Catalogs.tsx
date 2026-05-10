@@ -3,9 +3,7 @@ import { Link } from 'react-router-dom';
 
 export default function Catalogs() {
   return (
-    <DocPage slug="reference/catalogs">
-<h1>Flow catalog</h1>
-<p>Every flow shipped under <code>{`templates/`}</code>, grouped by protocol. The <code>{`YAML`}</code> column links to the source.</p>
+    <DocPage slug="reference/catalogs" lede="Every flow shipped under templates/, grouped by protocol. The YAML column links to the source.">
 <h2 id="ngap">NGAP</h2>
 <table>
 <thead><tr><th>Name</th><th>Category</th><th>NF role</th><th>Description</th><th>YAML</th></tr></thead>

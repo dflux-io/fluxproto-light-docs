@@ -315,7 +315,32 @@ function convertPage([component, slug, outRel, sources]) {
   // Reset per-page heading-id tracker.
   currentHeadingIds = new Set();
 
+  // Pull the H1 (we don't render it — PageHeader does) and the first
+  // paragraph-as-lede off the front of the token stream. Both feed into
+  // the DocPage's `lede` prop or get dropped entirely.
   const tokens = marked.lexer(merged);
+  let lede = '';
+  // Walk tokens dropping leading whitespace; the first heading token (depth=1)
+  // is the page title — we drop it. The next paragraph is the lede.
+  while (tokens.length > 0 && tokens[0].type === 'space') tokens.shift();
+  if (tokens.length > 0 && tokens[0].type === 'heading' && tokens[0].depth === 1) {
+    tokens.shift();
+  }
+  while (tokens.length > 0 && tokens[0].type === 'space') tokens.shift();
+  if (tokens.length > 0 && tokens[0].type === 'paragraph') {
+    // Capture as plain text — the lede is shown in a styled prop, not parsed.
+    const ledeToken = tokens.shift();
+    lede = stripTags(emitInline(ledeToken.tokens, { currentPath: sources[0] }))
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&#123;/g, '{')
+      .replace(/&#125;/g, '}')
+      .replace(/&#39;/g, "'")
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
   const ctx = { currentPath: sources[0] };
   const body = tokens.map((tok) => emitBlock(tok, ctx)).join('').trim();
 
@@ -339,11 +364,12 @@ function convertPage([component, slug, outRel, sources]) {
   // Don't pretty-indent the body — template literals (CodeBlock / Mermaid)
   // would have their content corrupted by leading whitespace. Valid JSX
   // doesn't require indentation.
+  const ledeProp = lede ? ` lede="${escapeAttr(lede)}"` : '';
   const tsx = `${fixedImports.join('\n')}
 
 export default function ${component}() {
   return (
-    <DocPage slug="${slug}">
+    <DocPage slug="${slug}"${ledeProp}>
 ${body}
     </DocPage>
   );

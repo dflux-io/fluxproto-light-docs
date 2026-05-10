@@ -1,24 +1,34 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useLocation } from 'react-router-dom';
-import { neighbors, pageBySlug } from '../manifest';
+import { neighbors, pageBySlug, sectionMeta } from '../manifest';
 import type { OutlineHeading } from '../types';
 import PageOutline from './PageOutline';
 import PrevNext from './PrevNext';
+import PageHeader from './PageHeader';
+import Breadcrumbs from './Breadcrumbs';
 
 interface DocPageProps {
   slug: string;
+  // Optional lede shown under the page title in the header card.
+  // Pages whose first paragraph reads as a lede should pass it here and
+  // omit it from the body.
+  lede?: string;
+  // When true, the auto-generated PageHeader and Breadcrumbs are skipped —
+  // useful for the home page which has its own hero treatment.
+  bare?: boolean;
   children: ReactNode;
 }
 
 // DocPage wraps every content page with the prev/next footer and the
 // right-side "On this page" outline. The outline is built from the
 // rendered DOM after mount (every H2/H3 with an `id` attribute).
-export default function DocPage({ slug, children }: DocPageProps) {
+export default function DocPage({ slug, lede, bare, children }: DocPageProps) {
   const location = useLocation();
   const articleRef = useRef<HTMLElement>(null);
   const [headings, setHeadings] = useState<OutlineHeading[]>([]);
   const page = pageBySlug(slug);
   const { prev, next } = neighbors(slug);
+  const meta = page && page.group ? sectionMeta(page.group) : null;
 
   // Walk the rendered article for h2/h3 with ids whenever the slug changes.
   useEffect(() => {
@@ -61,6 +71,17 @@ export default function DocPage({ slug, children }: DocPageProps) {
           ref={articleRef}
           className="prose prose-slate mx-auto max-w-3xl dark:prose-invert prose-headings:scroll-mt-20 prose-pre:bg-transparent prose-pre:p-0 prose-pre:m-0 prose-code:before:hidden prose-code:after:hidden"
         >
+          {!bare && page && (
+            <>
+              <Breadcrumbs section={page.group || undefined} title={page.title} />
+              <PageHeader
+                section={page.group || 'Documentation'}
+                Icon={meta?.Icon ?? sectionMeta('Glossary').Icon}
+                title={page.title}
+                lede={lede}
+              />
+            </>
+          )}
           {children}
           <PrevNext prev={prev} next={next} />
         </article>

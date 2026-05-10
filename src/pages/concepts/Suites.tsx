@@ -4,9 +4,7 @@ import { Link } from 'react-router-dom';
 
 export default function Suites() {
   return (
-    <DocPage slug="concepts/suites">
-<h1>Suites</h1>
-<p>A suite is an ordered list of flow steps run as one cycle. Each step independently acquires its own subscribers, runs its flow with its own workload, and either continues or aborts the cycle. Suites are the unit of <em>composed</em> tests — a single suite covers "provision policy → run a load burst → tear down policy" cleanly where one flow can't.</p>
+    <DocPage slug="concepts/suites" lede="A suite is an ordered list of flow steps run as one cycle. Each step independently acquires its own subscribers, runs its flow with its own workload, and either continues or aborts the cycle. Suites are the unit of composed tests — a single suite covers &quot;provision policy → run a load burst → tear down policy&quot; cleanly where one flow can't.">
 <h2 id="what-a-suite-declares">What a suite declares</h2>
 <CodeBlock lang="yaml" code={`kind: suite
 name: gnb-register-deregister

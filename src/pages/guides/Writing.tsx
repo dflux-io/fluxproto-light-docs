@@ -4,9 +4,7 @@ import { Link } from 'react-router-dom';
 
 export default function Writing() {
   return (
-    <DocPage slug="guides/writing">
-<h1>Writing flows</h1>
-<p>Flows are YAML files with <code>{`kind: flow`}</code> describing a finite-state machine for one protocol procedure. The engine drives the FSM per UE, dispatching transitions on inbound events (RX messages) and the synthetic <code>{`Start`}</code> event. This guide walks through the pieces of a flow YAML and what each one does. For exhaustive field tables, see <Link to="/reference/flow-schema">reference/flow-schema.md</Link>.</p>
+    <DocPage slug="guides/writing" lede="Flows are YAML files with kind: flow describing a finite-state machine for one protocol procedure. The engine drives the FSM per UE, dispatching transitions on inbound events (RX messages) and the synthetic Start event. This guide walks through the pieces of a flow YAML and what each one does. For exhaustive field tables, see reference/flow-schema.md.">
 <h2 id="flow-anatomy">Flow anatomy</h2>
 <p>Every flow has the same top-level shape:</p>
 <CodeBlock lang="yaml" code={`kind: flow

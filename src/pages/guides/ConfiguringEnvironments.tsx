@@ -4,9 +4,7 @@ import { Link } from 'react-router-dom';
 
 export default function ConfiguringEnvironments() {
   return (
-    <DocPage slug="guides/configuring-environments">
-<h1>Configuring environments</h1>
-<p>An environment is a YAML file that declares the network functions (NFs) fluxproto-light simulates or talks to, plus the wire-level transports those NFs use. CLI runs load it via <code>{`-c &lt;file&gt;`}</code>; daemon runs store one per database row. This guide covers the top-level shape and each protocol's transport block.</p>
+    <DocPage slug="guides/configuring-environments" lede="An environment is a YAML file that declares the network functions (NFs) fluxproto-light simulates or talks to, plus the wire-level transports those NFs use. CLI runs load it via -c <file>; daemon runs store one per database row. This guide covers the top-level shape and each protocol's transport block.">
 <h2 id="top-level-shape">Top-level shape</h2>
 <CodeBlock lang="yaml" code={`nfs:
   - name: <unique nf name>

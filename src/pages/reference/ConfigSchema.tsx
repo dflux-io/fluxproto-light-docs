@@ -1,12 +1,9 @@
 import DocPage from '../../components/DocPage';
 import CodeBlock from '../../components/CodeBlock';
-import { Link } from 'react-router-dom';
 
 export default function ConfigSchema() {
   return (
-    <DocPage slug="reference/config-schema">
-<h1>Config schema reference</h1>
-<p>Authoritative schema for env YAMLs (e.g. <code>{`config/lab.yaml`}</code>). For prose, see <Link to="/guides/configuring-environments">configuring-environments</Link>.</p>
+    <DocPage slug="reference/config-schema" lede="Authoritative schema for env YAMLs (e.g. config/lab.yaml). For prose, see configuring-environments.">
 <h2 id="synopsis">Synopsis</h2>
 <CodeBlock lang="yaml" code={`nfs:
   - name: GNBENF

@@ -4,9 +4,7 @@ import { Link } from 'react-router-dom';
 
 export default function FirstServerFlow() {
   return (
-    <DocPage slug="tutorials/first-server-flow">
-<h1>Your first server-mode flow</h1>
-<p>By the end of this tutorial you will have run two fluxproto-light processes against each other on <code>{`localhost`}</code>: one acting as an AMF (server-mode <code>{`registration_amf`}</code> flow), the other as a gNB (client-mode <code>{`registration`}</code> flow). Server-mode flows wait for the first inbound message and auto-spawn — no <code>{`Start`}</code> event, no -repetitions setting on the AMF side. Useful for vendor-side wiring tests, conformance harnesses, and AMF-replacement scenarios.</p>
+    <DocPage slug="tutorials/first-server-flow" lede="By the end of this tutorial you will have run two fluxproto-light processes against each other on localhost: one acting as an AMF (server-mode registration_amf flow), the other as a gNB (client-mode registration flow). Server-mode flows wait for the first inbound message and auto-spawn — no Start event, no -repetitions setting on the AMF side. Useful for vendor-side wiring tests, conformance harnesses, and AMF-replacement scenarios.">
 <h2 id="prerequisites">Prerequisites</h2>
 <ul>
 <li>You completed the <Link to="/introduction/quickstart">Quickstart</Link> and <Link to="/tutorials/first-yaml-flow">Your first YAML flow</Link>.</li>

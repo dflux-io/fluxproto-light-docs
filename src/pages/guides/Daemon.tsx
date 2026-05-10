@@ -4,9 +4,7 @@ import { Link } from 'react-router-dom';
 
 export default function Daemon() {
   return (
-    <DocPage slug="guides/daemon">
-<h1>Daemon mode</h1>
-<p><code>{`fluxproto-light`}</code> with no subcommand runs as a daemon: HTTP API on port 8199, optional embedded web UI, optional Prometheus metrics, optional pprof. Schedule recurring runs over REST, browse historical reports in the web UI, drive flows from a CI agent against a long-lived test plane. This guide covers startup, login, and configuration.</p>
+    <DocPage slug="guides/daemon" lede="fluxproto-light with no subcommand runs as a daemon: HTTP API on port 8199, optional embedded web UI, optional Prometheus metrics, optional pprof. Schedule recurring runs over REST, browse historical reports in the web UI, drive flows from a CI agent against a long-lived test plane. This guide covers startup, login, and configuration.">
 <h2 id="starting-the-daemon">Starting the daemon</h2>
 <CodeBlock lang="bash" code={`./bin/fluxproto-light                    # API only on :8199
 ./bin/fluxproto-light -port 8199 -web    # API + web UI on :8199

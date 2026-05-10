@@ -4,9 +4,7 @@ import { Link } from 'react-router-dom';
 
 export default function Subscribers() {
   return (
-    <DocPage slug="guides/subscribers">
-<h1>Subscribers</h1>
-<p>A subscriber is one UE identity — SUPI, K, OPC, SQN, SNN, ciphering and integrity algorithms. NGAP/NAS authentication consumes them; Diameter S6a / Gx flows reuse the same pool, with the request enrichers reading <code>{`imsi`}</code> for User-Name (S6a) or Subscription-Id-Data (Gx) and falling back to UE-stable synthetic IDs when an entry doesn't carry an explicit IMSI. This guide covers provisioning, generation, the runtime pool, and listing/purging against Open5GS.</p>
+    <DocPage slug="guides/subscribers" lede="A subscriber is one UE identity — SUPI, K, OPC, SQN, SNN, ciphering and integrity algorithms. NGAP/NAS authentication consumes them; Diameter S6a / Gx flows reuse the same pool, with the request enrichers reading imsi for User-Name (S6a) or Subscription-Id-Data (Gx) and falling back to UE-stable synthetic IDs when an entry doesn't carry an explicit IMSI. This guide covers provisioning, generation, the runtime pool, and listing/purging against Open5GS.">
 <h2 id="three-ways-to-provide-subscribers">Three ways to provide subscribers</h2>
 <ol>
 <li><strong>Generate to YAML</strong> (<code>{`subscriber generate`}</code>) — synthesize random credentials, write to a YAML file you can commit or hand to a core network's provisioning UI.</li>

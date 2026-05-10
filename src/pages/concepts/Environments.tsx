@@ -5,9 +5,7 @@ import { Link } from 'react-router-dom';
 
 export default function Environments() {
   return (
-    <DocPage slug="concepts/environments">
-<h1>Environments and NFs</h1>
-<p>An environment declares the network functions in scope and the wire-level transports they use. CLI runs load it from a YAML file; daemon runs store one row per env in the database. This page is the conceptual model — the exact field tables live in <Link to="/reference/config-schema">reference/config-schema.md</Link>.</p>
+    <DocPage slug="concepts/environments" lede="An environment declares the network functions in scope and the wire-level transports they use. CLI runs load it from a YAML file; daemon runs store one row per env in the database. This page is the conceptual model — the exact field tables live in reference/config-schema.md.">
 <h2 id="the-two-table-model">The two-table model</h2>
 <p>Every env has exactly two top-level tables:</p>
 <CodeBlock lang="yaml" code={`nfs:

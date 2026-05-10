@@ -4,9 +4,7 @@ import { Link } from 'react-router-dom';
 
 export default function FirstYamlFlow() {
   return (
-    <DocPage slug="tutorials/first-yaml-flow">
-<h1>Your first YAML flow</h1>
-<p>By the end of this tutorial you will have copied the shipped <code>{`registration`}</code> template, modified one transition to fail the flow on a different condition, and watched the resulting path land in <code>{`failed`}</code> instead of <code>{`registered`}</code>. The point is to put your hands on the YAML schema before reading the full reference.</p>
+    <DocPage slug="tutorials/first-yaml-flow" lede="By the end of this tutorial you will have copied the shipped registration template, modified one transition to fail the flow on a different condition, and watched the resulting path land in failed instead of registered. The point is to put your hands on the YAML schema before reading the full reference.">
 <h2 id="prerequisites">Prerequisites</h2>
 <ul>
 <li>You completed the <Link to="/introduction/quickstart">Quickstart</Link> and have <code>{`bin/fluxproto-light`}</code> working.</li>

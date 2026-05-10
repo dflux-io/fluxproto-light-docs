@@ -2,9 +2,7 @@ import DocPage from '../../components/DocPage';
 
 export default function UserPlane() {
   return (
-    <DocPage slug="concepts/user-plane">
-<h1>User plane</h1>
-<p>User-plane testing is a separate concern from signalling testing. This page explains why fluxproto-light treats GTP-U as its own subsystem with its own backends, what the two backends measure, and when to pick each one.</p>
+    <DocPage slug="concepts/user-plane" lede="User-plane testing is a separate concern from signalling testing. This page explains why fluxproto-light treats GTP-U as its own subsystem with its own backends, what the two backends measure, and when to pick each one.">
 <h2 id="why-split-signalling-from-user-plane">Why split signalling from user plane</h2>
 <p>5G procedures split clean across a control / user-plane line. Signalling — registration, PDU session establishment, handover — runs over NGAP and NAS5G with carefully timed interactions and per-step assertions. The whole flow takes hundreds of milliseconds and produces tens of bytes per UE. User plane — the actual GTP-U traffic on N3 once the session is up — takes microseconds per packet and produces megabits per second.</p>
 <p>Mixing the two into one process model would be a mistake. Signalling needs deterministic FSM dispatch with checks at every step; user plane needs a tight packet loop with no per-frame Go-side dispatch overhead. fluxproto-light keeps them separate: signalling drives an FSM that <em>sets up</em> the PDU session; user plane is a separate component that <em>uses</em> the session.</p>

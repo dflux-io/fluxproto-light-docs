@@ -4,9 +4,7 @@ import { Link } from 'react-router-dom';
 
 export default function Running() {
   return (
-    <DocPage slug="guides/running">
-<h1>Running flows</h1>
-<p><code>{`fluxproto-light run-flow`}</code> executes one flow against an environment. Flows are looked up by name in the templates DB after a sync of the <code>{`-templates`}</code> dir; the engine then drives the FSM per UE according to the workload knobs. This guide covers invocation, the workload model, output, tracing, and exit codes.</p>
+    <DocPage slug="guides/running" lede="fluxproto-light run-flow executes one flow against an environment. Flows are looked up by name in the templates DB after a sync of the -templates dir; the engine then drives the FSM per UE according to the workload knobs. This guide covers invocation, the workload model, output, tracing, and exit codes.">
 <h2 id="invocation">Invocation</h2>
 <CodeBlock lang="bash" code={`fluxproto-light run-flow \\
     -flow <name> \\

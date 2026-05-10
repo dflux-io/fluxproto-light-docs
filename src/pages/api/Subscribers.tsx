@@ -1,12 +1,11 @@
 import DocPage from '../../components/DocPage';
+import HttpMethod from '../../components/HttpMethod';
 import CodeBlock from '../../components/CodeBlock';
 import { Link } from 'react-router-dom';
 
 export default function ApiSubscribers() {
   return (
-    <DocPage slug="api/subscribers">
-<h1>Subscribers</h1>
-<p>CRUD for subscribers + pool stats. Subscribers are UE identities (SUPI + K + OPC + SQN + algorithms) the engine assigns to UEs at flow-start. The pool serialises one-execution-per-subscriber for the lifetime of each UE.</p>
+    <DocPage slug="api/subscribers" lede="CRUD for subscribers + pool stats. Subscribers are UE identities (SUPI + K + OPC + SQN + algorithms) the engine assigns to UEs at flow-start. The pool serialises one-execution-per-subscriber for the lifetime of each UE.">
 <p>For the conceptual model, see <Link to="/guides/subscribers">Subscribers guide</Link>.</p>
 <h2 id="endpoints">Endpoints</h2>
 <table>
@@ -21,7 +20,7 @@ export default function ApiSubscribers() {
 <tr><td>PUT</td><td><code>{`/api/v1/subscribers/{id}`}</code></td><td>Update</td></tr>
 <tr><td>DELETE</td><td><code>{`/api/v1/subscribers/{id}`}</code></td><td>Delete (must be unlocked)</td></tr></tbody>
 </table>
-<h2 id="get-apiv1subscribers">GET /api/v1/subscribers</h2>
+<h2 id="get-apiv1subscribers" className="flex items-center gap-2"><HttpMethod method="GET" /><code>{`/api/v1/subscribers`}</code></h2>
 <CodeBlock lang="http" code={`GET /api/v1/subscribers?locked=false&search=imsi-901
 Authorization: Bearer <token>`} />
 <table>
@@ -48,7 +47,7 @@ Authorization: Bearer <token>`} />
   }
 ]`} />
 <p><code>{`locked_by`}</code> is the execution ID that's currently holding this subscriber, or empty.</p>
-<h2 id="get-apiv1subscribersstats">GET /api/v1/subscribers/stats</h2>
+<h2 id="get-apiv1subscribersstats" className="flex items-center gap-2"><HttpMethod method="GET" /><code>{`/api/v1/subscribers/stats`}</code></h2>
 <p>Aggregate counts.</p>
 <CodeBlock lang="http" code={`GET /api/v1/subscribers/stats
 Authorization: Bearer <token>`} />
@@ -60,7 +59,7 @@ Authorization: Bearer <token>`} />
   "waiting": 3
 }`} />
 <p><code>{`waiting`}</code> is the in-process FIFO queue depth — acquirers blocked because the pool is empty. Only meaningful inside the daemon process that owns the pool.</p>
-<h2 id="get-apiv1subscriberspool">GET /api/v1/subscribers/pool</h2>
+<h2 id="get-apiv1subscriberspool" className="flex items-center gap-2"><HttpMethod method="GET" /><code>{`/api/v1/subscribers/pool`}</code></h2>
 <p>Live pool snapshot including waiting context IDs.</p>
 <CodeBlock lang="http" code={`GET /api/v1/subscribers/pool
 Authorization: Bearer <token>`} />
@@ -72,7 +71,7 @@ Authorization: Bearer <token>`} />
   "waiting": 3,
   "waiting_context_ids": ["<uuid>", "<uuid>", "<uuid>"]
 }`} />
-<h2 id="post-apiv1subscribers">POST /api/v1/subscribers</h2>
+<h2 id="post-apiv1subscribers" className="flex items-center gap-2"><HttpMethod method="POST" /><code>{`/api/v1/subscribers`}</code></h2>
 <p>Create one.</p>
 <CodeBlock lang="http" code={`POST /api/v1/subscribers
 Authorization: Bearer <token>
@@ -103,7 +102,7 @@ Content-Type: application/json
 <tbody><tr><td>400</td><td>Invalid SUPI format, key/opc not hex, etc.</td></tr>
 <tr><td>409</td><td>SUPI already exists</td></tr></tbody>
 </table>
-<h2 id="post-apiv1subscribersimport">POST /api/v1/subscribers/import</h2>
+<h2 id="post-apiv1subscribersimport" className="flex items-center gap-2"><HttpMethod method="POST" /><code>{`/api/v1/subscribers/import`}</code></h2>
 <p>Bulk import from a YAML body — same schema as the CLI's <code>{`-s &lt;file&gt;`}</code>.</p>
 <CodeBlock lang="http" code={`POST /api/v1/subscribers/import
 Authorization: Bearer <token>
@@ -118,17 +117,17 @@ Content-Type: application/json
   "updated": 5
 }`} />
 <p>Existing entries with the same SUPI are updated in place; new ones are inserted.</p>
-<h2 id="delete-apiv1subscribers">DELETE /api/v1/subscribers</h2>
+<h2 id="delete-apiv1subscribers" className="flex items-center gap-2"><HttpMethod method="DELETE" /><code>{`/api/v1/subscribers`}</code></h2>
 <p>Delete every unlocked subscriber. Locked rows are preserved so in-flight executions don't break.</p>
 <CodeBlock lang="http" code={`DELETE /api/v1/subscribers
 Authorization: Bearer <token>`} />
 <h3 id="response-5">Response</h3>
 <CodeBlock lang="json" code={`{ "deleted": 88, "skipped_locked": 12 }`} />
-<h2 id="get-apiv1subscribers123id125">GET /api/v1/subscribers/&#123;id&#125;</h2>
+<h2 id="get-apiv1subscribers123id125" className="flex items-center gap-2"><HttpMethod method="GET" /><code>{`/api/v1/subscribers/&#123;id&#125;`}</code></h2>
 <CodeBlock lang="http" code={`GET /api/v1/subscribers/1
 Authorization: Bearer <token>`} />
 <p>The <code>{`{id}`}</code> is the numeric primary key, not the SUPI. Use the list view's <code>{`search`}</code> to find one by SUPI first.</p>
-<h2 id="put-apiv1subscribers123id125">PUT /api/v1/subscribers/&#123;id&#125;</h2>
+<h2 id="put-apiv1subscribers123id125" className="flex items-center gap-2"><HttpMethod method="PUT" /><code>{`/api/v1/subscribers/&#123;id&#125;`}</code></h2>
 <p>Update. Same body shape as POST.</p>
 <h3 id="errors-2">Errors</h3>
 <table>
@@ -136,7 +135,7 @@ Authorization: Bearer <token>`} />
 <tbody><tr><td>404</td><td>Not found</td></tr>
 <tr><td>409</td><td>Subscriber is locked (release it before updating)</td></tr></tbody>
 </table>
-<h2 id="delete-apiv1subscribers123id125">DELETE /api/v1/subscribers/&#123;id&#125;</h2>
+<h2 id="delete-apiv1subscribers123id125" className="flex items-center gap-2"><HttpMethod method="DELETE" /><code>{`/api/v1/subscribers/&#123;id&#125;`}</code></h2>
 <p>Delete one. Must be unlocked.</p>
 <CodeBlock lang="http" code={`DELETE /api/v1/subscribers/1
 Authorization: Bearer <token>`} />

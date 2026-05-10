@@ -1,12 +1,9 @@
 import DocPage from '../../components/DocPage';
 import CodeBlock from '../../components/CodeBlock';
-import { Link } from 'react-router-dom';
 
 export default function SuiteSchema() {
   return (
-    <DocPage slug="reference/suite-schema">
-<h1>Suite schema reference</h1>
-<p>Authoritative schema for <code>{`kind: suite`}</code> YAML. Suites compose flows into ordered, serial runs. For prose, see <Link to="/guides/writing">writing-suites</Link>.</p>
+    <DocPage slug="reference/suite-schema" lede="Authoritative schema for kind: suite YAML. Suites compose flows into ordered, serial runs. For prose, see writing-suites.">
 <h2 id="synopsis">Synopsis</h2>
 <CodeBlock lang="yaml" code={`kind: suite
 name: gnb-register-deregister

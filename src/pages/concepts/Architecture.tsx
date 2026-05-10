@@ -3,9 +3,7 @@ import Mermaid from '../../components/Mermaid';
 
 export default function Architecture() {
   return (
-    <DocPage slug="concepts/architecture">
-<h1>Architecture</h1>
-<p>Where fluxproto-light sits, what the binary contains, and how the two deployment modes (CLI vs daemon) relate.</p>
+    <DocPage slug="concepts/architecture" lede="Where fluxproto-light sits, what the binary contains, and how the two deployment modes (CLI vs daemon) relate.">
 <h2 id="system-shape">System shape</h2>
 <Mermaid code={`graph LR
   CI[CI agent / engineer] -- HTTP / CLI --> FPL[fluxproto-light]

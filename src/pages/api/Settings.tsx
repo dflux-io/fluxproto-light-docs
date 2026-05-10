@@ -1,18 +1,17 @@
 import DocPage from '../../components/DocPage';
+import HttpMethod from '../../components/HttpMethod';
 import CodeBlock from '../../components/CodeBlock';
 
 export default function ApiSettings() {
   return (
-    <DocPage slug="api/settings">
-<h1>Settings</h1>
-<p>Runtime tuning. Persisted to the DB so values survive daemon restarts. <code>{`GET`}</code> is open to any authenticated user; <code>{`PUT`}</code> requires <code>{`role: admin`}</code>.</p>
+    <DocPage slug="api/settings" lede="Runtime tuning. Persisted to the DB so values survive daemon restarts. GET is open to any authenticated user; PUT requires role: admin.">
 <h2 id="endpoints">Endpoints</h2>
 <table>
 <thead><tr><th>Method</th><th>Path</th><th>Auth</th><th>Description</th></tr></thead>
 <tbody><tr><td>GET</td><td><code>{`/api/v1/settings`}</code></td><td>bearer</td><td>Read all runtime settings</td></tr>
 <tr><td>PUT</td><td><code>{`/api/v1/settings`}</code></td><td>admin</td><td>Update one or more settings</td></tr></tbody>
 </table>
-<h2 id="get-apiv1settings">GET /api/v1/settings</h2>
+<h2 id="get-apiv1settings" className="flex items-center gap-2"><HttpMethod method="GET" /><code>{`/api/v1/settings`}</code></h2>
 <CodeBlock lang="http" code={`GET /api/v1/settings
 Authorization: Bearer <token>`} />
 <h3 id="response">Response</h3>
@@ -24,7 +23,7 @@ Authorization: Bearer <token>`} />
   "default_workload_max_rate": 100
 }`} />
 <p>The exact set of keys is the runtime-settings registry — additions are non-breaking. Each key is documented in <code>{`fpl/settings.go`}</code>.</p>
-<h2 id="put-apiv1settings">PUT /api/v1/settings</h2>
+<h2 id="put-apiv1settings" className="flex items-center gap-2"><HttpMethod method="PUT" /><code>{`/api/v1/settings`}</code></h2>
 <p>Update. Body is a partial map — only provided keys are changed.</p>
 <CodeBlock lang="http" code={`PUT /api/v1/settings
 Authorization: Bearer <token>

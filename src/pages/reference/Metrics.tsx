@@ -4,9 +4,7 @@ import { Link } from 'react-router-dom';
 
 export default function Metrics() {
   return (
-    <DocPage slug="reference/metrics">
-<h1>Metrics reference</h1>
-<p>Every Prometheus metric the daemon exposes on <code>{`/metrics`}</code>. The endpoint binds on <code>{`-metrics_port &lt;port&gt;`}</code> (default off) over a separate listener — set <code>{`-metrics_port 9090`}</code> to enable. The <code>{`process_*`}</code> and <code>{`go_*`}</code> collectors from the standard <code>{`prometheus/client_golang`}</code> library are also registered.</p>
+    <DocPage slug="reference/metrics" lede="Every Prometheus metric the daemon exposes on /metrics. The endpoint binds on -metrics_port <port> (default off) over a separate listener — set -metrics_port 9090 to enable. The process_* and go_* collectors from the standard prometheus/client_golang library are also registered.">
 <p>For prose on enabling metrics, see <Link to="/guides/daemon">daemon-mode</Link>.</p>
 <h2 id="synopsis">Synopsis</h2>
 <CodeBlock lang="bash" code={`fluxproto-light -port 8199 -metrics_port 9090
