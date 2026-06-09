@@ -4,8 +4,9 @@ import { Link } from 'react-router-dom';
 
 export default function Writing() {
   return (
-    <DocPage slug="guides/writing" lede="Flows are YAML files with kind: flow describing a finite-state machine for one protocol procedure. The engine drives the FSM per UE, dispatching transitions on inbound events (RX messages) and the synthetic Start event. This guide walks through the pieces of a flow YAML and what each one does. For exhaustive field tables, see reference/flow-schema.md.">
+    <DocPage slug="guides/writing" lede="Flows are YAML files with kind: flow describing a finite-state machine for one protocol procedure. The engine drives the FSM per UE, dispatching transitions on inbound events (RX messages) and the synthetic Start event. The first half of this guide walks through the pieces of a flow YAML and what each one does; the second half covers writing suites that chain flows into one cycle. For exhaustive field tables, see the flow schema and suite schema references.">
 <h2 id="flow-anatomy">Flow anatomy</h2>
+<p>Every shipped flow and suite this guide cites lives in the public <a href="https://github.com/dflux-io/fluxproto-light-templates">templates repository</a> — open it to copy-edit a canonical example rather than starting from scratch. For the conceptual model behind the pieces below, see <Link to="/concepts/flows/states">states and transitions</Link> and <Link to="/concepts/flows/actions">actions and checks</Link>.</p>
 <p>Every flow has the same top-level shape:</p>
 <CodeBlock lang="yaml" code={`kind: flow
 name: <unique flow name>
@@ -86,11 +87,11 @@ any_state_transitions: [...]`} />
       "ue_context_request": 1
     }`} />
 <h3 id="check"><code>{`check`}</code></h3>
-<p>Assert a field on the most recent inbound message (or <code>{`ue.&lt;path&gt;`}</code> against UE context). Eight comparison ops: <code>{`equals`}</code>, <code>{`not_empty`}</code>, <code>{`greater_than`}</code>, <code>{`less_than`}</code>, <code>{`greater_or_equal`}</code>, <code>{`less_or_equal`}</code>, <code>{`contains`}</code>, <code>{`exists`}</code>. A failed check aborts the transition; the FSM stays in the current state and either receives a later matching event or hits <code>{`on_timeout`}</code>.</p>
+<p>Assert a field on the most recent inbound message (or <code>{`ue.&lt;path&gt;`}</code> against UE context). Nine comparison ops: <code>{`equals`}</code>, <code>{`not_empty`}</code>, <code>{`greater_than`}</code>, <code>{`less_than`}</code>, <code>{`greater_or_equal`}</code>, <code>{`less_or_equal`}</code>, <code>{`contains`}</code>, <code>{`not_contains`}</code>, <code>{`exists`}</code>. A failed check aborts the transition; the FSM stays in the current state and either receives a later matching event or hits <code>{`on_timeout`}</code>.</p>
 <CodeBlock lang="yaml" code={`- type: check
   field: ue.AmfUeNgapId
   op: not_empty`} />
-<p>Checks must come before any <code>{`send`}</code> in a transition.</p>
+<p>You don't need to order checks before sends in the YAML. The engine runs every non-send action (checks, extracts, and the rest) in declared order first, then dispatches all the transition's sends together as one burst — so a check always evaluates before any message goes on the wire, regardless of where you place it.</p>
 <h3 id="extract"><code>{`extract`}</code></h3>
 <p>Read a field off the most recent inbound message and store it in <code>{`ue.Params[&lt;store key&gt;]`}</code> for later use. Two forms:</p>
 <CodeBlock lang="yaml" code={`- type: extract
@@ -104,7 +105,7 @@ any_state_transitions: [...]`} />
 <h3 id="uplane_start"><code>{`uplane_start`}</code></h3>
 <p>Arm the user-plane traffic generator after the NGAP send that surfaced the UPF tunnel parameters. The parameters come from the gNB's <code>{`uplane:`}</code> config block and the inbound <code>{`PduSessionResourceSetupRequest`}</code>.</p>
 <CodeBlock lang="yaml" code={`- type: uplane_start`} />
-<p>See <Link to="/guides/user-plane-testing">user-plane-testing</Link> and the shipped <code>{`templates/gnb/uplane_traffic.yaml`}</code>.</p>
+<p>See <Link to="/guides/user-plane-testing">user-plane testing</Link> and the shipped <code>{`templates/gnb/uplane_traffic.yaml`}</code>.</p>
 <h3 id="ngap_realloc"><code>{`ngap_realloc`}</code></h3>
 <p>NGAP-only. Reallocate the <code>{`RAN-UE-NGAP-ID`}</code> on the same gNB before the next send. Used in stress flows to verify AMF tracking when the gNB renumbers a UE.</p>
 <h3 id="ngap_handover_swap"><code>{`ngap_handover_swap`}</code></h3>
@@ -119,6 +120,7 @@ any_state_transitions: [...]`} />
 <tr><td><code>{`greater_or_equal`}</code></td><td>Field ≥ <code>{`expected:`}</code></td></tr>
 <tr><td><code>{`less_or_equal`}</code></td><td>Field ≤ <code>{`expected:`}</code></td></tr>
 <tr><td><code>{`contains`}</code></td><td>Field's string form contains <code>{`expected:`}</code> substring</td></tr>
+<tr><td><code>{`not_contains`}</code></td><td>Field's string form does NOT contain <code>{`expected:`}</code> substring (passes vacuously when the field is absent)</td></tr>
 <tr><td><code>{`exists`}</code></td><td>Field resolves (regardless of value)</td></tr></tbody>
 </table>
 <h2 id="template-expressions">Template expressions</h2>
@@ -140,18 +142,19 @@ params:
 <li>PFCP: 10 (Heartbeat, AssociationSetup, SessionEstablishment, SessionModification, SessionDeletion — request and response each)</li>
 <li>REST: generic — flow authors declare arbitrary message names inline; one shipped enricher (<code>{`EnrichRESTGeneric`}</code>) sends/receives the JSON body verbatim.</li>
 </ul>
-<p>The full list is in <Link to="/reference/flow-schema#enricher-catalog">reference/flow-schema.md</Link>.</p>
+<p>The full list is in the <Link to="/reference/flow-schema#enricher-catalog">flow schema reference</Link>.</p>
 <h2 id="client-vs-server-flows">Client vs server flows</h2>
 <p><code>{`type: client`}</code> flows have a <code>{`Start`}</code> event transition out of <code>{`initial_state`}</code>. The engine fires <code>{`Start`}</code> per UE; the first <code>{`send`}</code> action emits the procedure's first message.</p>
 <p><code>{`type: server`}</code> flows have no <code>{`Start`}</code> — they auto-spawn when an inbound demux matches a registered server-mode message at <code>{`initial_state`}</code>. There must be at least one transition at <code>{`initial_state`}</code> whose event matches an inbound RX message. The shipped <code>{`templates/amf/registration_amf.yaml`}</code>, <code>{`templates/sbi/nudm_sdm_get_server.yaml`}</code>, and <code>{`templates/rest/fgp_admin_server.yaml`}</code> are the canonical examples.</p>
-<h2 id="troubleshooting">Troubleshooting</h2>
+<h2 id="troubleshooting-flows">Troubleshooting flows</h2>
 <p><strong><code>{`unknown enricher &quot;X&quot;`}</code> at flow load</strong> — the <code>{`message:`}</code> value doesn't match any registered enricher name. Check the enricher catalog for the exact spelling; for REST, server-side flows reference enrichers registered at flow-load time via <code>{`RegisterRESTMessage`}</code>.</p>
 <p><strong><code>{`event must be a string or {and: [...]} or {or: [...]}`}</code></strong> — your <code>{`event:`}</code> field is malformed. Use one of the three documented forms.</p>
 <p><strong><code>{`state X has no transitions and is not a final state`}</code></strong> — every non-terminal state needs at least one transition (or <code>{`on_timeout`}</code>).</p>
 <p><strong><code>{`client FSM must have a transition matching &quot;Start&quot;`}</code></strong> — client flows must dispatch on the synthetic <code>{`Start`}</code> event from <code>{`initial_state`}</code>.</p>
 <p><strong><code>{`server FSM must not have a transition matching &quot;Start&quot;`}</code></strong> — server flows are reactive. Drop the <code>{`Start`}</code> transition.</p>
 <p><strong>Check fails but trace shows the field is set</strong> — <code>{`field:`}</code> paths are case-sensitive. NGAP fields use lowercase-with-underscores (<code>{`amf_ue_ngap_id`}</code>); UE-context fields are PascalCase prefixed with <code>{`ue.`}</code> (<code>{`ue.AmfUeNgapId`}</code>).</p>
-<p>A suite is a YAML file with <code>{`kind: suite`}</code> that orders a list of flow steps into one cycle. Each step runs its referenced flow with its own workload before the next step starts; subscribers are not shared across steps. Suites are strictly serial in v1 — no <code>{`rate:`}</code> at the suite level. This guide covers the YAML shape and the runner semantics.</p>
+<h2 id="writing-suites">Writing suites</h2>
+<p>A suite is a YAML file with <code>{`kind: suite`}</code> that orders a list of flow steps into one cycle. Each step runs its referenced flow with its own workload before the next step starts; subscribers are not shared across steps. Suites are strictly serial in v1 — no <code>{`rate:`}</code> at the suite level. The rest of this guide covers the YAML shape and the runner semantics. For the full field tables, see the <Link to="/reference/suite-schema">suite schema</Link>.</p>
 <h2 id="suite-anatomy">Suite anatomy</h2>
 <CodeBlock lang="yaml" code={`kind: suite
 name: <unique suite name>
@@ -246,10 +249,16 @@ fluxproto-light report show-suite <suite-execution-id>`} />
 <li><code>{`step %q: rate must be &gt;= 0`}</code> — rates and durations cannot be negative.</li>
 </ul>
 <p>Step-level flow names are not resolved at suite-load time — they're resolved lazily by the runner against the DB-backed catalog. A suite that references a missing flow loads cleanly but fails at run time with <code>{`flow %q not found`}</code>.</p>
-<h2 id="troubleshooting-2">Troubleshooting</h2>
+<h2 id="troubleshooting-suites">Troubleshooting suites</h2>
 <p><strong>Step skipped after a prior failure</strong> — that's <code>{`stop_on_failure: true`}</code> (the default) doing its job. Either set it to <code>{`false`}</code> on the upstream step or mark the cleanup step <code>{`always_run: true`}</code>.</p>
 <p><strong>Subscribers exhausted between steps</strong> — every step takes its own batch from the pool. Provision enough subscribers for the largest step (or use <code>{`gen_subscriber: true`}</code> to synthesize per-UE subscribers in memory).</p>
 <p><strong><code>{`-rate is not supported for run-suite`}</code></strong> — suites are serial. Move the rate into a per-step <code>{`rate:`}</code> field.</p>
+<h2 id="where-to-go-next">Where to go next</h2>
+<ul>
+<li><Link to="/guides/running">Running flows and suites</Link> — execute what you just wrote.</li>
+<li><Link to="/reference/flow-schema">Flow schema</Link> and <Link to="/reference/suite-schema">suite schema</Link> — exhaustive field tables.</li>
+<li><a href="https://github.com/dflux-io/fluxproto-light-templates">Templates repository</a> — copy-edit the canonical shipped flows and suites.</li>
+</ul>
     </DocPage>
   );
 }

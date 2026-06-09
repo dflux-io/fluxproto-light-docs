@@ -10,3 +10,6 @@ dist/
 public/search-index.json
 public/sitemap.xml
 public/robots.txt
+
+# stray SQLite the binary drops when generating the catalog
+fpl.db

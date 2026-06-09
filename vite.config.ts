@@ -8,9 +8,16 @@ export default defineConfig({
     // reachable from other machines on the LAN. Override per-run with
     // `--host <specific-ip>` if you need to bind to one NIC.
     host: true,
+    // Dedicated port so this docs site never collides with the default
+    // 5173 used by sibling projects. strictPort fails loudly instead of
+    // silently hopping to the next free port. Override with `--port`.
+    port: 5180,
+    strictPort: true,
   },
   preview: {
     host: true,
+    port: 5181,
+    strictPort: true,
   },
   build: {
     outDir: 'dist',

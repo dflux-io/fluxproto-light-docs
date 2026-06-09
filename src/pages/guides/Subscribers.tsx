@@ -1,10 +1,12 @@
 import DocPage from '../../components/DocPage';
 import CodeBlock from '../../components/CodeBlock';
+import Callout from '../../components/Callout';
 import { Link } from 'react-router-dom';
 
 export default function Subscribers() {
   return (
-    <DocPage slug="guides/subscribers" lede="A subscriber is one UE identity — SUPI, K, OPC, SQN, SNN, ciphering and integrity algorithms. NGAP/NAS authentication consumes them; Diameter S6a / Gx flows reuse the same pool, with the request enrichers reading imsi for User-Name (S6a) or Subscription-Id-Data (Gx) and falling back to UE-stable synthetic IDs when an entry doesn't carry an explicit IMSI. This guide covers provisioning, generation, the runtime pool, and listing/purging against Open5GS.">
+    <DocPage slug="guides/subscribers" lede="A subscriber is one UE identity — SUPI, K, OPC, SQN, SNN, plus ciphering and integrity algorithms. NGAP/NAS authentication consumes these credentials, and Diameter S6a / Gx flows reuse the same pool. This guide is the recipe for working with subscribers: generate, provision, list, and purge. For the model behind the pool, see the concept page.">
+<Callout type="note">For how subscribers map to UEs and how the pool serialises identities across executions, read <Link to="/concepts/subscribers">Subscribers</Link>. This page is the practical recipe.</Callout>
 <h2 id="three-ways-to-provide-subscribers">Three ways to provide subscribers</h2>
 <ol>
 <li><strong>Generate to YAML</strong> (<code>{`subscriber generate`}</code>) — synthesize random credentials, write to a YAML file you can commit or hand to a core network's provisioning UI.</li>
@@ -49,7 +51,7 @@ subscribers:
 <tr><td><code>{`-integrity &lt;alg&gt;`}</code></td><td>NIA2</td><td>NIA0 / NIA1 / NIA2 / NIA3</td></tr>
 <tr><td><code>{`-o &lt;path&gt;`}</code></td><td>subscribers.yaml</td><td>Output path</td></tr></tbody>
 </table>
-<p>K and OPC are 16 random bytes each, hex-encoded. The MSIN sequence is deterministic (start + offset), so you can regenerate the same set with the same flags.</p>
+<p>The MSIN sequence is deterministic — it counts up from <code>{`-start-msin`}</code>, so the same flags always produce the same SUPI/IMSI set. K and OPC are different: each is 16 fresh random bytes per row, generated on every invocation. Re-running with identical flags yields the same identities but new keys, so generate once and commit the output if you need a stable credential set.</p>
 <h2 id="subscriber-provision"><code>{`subscriber provision`}</code></h2>
 <p>Push a YAML file into an Open5GS WebUI:</p>
 <CodeBlock lang="bash" code={`fluxproto-light subscriber provision \\
@@ -70,7 +72,7 @@ fluxproto-light subscriber purge -host <ip> -port 9999 -user admin -pass <pwd> -
 <CodeBlock lang="bash" code={`fluxproto-light run-flow -flow registration \\
     -templates templates -c config/lab.yaml \\
     -gen-subscriber -repetitions 100`} />
-<p>The engine synthesizes a fresh <code>{`SubscriberEntity`}</code> per UE in memory. No DB writes, no pool contention. The pool-empty fail-fast guard is bypassed and <code>{`SubscriberPool.Release`}</code> is skipped at cleanup.</p>
+<p>The engine synthesizes a fresh subscriber per UE in memory. <code>{`-gen-subscriber`}</code> needs no DB and never blocks on the pool — there is nothing to acquire or release.</p>
 <p>This works only when the AMF doesn't actually validate the auth challenge — lab AMFs, dev proxies, or any FSM that fails before reaching authentication. Real AMFs reject auth attempts because they have no row for the SUPI.</p>
 <h2 id="the-pool-observable-behaviour">The pool — observable behaviour</h2>
 <p>When real subscribers are loaded, the engine acquires through the in-process <code>{`SubscriberPool`}</code> rather than touching the DB directly. Observable behaviour:</p>
@@ -79,15 +81,20 @@ fluxproto-light subscriber purge -host <ip> -port 9999 -user admin -pass <pwd> -
 <li><strong>Acquirers block when the pool is empty.</strong> A call that can't get a free subscriber waits on a FIFO queue. Default wait: 5 seconds, capped at the engine's per-flow timeout.</li>
 <li><strong>Drain on shutdown.</strong> When the daemon shuts down, every in-flight Acquire wakes up with <code>{`ErrPoolDraining`}</code> so requests fail fast instead of timing out behind a closing listener.</li>
 </ul>
-<p>The pool is in-memory and per-process. Two daemons sharing one Postgres DB don't share an in-process queue, but their DB-level locks still serialise lookups (the repo path is atomic).</p>
-<h2 id="pool-stats">Pool stats</h2>
-<p>The daemon exposes pool stats on the <code>{`/status`}</code> endpoint, plus Prometheus collectors for total / locked / waiting and an acquire histogram (see <Link to="/reference/metrics">reference/metrics.md</Link>).</p>
+<p>The pool is in-memory and per-process. The backing store defaults to SQLite at <code>{`./fpl.db`}</code> (set <code>{`-db`}</code> or the <code>{`FPL_DB`}</code> environment variable to point elsewhere); Postgres is an opt-in alternative. Two daemons sharing one database don't share an in-process queue, but their database-level locks still serialise lookups, so the same subscriber is never handed to two executions at once.</p>
+<p>The daemon also exposes pool stats. Query <code>{`/api/v1/status`}</code> for a snapshot, or scrape the Prometheus collectors for total / locked / waiting counts and an acquire-latency histogram — see <Link to="/reference/metrics">Metrics</Link>.</p>
 <h2 id="troubleshooting">Troubleshooting</h2>
-<p><strong><code>{`ErrPoolEmpty`}</code></strong> — no subscribers in the DB and <code>{`-gen-subscriber`}</code> not set. Provision via <code>{`-s &lt;file&gt;`}</code>.</p>
-<p><strong>Acquire timeouts under load</strong> — pool is too small for the workload. Either increase the pool size (provision more subscribers) or reduce <code>{`-rate`}</code>.</p>
+<p><strong><code>{`no subscribers configured — add at least one subscriber before executing`}</code></strong> — the pool is empty and <code>{`-gen-subscriber`}</code> is not set. Load a subscribers file into the pool with <code>{`-s &lt;file&gt;`}</code> (this is fluxproto-light's own DB-backed pool — distinct from <code>{`subscriber provision`}</code>, which writes to the Open5GS WebUI), or add <code>{`-gen-subscriber`}</code> for in-memory UEs.</p>
+<p><strong>Acquire timeouts under load</strong> (<code>{`ErrPoolTimeout`}</code>) — the pool is too small for the workload, so executions wait past the acquire deadline. Either load more subscribers or reduce <code>{`-rate`}</code>.</p>
 <p><strong>Open5GS WebUI returns 401</strong> — wrong <code>{`-user`}</code>/<code>{`-pass`}</code>. The defaults match a stock Open5GS install; production deployments should change them.</p>
 <p><strong>SUPI rejected at auth</strong> — the K/OPC in fluxproto's YAML doesn't match what's provisioned in the AMF/HSS. Re-provision or regenerate; the values must match exactly.</p>
-<p><strong>Synthetic-IMSI Diameter requests</strong> — when a subscriber has no <code>{`imsi`}</code> field, the Diameter enrichers fall back to a UE-stable synthetic identifier so load tests can run without populating IMSI per row.</p>
+<p><strong>Synthetic-IMSI Diameter requests</strong> — when a subscriber has no <code>{`imsi`}</code> field, the Diameter S6a / Gx enrichers fall back to a UE-stable synthetic identifier (used for User-Name on S6a and Subscription-Id-Data on Gx) so load tests can run without populating IMSI per row.</p>
+<h2 id="where-to-go-next">Where to go next</h2>
+<ul>
+<li><Link to="/concepts/subscribers">Subscribers</Link> — the model behind the pool and how identities map to UEs.</li>
+<li><Link to="/guides/running">Running flows and suites</Link> — wire <code>{`-s`}</code> and <code>{`-gen-subscriber`}</code> into a run.</li>
+<li><Link to="/reference/cli">CLI reference</Link> — every <code>{`subscriber`}</code> subcommand flag in one place.</li>
+</ul>
     </DocPage>
   );
 }

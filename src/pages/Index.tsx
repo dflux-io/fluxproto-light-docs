@@ -3,20 +3,21 @@ import { Sparkles } from 'lucide-react';
 import DocPage from '../components/DocPage';
 import SectionCard from '../components/SectionCard';
 import { sectionMeta } from '../manifest';
+import { catalogSummary } from '../generated/catalogSummary';
 
 export default function Index() {
   const sections: { to: string; group: string; title: string; description: string }[] = [
     {
       to: '/introduction',
-      group: 'Introduction',
+      group: 'Get started',
       title: 'Start here',
-      description: 'What fluxproto-light is, when to pick it, and how to run your first flow in 10 minutes.',
+      description: 'What fluxproto-light is, when to pick it, and how to run your first flow in ten minutes.',
     },
     {
       to: '/concepts/architecture',
       group: 'Concepts',
       title: 'Mental model',
-      description: 'Flows, suites, environments, NF roles. Read these to understand the model behind the tool.',
+      description: 'Flows, suites, environments, NF roles. Read these to understand the model behind the engine.',
     },
     {
       to: '/tutorials/first-yaml-flow',
@@ -26,19 +27,19 @@ export default function Index() {
     },
     {
       to: '/guides/writing',
-      group: 'Guides',
+      group: 'How-to guides',
       title: 'How-tos',
-      description: 'Recipes for everyday tasks: writing flows, configuring envs, running suites in CI.',
+      description: 'Recipes for everyday tasks: writing flows, configuring environments, running suites in CI.',
     },
     {
       to: '/reference/cli',
       group: 'Reference',
       title: 'Look it up',
-      description: 'Authoritative schemas — every CLI flag, every YAML field, every metric, every flow.',
+      description: 'Authoritative references — every CLI flag, every YAML field, every metric, every flow.',
     },
     {
       to: '/api/overview',
-      group: 'API',
+      group: 'HTTP API',
       title: 'REST API',
       description: 'The daemon\'s HTTP surface. Drive runs, browse reports, manage schedules from any client.',
     },
@@ -56,9 +57,9 @@ export default function Index() {
           5G/4G protocol load &amp; conformance tester
         </h1>
         <p className="mt-3 max-w-2xl text-base leading-relaxed text-ink-muted">
-          One Go binary that drives NGAP, Diameter, SBI, REST, and PFCP from declarative YAML
-          flow definitions. Run conformance tests in CI or stand up a continuous test plane
-          with the embedded daemon.
+          One Go binary that drives NGAP, Diameter, SBI, REST, and PFCP signalling — plus GTP-U
+          user-plane traffic — from declarative YAML flows. Run conformance tests in CI or stand
+          up a continuous test plane with the embedded daemon.
         </p>
         <div className="mt-5 flex flex-wrap gap-2 text-sm">
           <Link
@@ -93,9 +94,13 @@ export default function Index() {
         })}
       </div>
 
-      {/* Latest release */}
+      {/* Catalog stat */}
       <p className="not-prose mt-10 text-xs text-ink-subtle">
-        Latest release: <code className="rounded bg-surface-muted px-1.5 py-0.5 font-mono text-[11px] text-ink-muted">20260509-1822-2148cf89</code>
+        Ships with{' '}
+        <Link to="/reference/catalogs" className="text-ink-muted hover:text-ink">
+          {catalogSummary.totals.flows} ready-to-run flows and {catalogSummary.totals.suites} suites
+        </Link>{' '}
+        across NGAP, Diameter, SBI, REST, and PFCP.
       </p>
     </DocPage>
   );

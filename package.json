@@ -5,14 +5,17 @@
   "type": "module",
   "description": "Documentation site for fluxproto-light. React + TypeScript + Tailwind. Pages authored as JSX.",
   "scripts": {
-    "dev": "node scripts/build-search-index.mjs && node scripts/build-sitemap.mjs && vite",
-    "build": "node scripts/build-search-index.mjs && node scripts/build-sitemap.mjs && tsc -b && vite build",
+    "dev": "node scripts/build-catalog.mjs && node scripts/build-search-index.mjs && node scripts/build-sitemap.mjs && vite",
+    "build": "node scripts/build-catalog.mjs && node scripts/build-search-index.mjs && node scripts/build-sitemap.mjs && tsc -b && vite build",
     "preview": "vite preview",
     "typecheck": "tsc -b --noEmit",
+    "build:catalog": "node scripts/build-catalog.mjs",
     "build:search": "node scripts/build-search-index.mjs",
     "build:sitemap": "node scripts/build-sitemap.mjs"
   },
   "dependencies": {
+    "@fontsource-variable/geist": "^5.2.9",
+    "@fontsource-variable/geist-mono": "^5.2.8",
     "highlight.js": "^11.10.0",
     "lucide-react": "^1.14.0",
     "mermaid": "^11.4.1",

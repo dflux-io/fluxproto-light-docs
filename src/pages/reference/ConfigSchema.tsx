@@ -1,9 +1,11 @@
+import { Link } from 'react-router-dom';
 import DocPage from '../../components/DocPage';
 import CodeBlock from '../../components/CodeBlock';
 
 export default function ConfigSchema() {
   return (
-    <DocPage slug="reference/config-schema" lede="Authoritative schema for env YAMLs (e.g. config/lab.yaml). For prose, see configuring-environments.">
+    <DocPage slug="reference/config-schema" lede="Authoritative schema for the environment YAML (e.g. config/lab.yaml).">
+<p>The environment YAML is the file you pass with <code>{`-c`}</code> (sometimes called the config). It declares the network functions under test, the wire stacks they speak, and how each connects to its peers. For the narrative walkthrough, see <Link to="/guides/configuring-environments">Configuring environments</Link>; for the message bodies that flows send over these transports, see the <Link to="/reference/flow-schema">flow schema</Link>.</p>
 <h2 id="synopsis">Synopsis</h2>
 <CodeBlock lang="yaml" code={`nfs:
   - name: GNBENF
@@ -29,8 +31,8 @@ diameter_dictionary_path: config/diameter/custom_dict.xml`} />
 <table>
 <thead><tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
 <tbody><tr><td><code>{`name`}</code></td><td>string</td><td>yes</td><td>Unique within the env</td></tr>
-<tr><td><code>{`role`}</code></td><td>enum</td><td>yes</td><td><code>{`gnb`}</code>, <code>{`amf`}</code>, <code>{`smf`}</code>, <code>{`ausf`}</code>, <code>{`udm`}</code>, <code>{`pcf`}</code>, <code>{`nrf`}</code>, <code>{`upf`}</code>, <code>{`mme`}</code>, <code>{`pgw`}</code>, <code>{`af`}</code>, <code>{`external`}</code></td></tr>
-<tr><td><code>{`plmn`}</code></td><td>PLMN</td><td>no</td><td><code>{`{ mcc, mnc }`}</code></td></tr>
+<tr><td><code>{`role`}</code></td><td>enum</td><td>yes</td><td><code>{`gnb`}</code>, <code>{`amf`}</code>, <code>{`smf`}</code>, <code>{`ausf`}</code>, <code>{`udm`}</code>, <code>{`pcf`}</code>, <code>{`nrf`}</code>, <code>{`upf`}</code>, <code>{`mme`}</code>, <code>{`pgw`}</code>, <code>{`af`}</code>, <code>{`pcrf`}</code>, <code>{`external`}</code></td></tr>
+<tr><td><code>{`plmn`}</code></td><td>PLMN</td><td>role-specific</td><td><code>{`{ mcc, mnc }`}</code>. Required for Diameter roles (<code>{`mme`}</code>, <code>{`pgw`}</code>, <code>{`af`}</code>, <code>{`pcrf`}</code>): both <code>{`mcc`}</code> and <code>{`mnc`}</code> must be set or config load fails. Optional for other roles.</td></tr>
 <tr><td><code>{`transport`}</code></td><td>string</td><td>no</td><td>Transport ID this NF uses</td></tr>
 <tr><td><code>{`gnb`}</code></td><td>GNBProperties</td><td>role-specific</td><td>Set when <code>{`role: gnb`}</code></td></tr>
 <tr><td><code>{`amf`}</code></td><td>AMFProperties</td><td>role-specific</td><td>Set when <code>{`role: amf`}</code></td></tr></tbody>
@@ -54,7 +56,7 @@ diameter_dictionary_path: config/diameter/custom_dict.xml`} />
 <tbody><tr><td><code>{`global_id`}</code></td><td>GlobalID</td><td>yes</td><td>gNB identity advertised in NGSetupRequest</td></tr>
 <tr><td><code>{`global_id.plmn`}</code></td><td>PLMN</td><td>yes</td><td>gNB PLMN</td></tr>
 <tr><td><code>{`global_id.gnb_id`}</code></td><td>string</td><td>yes</td><td>gNB ID (decimal or hex string)</td></tr>
-<tr><td><code>{`global_id.bit_length`}</code></td><td>int</td><td>yes</td><td>22, 24, 28, or 32</td></tr>
+<tr><td><code>{`global_id.bit_length`}</code></td><td>int</td><td>yes</td><td>gNB ID bit length, typically 22, 24, 28, or 32</td></tr>
 <tr><td><code>{`supported_tas`}</code></td><td>[]SupportedTA</td><td>yes</td><td>TAC + PLMNs + slices</td></tr>
 <tr><td><code>{`supported_tas[].tac`}</code></td><td>int</td><td>yes</td><td>Tracking Area Code</td></tr>
 <tr><td><code>{`supported_tas[].plmns[].plmn`}</code></td><td>PLMN</td><td>yes</td><td>PLMN within the TA</td></tr>

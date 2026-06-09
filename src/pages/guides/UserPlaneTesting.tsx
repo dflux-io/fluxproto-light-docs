@@ -1,17 +1,18 @@
+import { Link } from 'react-router-dom';
 import DocPage from '../../components/DocPage';
 import CodeBlock from '../../components/CodeBlock';
 
 export default function UserPlaneTesting() {
   return (
-    <DocPage slug="guides/user-plane-testing" lede="GTP-U user-plane testing is separate from signalling. Once a UE has its PDU session established (via the NGAP pdu_session_setup flow), the gNB can drive real IP traffic through the UPF on N3 (3GPP TS 29.281) and measure throughput, latency, jitter, and drop. fluxproto-light has two user-plane backends — userspace kernel sockets for portability, DPDK for line-rate. This guide covers both.">
+    <DocPage slug="guides/user-plane-testing" lede="User-plane testing is separate from signalling. Once a UE has its PDU session established, the gNB drives real IP traffic through the UPF on N3 and measures throughput, latency, jitter, and drop. fluxproto-light has two user-plane receiver backends: userspace kernel sockets for portability, and DPDK for line rate. This guide covers both.">
 <h2 id="two-backends">Two backends</h2>
 <table>
 <thead><tr><th>Backend</th><th>When to pick</th></tr></thead>
 <tbody><tr><td><code>{`uspace`}</code> (userspace)</td><td>Functional checks, low rates (≤ a few hundred Mbps), no privileged NIC binding. Runs on any Linux.</td></tr>
 <tr><td><code>{`dpdk`}</code></td><td>Throughput / latency benchmarks. Requires huge pages + a NIC bound to a DPDK-compatible driver.</td></tr></tbody>
 </table>
-<p>The two backends terminate the <em>receiver</em> side — they sit "behind the UPF" on N6/N9 (plain IP, GTP-U already stripped) or, in DPDK mode with <code>{`-gtp`}</code>, terminate GTP tunnels themselves.</p>
-<p>The <em>sender</em> side is a flow action: <code>{`templates/gnb/uplane_traffic.yaml`}</code> runs the registration + PDU session sequence then triggers <code>{`uplane_start`}</code>, which arms the gNB-side traffic generator using parameters from the inbound <code>{`PduSessionResourceSetupRequest`}</code> and the gNB's <code>{`uplane:`}</code> config block.</p>
+<p>Both backends terminate the receiver side. They sit behind the UPF on N6/N9 (plain IP, GTP-U already stripped) or, in DPDK mode with <code>{`-gtp`}</code>, terminate GTP tunnels themselves.</p>
+<p>The sender side is a flow action. The shipped <code>{`templates/gnb/uplane_traffic.yaml`}</code> flow runs the registration and PDU session sequence, then triggers <code>{`uplane_start`}</code>, which arms the gNB-side traffic generator using parameters from the inbound <code>{`PDUSessionResourceSetupRequest`}</code> and the gNB's <code>{`uplane:`}</code> configuration block. The GTP-U generator encapsulates ICMP or UDP packets. For the concepts behind this, see <Link to="/concepts/user-plane">user plane</Link>.</p>
 <h2 id="configure-the-gnb-sender">Configure the gNB sender</h2>
 <p>In your env's gNB block:</p>
 <CodeBlock lang="yaml" code={`nfs:
@@ -23,11 +24,11 @@ export default function UserPlaneTesting() {
       supported_tas: [ ... ]
       uplane:
         type: USPACE             # or DPDK
-        protocol: 1              # 1=ICMP, 2=UDP, 3=TCP
+        protocol: 1              # 1=ICMP, 2=UDP (the GTP-U sender encapsulates these)
         duration: "5s"
         target_addr: "8.8.8.8"   # destination behind the UPF`} />
-<p><code>{`type: USPACE`}</code> runs an in-process userspace generator (kernel sockets). <code>{`type: DPDK`}</code> shells out to the embedded <code>{`fpl-dpdk-c`}</code> binary (extracted from the Go binary into a temp dir on first use, see <code>{`make embed-dfxpc`}</code>).</p>
-<p><code>{`local_gtpu`}</code> on the NGAP transport is the IP the gNB advertises to the UPF as its N3 endpoint — the UPF will tunnel return traffic there.</p>
+<p><code>{`type: USPACE`}</code> runs a userspace generator over kernel sockets. <code>{`type: DPDK`}</code> uses the DPDK-accelerated backend for line-rate sends.</p>
+<p><code>{`local_gtpu`}</code> on the NGAP transport is the IP the gNB advertises to the UPF as its N3 endpoint. The UPF tunnels return traffic there.</p>
 <h2 id="server-uspace-userspace-receiver"><code>{`server uspace`}</code> — userspace receiver</h2>
 <CodeBlock lang="bash" code={`fluxproto-light server uspace \\
     -protocol udp \\
@@ -36,9 +37,9 @@ export default function UserPlaneTesting() {
     -port-num 4`} />
 <p>Per-protocol behaviour:</p>
 <ul>
-<li><strong>UDP</strong>: <code>{`ListenPacket`}</code> per port; echoes each datagram back to the sender.</li>
-<li><strong>TCP</strong>: <code>{`Listen`}</code> per port. The kernel completes the SYN/SYN-ACK so a SYN-only client sees its RTT reply even when <code>{`Accept()`}</code> doesn't fire. Application-layer echo runs after the full 3-way handshake.</li>
-<li><strong>ICMP</strong>: raw ICMP socket; replies to echo requests. Note: most Linux kernels also reply automatically — set <code>{`net.ipv4.icmp_echo_ignore_all=1`}</code> to let this server be the responder.</li>
+<li><strong>UDP</strong>: binds one listener per port and echoes each datagram back to the sender.</li>
+<li><strong>TCP</strong>: listens per port. The kernel completes the SYN/SYN-ACK, so a SYN-only client sees its RTT reply; application-layer echo runs after the full three-way handshake.</li>
+<li><strong>ICMP</strong>: opens a raw ICMP socket and replies to echo requests. Most Linux kernels also reply automatically, so set <code>{`net.ipv4.icmp_echo_ignore_all=1`}</code> to let this server be the responder.</li>
 </ul>
 <p>Flags:</p>
 <table>
@@ -79,22 +80,19 @@ export default function UserPlaneTesting() {
 <tr><td><code>{`-gtp`}</code></td><td>no</td><td>Enable GTP tunnel termination</td></tr>
 <tr><td><code>{`-metrics-port &lt;n&gt;`}</code></td><td>no</td><td>Prometheus metrics endpoint</td></tr></tbody>
 </table>
-<p>The DPDK backend shells out to <code>{`fpl-dpdk-c`}</code>, an embedded binary built into the Go executable. On first use, fluxproto-light extracts it to a temp dir and execs it; the binary requires huge pages allocated and the chosen NIC bound to a DPDK-compatible driver (typically <code>{`vfio-pci`}</code> or <code>{`igb_uio`}</code>).</p>
-<p>DPDK prerequisites at a customer-procedural level:</p>
+<p>The DPDK backend uses an accelerated listener that ships inside the fluxproto-light binary. It requires huge pages allocated and the chosen NIC bound to a DPDK-compatible driver (typically <code>{`vfio-pci`}</code> or <code>{`igb_uio`}</code>).</p>
+<p>DPDK prerequisites:</p>
 <ol>
 <li>Allocate huge pages: <code>{`echo 1024 &gt; /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages`}</code></li>
-<li>Bind the NIC to a DPDK driver (<code>{`dpdk-devbind.py --bind=vfio-pci 0000:00:09.0`}</code>)</li>
+<li>Bind the NIC to a DPDK driver: <code>{`dpdk-devbind.py --bind=vfio-pci 0000:00:09.0`}</code></li>
 <li>Run <code>{`server dpdk`}</code> as root (or with <code>{`CAP_SYS_ADMIN`}</code>)</li>
 </ol>
-<p>Build the embedded binary fresh from the in-repo source:</p>
-<CodeBlock lang="bash" code={`make embed-dfxpc`} />
-<p>After that the next <code>{`make`}</code> picks up the updated embed.</p>
 <h2 id="driving-traffic-from-a-flow">Driving traffic from a flow</h2>
-<p>The shipped <code>{`templates/gnb/uplane_traffic.yaml`}</code> is the canonical sender flow. It runs the full registration + PDU session establishment then triggers <code>{`uplane_start`}</code> to fire the configured sender. The receiver running on the destination end echoes traffic back, and the sender measures throughput / latency / jitter / drop.</p>
+<p>The <code>{`uplane_start`}</code> action arms the sender. In <code>{`uplane_traffic.yaml`}</code> it fires on the same transition that sends the <code>{`PDUSessionResourceSetupResponse`}</code>, once the PDU session is established:</p>
 <CodeBlock lang="yaml" code={`- type: send
   message: PDUSessionResourceSetupResponse
 - type: uplane_start`} />
-<p>The <code>{`EngineResult`}</code> includes a <code>{`uplane_report`}</code> field with the per-flow metric snapshot when an <code>{`uplane_start`}</code> action fired during the run.</p>
+<p>When an <code>{`uplane_start`}</code> action fires during a run, the flow result carries a <code>{`uplane_report`}</code> field with the per-flow metric snapshot. Read the full sender flow in the <a href="https://github.com/dflux-io/fluxproto-light-templates/blob/main/gnb/uplane_traffic.yaml" target="_blank" rel="noreferrer">templates repository</a>.</p>
 <h2 id="what-each-backend-measures">What each backend measures</h2>
 <p>Both backends report the same metric shape:</p>
 <ul>
@@ -107,10 +105,15 @@ export default function UserPlaneTesting() {
 <p>Userspace tops out at a few hundred kpps on a typical NIC; DPDK reaches line rate up to the per-core packet budget.</p>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <p><strong>ICMP server receives nothing</strong> — kernel is auto-replying. Set <code>{`net.ipv4.icmp_echo_ignore_all=1`}</code>.</p>
-<p><strong><code>{`fpl-dpdk-c: not found`}</code></strong> — the binary wasn't embedded at build time. Run <code>{`make embed-dfxpc`}</code> then rebuild.</p>
-<p><strong>DPDK <code>{`EAL: Cannot mbuf`}</code> errors</strong> — huge pages aren't allocated, or the process can't see them. Verify with <code>{`cat /proc/meminfo | grep Huge`}</code>.</p>
-<p><strong>Sender never fires <code>{`uplane_start`}</code></strong> — the flow's preceding states didn't reach the action. Check <code>{`-trace`}</code> to see where the FSM landed.</p>
-<p><strong>N3 traffic returns to the wrong address</strong> — <code>{`local_gtpu`}</code> on the NGAP transport must be the IP the UPF can route packets to. NAT in between will break the return path.</p>
+<p><strong>DPDK <code>{`EAL: Cannot mbuf`}</code> errors</strong> — huge pages aren't allocated, or the process can't see them. Verify with <code>{`grep Huge /proc/meminfo`}</code>.</p>
+<p><strong>Sender never fires <code>{`uplane_start`}</code></strong> — the flow's preceding states didn't reach the action. Run with <code>{`-trace`}</code> to see which state the flow landed in.</p>
+<p><strong>N3 traffic returns to the wrong address</strong> — <code>{`local_gtpu`}</code> on the NGAP transport must be an IP the UPF can route packets to. NAT in between will break the return path.</p>
+<h2 id="where-to-go-next">Where to go next</h2>
+<ul>
+<li><Link to="/concepts/user-plane">User plane</Link> — the concepts behind GTP-U testing and when to skip it.</li>
+<li><Link to="/reference/cli">CLI reference</Link> — the full <code>{`server uspace`}</code> and <code>{`server dpdk`}</code> flag set.</li>
+<li><Link to="/guides/running">Running flows and suites</Link> — drive the sender flow and read its result.</li>
+</ul>
     </DocPage>
   );
 }

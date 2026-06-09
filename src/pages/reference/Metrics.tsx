@@ -5,11 +5,12 @@ import { Link } from 'react-router-dom';
 export default function Metrics() {
   return (
     <DocPage slug="reference/metrics" lede="Every Prometheus metric the daemon exposes on /metrics. The endpoint binds on -metrics_port <port> (default off) over a separate listener — set -metrics_port 9090 to enable. The process_* and go_* collectors from the standard prometheus/client_golang library are also registered.">
-<p>For prose on enabling metrics, see <Link to="/guides/daemon">daemon-mode</Link>.</p>
+<p>For prose on enabling metrics, see <Link to="/guides/daemon">Running the daemon</Link>.</p>
 <h2 id="synopsis">Synopsis</h2>
 <CodeBlock lang="bash" code={`fluxproto-light -port 8199 -metrics_port 9090
 curl http://localhost:9090/metrics`} />
 <h2 id="counters">Counters</h2>
+<p>The message and NGAP error counters instrument the NGAP pipeline only. SBI, REST, Diameter, and PFCP traffic is not counted here — track those flows through <code>{`fpl_flows_total`}</code> and the latency histograms instead.</p>
 <table>
 <thead><tr><th>Name</th><th>Labels</th><th>Description</th></tr></thead>
 <tbody><tr><td><code>{`fpl_messages_total`}</code></td><td>direction, msg_type</td><td>Total NGAP messages pipelined</td></tr>
@@ -23,7 +24,7 @@ curl http://localhost:9090/metrics`} />
 <tr><td><code>{`fpl_fsm_state_timeouts_total`}</code></td><td>flow, state</td><td><code>{`on_timeout`}</code> firings</td></tr>
 <tr><td><code>{`fpl_bus_handler_total`}</code></td><td>address</td><td>Total events dispatched per bus address</td></tr>
 <tr><td><code>{`fpl_bus_handler_errors_total`}</code></td><td>address</td><td>Handler-level errors (not business errors routed to internal.error)</td></tr>
-<tr><td><code>{`fpl_bus_events_dropped_total`}</code></td><td>address</td><td>Events dropped at a bus address (overflow / shutdown)</td></tr></tbody>
+<tr><td><code>{`fpl_bus_events_dropped_total`}</code></td><td>reason</td><td>Events dropped (<code>{`reason`}</code>: <code>{`no_handler`}</code> for an unregistered address, <code>{`stopped`}</code> after the bus shuts down)</td></tr></tbody>
 </table>
 <h2 id="gauges">Gauges</h2>
 <table>
@@ -32,10 +33,9 @@ curl http://localhost:9090/metrics`} />
 <tr><td><code>{`fpl_gnb_registered`}</code></td><td>—</td><td>gNBs that have completed NG Setup (incremented on NGSetupResponse)</td></tr>
 <tr><td><code>{`fpl_ue_registered`}</code></td><td>—</td><td>UEs currently registered with the 5GC</td></tr>
 <tr><td><code>{`fpl_pdu_sessions_active`}</code></td><td>—</td><td>PDU sessions currently active</td></tr>
-<tr><td><code>{`fpl_subscriber_pool_total`}</code></td><td>—</td><td>Total subscribers in the pool (custom collector; reads <code>{`SubscriberPool.Stats()`}</code> per scrape)</td></tr>
-<tr><td><code>{`fpl_subscriber_pool_locked`}</code></td><td>—</td><td>Subscribers currently held by an execution</td></tr>
-<tr><td><code>{`fpl_subscriber_pool_free`}</code></td><td>—</td><td>Subscribers available for acquisition</td></tr>
-<tr><td><code>{`fpl_subscriber_pool_waiting`}</code></td><td>—</td><td>Acquirers blocked in the FIFO queue</td></tr>
+<tr><td><code>{`fpl_subscriber_pool_size`}</code></td><td>—</td><td>Total subscribers in the pool, locked plus free (custom collector; reads pool stats per scrape)</td></tr>
+<tr><td><code>{`fpl_subscriber_pool_in_use`}</code></td><td>—</td><td>Subscribers currently locked by an active flow</td></tr>
+<tr><td><code>{`fpl_subscriber_pool_waiting`}</code></td><td>—</td><td>Acquire calls currently blocked in the FIFO queue</td></tr>
 <tr><td><code>{`fpl_executions_active`}</code></td><td>—</td><td>In-flight executions (custom collector over <code>{`ExecutionRegistry`}</code>)</td></tr>
 <tr><td><code>{`fpl_bus_queue_depth`}</code></td><td>—</td><td>Live event-bus queue depth</td></tr>
 <tr><td><code>{`dflux_app_info`}</code></td><td>name, version, commit, buildtime</td><td>Daemon metadata, always 1</td></tr></tbody>
@@ -67,7 +67,7 @@ sum by(flow) (rate(fpl_flows_total[5m]))`} />
 <CodeBlock lang="promql" code={`histogram_quantile(0.95,
   sum by(flow, le) (rate(fpl_flow_latency_seconds_bucket[5m])))`} />
 <h3 id="subscriber-pool-saturation">Subscriber pool saturation</h3>
-<CodeBlock lang="promql" code={`fpl_subscriber_pool_locked / fpl_subscriber_pool_total`} />
+<CodeBlock lang="promql" code={`fpl_subscriber_pool_in_use / fpl_subscriber_pool_size`} />
 <h3 id="bus-backpressure">Bus backpressure</h3>
 <CodeBlock lang="promql" code={`fpl_bus_queue_depth
 rate(fpl_bus_events_dropped_total[1m])`} />
@@ -76,6 +76,11 @@ rate(fpl_bus_events_dropped_total[1m])`} />
 <li>Custom collectors (<code>{`fpl_subscriber_pool_*`}</code>, <code>{`fpl_executions_active`}</code>) read live in-memory state on every scrape, so values are always current — no periodic push.</li>
 <li><code>{`dflux_app_info`}</code> is the standard pattern for surfacing version metadata to dashboards and alert payloads.</li>
 <li><code>{`result`}</code> labels on counters and histograms are kept low-cardinality (small enum) so they're safe to slice and dice.</li>
+</ul>
+<h2 id="where-to-go-next">Where to go next</h2>
+<ul>
+<li><Link to="/guides/daemon">Running the daemon</Link> — enable the metrics listener and keep the engine running.</li>
+<li><Link to="/guides/ci-integration">CI integration</Link> — scrape these metrics from a pipeline run.</li>
 </ul>
     </DocPage>
   );

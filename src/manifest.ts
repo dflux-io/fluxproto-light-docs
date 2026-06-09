@@ -1,5 +1,5 @@
 import {
-  BookOpen,
+  Rocket,
   Lightbulb,
   GraduationCap,
   Wrench,
@@ -23,21 +23,22 @@ interface SectionMeta {
 }
 
 const sections: Record<string, SectionMeta> = {
-  Introduction: { Icon: BookOpen },
-  Concepts:     { Icon: Lightbulb },
-  Tutorials:    { Icon: GraduationCap },
-  Guides:       { Icon: Wrench },
-  Reference:    { Icon: Library },
-  API:          { Icon: Plug },
-  Glossary:     { Icon: Book },
+  'Get started':   { Icon: Rocket },
+  Concepts:        { Icon: Lightbulb },
+  Tutorials:       { Icon: GraduationCap },
+  'How-to guides': { Icon: Wrench },
+  Reference:       { Icon: Library },
+  'HTTP API':      { Icon: Plug },
+  Glossary:        { Icon: Book },
 };
 
 const groups: ManifestGroup[] = [
   {
-    title: 'Introduction',
+    title: 'Get started',
     pages: [
-      { slug: 'introduction', title: 'Introduction', group: 'Introduction' },
-      { slug: 'introduction/quickstart', title: 'Quickstart', group: 'Introduction' },
+      { slug: 'introduction', title: 'Overview', group: 'Get started' },
+      { slug: 'introduction/why', title: 'Why fluxproto-light', group: 'Get started' },
+      { slug: 'introduction/quickstart', title: 'Quickstart', group: 'Get started' },
     ],
   },
   {
@@ -45,8 +46,11 @@ const groups: ManifestGroup[] = [
     pages: [
       { slug: 'concepts/architecture', title: 'Architecture', group: 'Concepts' },
       { slug: 'concepts/flows', title: 'Flows', group: 'Concepts' },
+      { slug: 'concepts/flows/states', title: 'States & transitions', group: 'Concepts' },
+      { slug: 'concepts/flows/actions', title: 'Actions & checks', group: 'Concepts' },
       { slug: 'concepts/suites', title: 'Suites', group: 'Concepts' },
       { slug: 'concepts/environments', title: 'Environments', group: 'Concepts' },
+      { slug: 'concepts/subscribers', title: 'Subscribers', group: 'Concepts' },
       { slug: 'concepts/user-plane', title: 'User plane', group: 'Concepts' },
     ],
   },
@@ -58,16 +62,16 @@ const groups: ManifestGroup[] = [
     ],
   },
   {
-    title: 'Guides',
+    title: 'How-to guides',
     pages: [
-      { slug: 'guides/writing', title: 'Writing flows and suites', group: 'Guides' },
-      { slug: 'guides/running', title: 'Running flows and suites', group: 'Guides' },
-      { slug: 'guides/configuring-environments', title: 'Configuring environments', group: 'Guides' },
-      { slug: 'guides/daemon', title: 'Daemon mode and scheduling', group: 'Guides' },
-      { slug: 'guides/user-plane-testing', title: 'User-plane testing', group: 'Guides' },
-      { slug: 'guides/subscribers', title: 'Subscribers', group: 'Guides' },
-      { slug: 'guides/multi-protocol-flows', title: 'Multi-protocol flows', group: 'Guides' },
-      { slug: 'guides/ci-integration', title: 'CI integration', group: 'Guides' },
+      { slug: 'guides/writing', title: 'Writing flows and suites', group: 'How-to guides' },
+      { slug: 'guides/running', title: 'Running flows and suites', group: 'How-to guides' },
+      { slug: 'guides/configuring-environments', title: 'Configuring environments', group: 'How-to guides' },
+      { slug: 'guides/subscribers', title: 'Managing subscribers', group: 'How-to guides' },
+      { slug: 'guides/multi-protocol-flows', title: 'Multi-protocol flows', group: 'How-to guides' },
+      { slug: 'guides/user-plane-testing', title: 'User-plane testing', group: 'How-to guides' },
+      { slug: 'guides/daemon', title: 'Running the daemon', group: 'How-to guides' },
+      { slug: 'guides/ci-integration', title: 'CI integration', group: 'How-to guides' },
     ],
   },
   {
@@ -76,22 +80,22 @@ const groups: ManifestGroup[] = [
       { slug: 'reference/cli', title: 'CLI', group: 'Reference' },
       { slug: 'reference/flow-schema', title: 'Flow schema', group: 'Reference' },
       { slug: 'reference/suite-schema', title: 'Suite schema', group: 'Reference' },
-      { slug: 'reference/config-schema', title: 'Config schema', group: 'Reference' },
-      { slug: 'reference/catalogs', title: 'Flow & suite catalogs', group: 'Reference' },
+      { slug: 'reference/config-schema', title: 'Environment schema', group: 'Reference' },
+      { slug: 'reference/catalogs', title: 'Flow & suite catalog', group: 'Reference' },
       { slug: 'reference/metrics', title: 'Metrics', group: 'Reference' },
     ],
   },
   {
-    title: 'API',
+    title: 'HTTP API',
     pages: [
-      { slug: 'api/overview', title: 'Overview', group: 'API' },
-      { slug: 'api/users', title: 'Users', group: 'API' },
-      { slug: 'api/flows', title: 'Flows', group: 'API' },
-      { slug: 'api/environments', title: 'Environments', group: 'API' },
-      { slug: 'api/executions', title: 'Executions and reports', group: 'API' },
-      { slug: 'api/schedules', title: 'Schedules', group: 'API' },
-      { slug: 'api/subscribers', title: 'Subscribers', group: 'API' },
-      { slug: 'api/settings', title: 'Settings', group: 'API' },
+      { slug: 'api/overview', title: 'Overview', group: 'HTTP API' },
+      { slug: 'api/users', title: 'Users', group: 'HTTP API' },
+      { slug: 'api/environments', title: 'Environments', group: 'HTTP API' },
+      { slug: 'api/flows', title: 'Flows', group: 'HTTP API' },
+      { slug: 'api/executions', title: 'Executions and reports', group: 'HTTP API' },
+      { slug: 'api/schedules', title: 'Schedules', group: 'HTTP API' },
+      { slug: 'api/subscribers', title: 'Subscribers', group: 'HTTP API' },
+      { slug: 'api/settings', title: 'Settings', group: 'HTTP API' },
     ],
   },
   {
@@ -129,5 +133,5 @@ export function neighbors(slug: string): { prev?: ManifestPage; next?: ManifestP
 }
 
 export function sectionMeta(group: string): SectionMeta {
-  return sections[group] ?? { Icon: BookOpen };
+  return sections[group] ?? { Icon: Book };
 }

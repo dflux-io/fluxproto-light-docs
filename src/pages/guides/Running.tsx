@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 export default function Running() {
   return (
-    <DocPage slug="guides/running" lede="fluxproto-light run-flow executes one flow against an environment. Flows are looked up by name in the templates DB after a sync of the -templates dir; the engine then drives the FSM per UE according to the workload knobs. This guide covers invocation, the workload model, output, tracing, and exit codes.">
+    <DocPage slug="guides/running" lede="fluxproto-light run-flow executes one flow against an environment. Flows are looked up by name in the templates DB after a sync of the -templates directory; the engine then drives the FSM per UE according to the workload knobs. This guide covers invocation, the workload model, output, tracing, and exit codes.">
 <h2 id="invocation">Invocation</h2>
 <CodeBlock lang="bash" code={`fluxproto-light run-flow \\
     -flow <name> \\
@@ -47,16 +47,14 @@ export default function Running() {
 </table>
 <p>Each UE runs the FSM independently. The engine spawns according to the rate, then waits for in-flight UEs to terminate. Total wall-clock time = max(<code>{`-duration`}</code>, <code>{`-repetitions / -rate`}</code>) + drain time.</p>
 <p>A run with <code>{`-repetitions 1`}</code> and no <code>{`-duration`}</code>/<code>{`-rate`}</code> is single-UE mode — the report includes a per-message step log. Multi-UE runs aggregate metrics but skip the step log (it would be unhelpful at scale).</p>
-<h2 id="output-formats">Output formats</h2>
-<p>Default is a coloured table. The CLI prints to stdout; logs go to stderr.</p>
+<h2 id="output">Output</h2>
+<p><code>{`run-flow`}</code> always prints a human-readable table to stdout; logs go to stderr.</p>
 <CodeBlock lang="" code={`==> Flow: registration
     Result: PASS
     Duration: 187ms
     Steps: 7
     Final state: registered`} />
-<p>JSON for scripting / CI:</p>
-<CodeBlock lang="bash" code={`fluxproto-light run-flow -flow registration ... -output json`} />
-<p>The JSON shape mirrors <code>{`EngineResult`}</code> — <code>{`execution_id`}</code>, <code>{`flow_name`}</code>, <code>{`duration`}</code>, <code>{`metrics`}</code>, <code>{`steps`}</code>, <code>{`event_log`}</code>, <code>{`msg_types`}</code>, <code>{`workload`}</code>, <code>{`post_checks`}</code>, <code>{`uplane_report`}</code>, <code>{`all_passed`}</code>, <code>{`error`}</code>. Stable across releases.</p>
+<p>For machine-readable output, run the flow against the <Link to="/guides/daemon">daemon</Link> and fetch the persisted report over the HTTP API, or read the report record from the DB (see <Link to="#db">DB</Link> below). The report carries the full execution result: <code>{`execution_id`}</code>, <code>{`report_id`}</code>, <code>{`flow_name`}</code>, <code>{`duration`}</code>, <code>{`metrics`}</code>, <code>{`steps`}</code>, <code>{`event_log`}</code>, <code>{`msg_types`}</code>, <code>{`workload`}</code>, <code>{`post_checks`}</code>, <code>{`uplane_report`}</code>, <code>{`final_state_counts`}</code>, <code>{`final_params`}</code>, and <code>{`all_passed`}</code>. When the flow ran as a suite step, <code>{`suite_execution_id`}</code> and <code>{`suite_step_name`}</code> are populated too.</p>
 <h2 id="tracing">Tracing</h2>
 <p><code>{`-trace`}</code> adds three things:</p>
 <ol>
@@ -78,7 +76,7 @@ export default function Running() {
 <li><code>{`0`}</code> — every UE's flow completed <code>{`AllPassed`}</code></li>
 <li><code>{`1`}</code> — at least one check failed, or the engine returned an error</li>
 </ul>
-<p>CI gating: rely on the exit code, then optionally parse <code>{`-output json`}</code> for diagnostics.</p>
+<p>For CI gating, rely on the exit code. For diagnostics beyond pass/fail, persist runs through the <Link to="/guides/daemon">daemon</Link> and pull the report over the <Link to="/api/executions">HTTP API</Link>.</p>
 <h2 id="db">DB</h2>
 <p>Every run persists a <code>{`ReportEntity`}</code> to SQLite at <code>{`./fpl.db`}</code> (overridable via <code>{`-db &lt;path&gt;`}</code> or <code>{`FPL_DB`}</code>). The shipped CLI also auto-syncs the templates dir into the DB before each run, so the catalog is always up to date with what's on disk.</p>
 <CodeBlock lang="bash" code={`fluxproto-light report list
@@ -90,8 +88,9 @@ fluxproto-light report <report-id>`} />
 <p><strong><code>{`ErrPoolEmpty`}</code></strong> — no subscribers in the DB and no <code>{`-gen-subscriber`}</code>. Either provision via <code>{`-s &lt;file&gt;`}</code> or pass <code>{`-gen-subscriber`}</code>.</p>
 <p><strong>Flow times out at <code>{`wait_*`}</code></strong> — the AMF/peer didn't send the expected response in time. Check <code>{`-trace`}</code> to see what <em>was</em> sent and whether the response matched the FSM's <code>{`event:`}</code> clause. Common cause: PLMN mismatch.</p>
 <p><strong><code>{`-rate`}</code> ignored</strong> — single-UE runs (<code>{`-repetitions 1`}</code>, no <code>{`-duration`}</code>) burst, ignoring rate. Multi-UE runs respect it.</p>
-<p><code>{`fluxproto-light run-suite`}</code> executes a suite — an ordered list of flow steps — as one or more cycles. Each cycle produces a single <code>{`SuiteReportEntity`}</code> with one child <code>{`ReportEntity`}</code> per step. This guide covers invocation, the cycle model, suite reports, and exit code behaviour.</p>
-<h2 id="invocation-2">Invocation</h2>
+<h2 id="running-suites">Running suites</h2>
+<p><code>{`fluxproto-light run-suite`}</code> executes a suite — an ordered list of flow steps — as one or more cycles. Each cycle produces a single suite report with one child report per step. The sections below cover suite invocation, the cycle model, suite reports, and exit-code behaviour.</p>
+<h3 id="suite-invocation">Suite invocation</h3>
 <CodeBlock lang="bash" code={`fluxproto-light run-suite \\
     -suite <name> \\
     -templates <dir> \\
@@ -103,11 +102,11 @@ fluxproto-light report <report-id>`} />
     [-trace] \\
     [-gen-subscriber] \\
     [-db <path>]`} />
-<p><code>{`-suite`}</code> is the name (not the path) as listed by <code>{`fluxproto-light suite list -templates &lt;dir&gt;`}</code>. The shipped suite is <code>{`gnb-register-deregister`}</code> in <code>{`templates/suites/gnb_register_deregister.yaml`}</code>.</p>
-<h2 id="cycle-vs-step">Cycle vs step</h2>
+<p><code>{`-suite`}</code> is the name (not the path) as listed by <code>{`fluxproto-light suite list -templates &lt;dir&gt;`}</code>. The templates repository ships 21 suites — compliance and security passes for gNB, AUSF, SMF, UDM, UPF, and NRF, plus the <code>{`gnb-register-deregister`}</code> demo. See the <Link to="/reference/catalogs">flow and suite catalog</Link> for the full list, and browse the source YAML in the <a href="https://github.com/dflux-io/fluxproto-light-templates" target="_blank" rel="noreferrer">fluxproto-light-templates</a> repository.</p>
+<h3 id="cycle-vs-step">Cycle vs step</h3>
 <p>A <em>cycle</em> is one full traversal of the suite's <code>{`steps:`}</code> list. A <em>step</em> is one entry in that list, executing one flow with its own workload. The runner repeats the cycle <code>{`-repetitions`}</code> times (or until <code>{`-duration`}</code> elapses).</p>
 <p>Within a cycle, steps are strictly serial — no parallelism between steps. Each step independently acquires its own subscribers from the pool, runs its flow, and releases the subscribers before the next step starts.</p>
-<h2 id="workload-at-the-cli-vs-in-the-suite">Workload at the CLI vs in the suite</h2>
+<h3 id="workload-at-the-cli-vs-in-the-suite">Workload at the CLI vs in the suite</h3>
 <p>The CLI flags drive the <em>outer loop</em> (number of cycles). Workload knobs <em>inside</em> a cycle live in the suite YAML on each step:</p>
 <table>
 <thead><tr><th>CLI flag</th><th>Scope</th></tr></thead>
@@ -115,8 +114,8 @@ fluxproto-light report <report-id>`} />
 <tr><td><code>{`-duration &lt;duration&gt;`}</code></td><td>Run cycles back-to-back until this elapses</td></tr>
 <tr><td><code>{`-timeout &lt;duration&gt;`}</code></td><td>Per-cycle deadline (each step inherits when not overridden)</td></tr></tbody>
 </table>
-<p>Per-step workload (<code>{`repetitions`}</code>, <code>{`rate`}</code>, <code>{`duration`}</code>, <code>{`timeout`}</code>) lives in the YAML — see <Link to="/guides/writing">writing-suites</Link>.</p>
-<p><code>{`-rate`}</code> is rejected at the suite level. Suites are strictly serial in v1; if you need rate, set it per step in the YAML.</p>
+<p>Per-step workload (<code>{`repetitions`}</code>, <code>{`rate`}</code>, <code>{`duration`}</code>, <code>{`timeout`}</code>) lives in the YAML — see <Link to="/guides/writing">writing flows and suites</Link>.</p>
+<p><code>{`run-suite`}</code> has no <code>{`-rate`}</code> flag. Steps run strictly serially, so there is no suite-level spawn rate; set <code>{`rate`}</code> per step in the YAML when a step needs to throttle its own UEs.</p>
 <CodeBlock lang="bash" code={`# 5 cycles of the gnb-register-deregister suite
 fluxproto-light run-suite -suite gnb-register-deregister \\
     -templates templates -c config/lab.yaml \\
@@ -126,9 +125,9 @@ fluxproto-light run-suite -suite gnb-register-deregister \\
 fluxproto-light run-suite -suite gnb-register-deregister \\
     -templates templates -c config/lab.yaml \\
     -s config/subscribers.yaml -duration 10m`} />
-<h2 id="cli-overrides">CLI overrides</h2>
+<h3 id="cli-overrides">CLI overrides</h3>
 <p><code>{`-trace`}</code> and <code>{`-gen-subscriber`}</code> OR with each step's setting — one of them being true enables the feature for that step. Useful when a long suite YAML has trace off but you want to debug one cycle.</p>
-<h2 id="suite-reports">Suite reports</h2>
+<h3 id="suite-reports">Suite reports</h3>
 <p>Each cycle persists one <code>{`SuiteReportEntity`}</code> plus one child <code>{`ReportEntity`}</code> per step. Browse with:</p>
 <CodeBlock lang="bash" code={`# List the most recent suite reports
 fluxproto-light report list-suites
@@ -137,7 +136,7 @@ fluxproto-light report list-suites
 fluxproto-light report show-suite <suite-execution-id>`} />
 <p>The <code>{`show-suite`}</code> view prints the suite-level summary (cycle duration, step count, pass/fail/abort) followed by every child report's summary. Drill into a single step's full report with <code>{`report &lt;report-id&gt;`}</code> using the ID from the <code>{`show-suite`}</code> listing.</p>
 <p>The standalone <code>{`report list`}</code> view filters out suite-children — they show up only via <code>{`list-suites`}</code> / <code>{`show-suite`}</code>. This keeps the standalone listing clean for ad-hoc <code>{`run-flow`}</code> runs.</p>
-<h2 id="exit-code">Exit code</h2>
+<h3 id="exit-code">Exit code</h3>
 <p>Exit <code>{`0`}</code> only when <em>every</em> cycle's <code>{`AllPassed`}</code> is true and no cycle was aborted. A single failing step (with <code>{`stop_on_failure: true`}</code>, the default) makes the cycle abort and produces a non-zero exit.</p>
 <table>
 <thead><tr><th>Exit code</th><th>Meaning</th></tr></thead>
@@ -145,14 +144,14 @@ fluxproto-light report show-suite <suite-execution-id>`} />
 <tr><td><code>{`1`}</code></td><td>At least one step failed, or one cycle was aborted, or the suite returned an error</td></tr></tbody>
 </table>
 <p><code>{`always_run`}</code> cleanup steps execute even after an abort, but their pass/fail still counts toward the cycle's <code>{`AllPassed`}</code>.</p>
-<h2 id="per-step-success-vs-cycle-abort">Per-step success vs cycle abort</h2>
+<h3 id="per-step-success-vs-cycle-abort">Per-step success vs cycle abort</h3>
 <p>A step can fail without aborting the cycle if it sets <code>{`stop_on_failure: false`}</code>. In that case the cycle continues to the next step but <code>{`cycle.AllPassed`}</code> is still false. Use this for negative-test steps that are expected to fail intermittently and shouldn't gate the cleanup steps that follow.</p>
-<h2 id="reading-the-report-json">Reading the report JSON</h2>
-<p>The daemon REST endpoint returns the same shape:</p>
+<h3 id="reading-the-report-json">Reading the report JSON</h3>
+<p>When runs go through the <Link to="/guides/daemon">daemon</Link>, fetch a report by its id over the HTTP API:</p>
 <CodeBlock lang="bash" code={`curl -H "Authorization: Bearer $TOKEN" \\
-    https://daemon/api/v1/reports/suite/<suite-execution-id>`} />
-<p>Each step's report carries the same <code>{`EngineResult`}</code> JSON as a standalone <code>{`run-flow`}</code> run, plus <code>{`suite_execution_id`}</code> and <code>{`suite_step_name`}</code> populated.</p>
-<h2 id="troubleshooting-2">Troubleshooting</h2>
+    https://daemon/api/v1/reports/<report-id>`} />
+<p>The report surface is <code>{`GET /api/v1/reports`}</code> (the list) and <code>{`GET /api/v1/reports/{id}`}</code> (one report). Each suite step's report carries the same execution result as a standalone <code>{`run-flow`}</code> run, with <code>{`suite_execution_id`}</code> and <code>{`suite_step_name`}</code> populated. See the <Link to="/api/executions">executions and reports API</Link> for the full schema.</p>
+<h3 id="troubleshooting-2">Suite troubleshooting</h3>
 <p><strong>Suite stops after one step</strong> — the step's <code>{`AllPassed`}</code> was false and <code>{`stop_on_failure: true`}</code> (default). Set <code>{`stop_on_failure: false`}</code> on the step if it's an expected partial failure.</p>
 <p><strong><code>{`always_run`}</code> step didn't execute</strong> — check the trace; the cycle might have been cancelled before reaching the cleanup. <code>{`always_run`}</code> runs after an abort but not after a context cancellation (Ctrl+C, deadline).</p>
 <p><strong>Subscriber pool drained mid-cycle</strong> — every step takes a fresh batch. Make sure the pool size ≥ the largest step's <code>{`repetitions`}</code>, or use <code>{`gen_subscriber: true`}</code> per step.</p>
