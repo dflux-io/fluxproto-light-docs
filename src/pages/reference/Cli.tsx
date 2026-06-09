@@ -17,7 +17,7 @@ fluxproto-light server <uspace|dpdk> [opts]
 fluxproto-light check -c <config>
 fluxproto-light -v`} />
 <h2 id="run-flow">run-flow</h2>
-<p>Execute one flow against an environment. Flows are looked up by name in the templates DB after a sync of the <code>{`-templates`}</code> dir. See <Link to="/guides/running">running-flows</Link> for the workload model.</p>
+<p>Execute one flow against an environment. Flows are looked up by name in the templates DB after a sync of the <code>{`-templates`}</code> dir. See the <Link to="/guides/running">Running flows and suites</Link> guide for the workload model.</p>
 <h3 id="synopsis-2">Synopsis</h3>
 <CodeBlock lang="bash" code={`fluxproto-light run-flow -flow registration \\
     -templates templates -c config/lab.yaml \\
@@ -27,7 +27,7 @@ fluxproto-light -v`} />
 <thead><tr><th>Name</th><th>Type</th><th>Required</th><th>Default</th><th>Description</th></tr></thead>
 <tbody><tr><td><code>{`-flow &lt;name&gt;`}</code></td><td>string</td><td>yes</td><td>—</td><td>Flow name (as listed by <code>{`flow list`}</code>)</td></tr>
 <tr><td><code>{`-templates &lt;dir&gt;`}</code></td><td>string</td><td>yes</td><td>—</td><td>Templates directory (recursively walked)</td></tr>
-<tr><td><code>{`-c &lt;file&gt;`}</code> / <code>{`-config &lt;file&gt;`}</code></td><td>string</td><td>yes</td><td>—</td><td>Env YAML config file</td></tr>
+<tr><td><code>{`-c &lt;file&gt;`}</code> / <code>{`-config &lt;file&gt;`}</code></td><td>string</td><td>yes</td><td>—</td><td>Environment YAML config file</td></tr>
 <tr><td><code>{`-s &lt;file&gt;`}</code> / <code>{`-subscribers &lt;file&gt;`}</code></td><td>string</td><td>no</td><td>—</td><td>Subscribers YAML file</td></tr>
 <tr><td><code>{`-db &lt;path&gt;`}</code></td><td>string</td><td>no</td><td><code>{`./fpl.db`}</code></td><td>SQLite DB path; env: <code>{`FPL_DB`}</code></td></tr>
 <tr><td><code>{`-repetitions &lt;n&gt;`}</code></td><td>int</td><td>no</td><td>1</td><td>Number of UEs to spawn</td></tr>
@@ -50,7 +50,7 @@ fluxproto-light run-flow -flow registration \\
     -s config/subscribers.yaml \\
     -repetitions 100 -rate 10 -duration 30s`} />
 <h2 id="run-suite">run-suite</h2>
-<p>Execute a suite — an ordered list of flow steps — as one or more cycles. See <Link to="/guides/running">running-suites</Link> for cycle semantics.</p>
+<p>Execute a suite — an ordered list of flow steps — as one or more cycles. See the <Link to="/guides/running">Running flows and suites</Link> guide for cycle semantics.</p>
 <h3 id="synopsis-3">Synopsis</h3>
 <CodeBlock lang="bash" code={`fluxproto-light run-suite -suite gnb-register-deregister \\
     -templates templates -c config/lab.yaml \\
@@ -60,7 +60,7 @@ fluxproto-light run-flow -flow registration \\
 <thead><tr><th>Name</th><th>Type</th><th>Required</th><th>Default</th><th>Description</th></tr></thead>
 <tbody><tr><td><code>{`-suite &lt;name&gt;`}</code></td><td>string</td><td>yes</td><td>—</td><td>Suite name (as listed by <code>{`suite list`}</code>)</td></tr>
 <tr><td><code>{`-templates &lt;dir&gt;`}</code></td><td>string</td><td>yes</td><td>—</td><td>Templates directory</td></tr>
-<tr><td><code>{`-c &lt;file&gt;`}</code> / <code>{`-config &lt;file&gt;`}</code></td><td>string</td><td>yes</td><td>—</td><td>Env YAML config file</td></tr>
+<tr><td><code>{`-c &lt;file&gt;`}</code> / <code>{`-config &lt;file&gt;`}</code></td><td>string</td><td>yes</td><td>—</td><td>Environment YAML config file</td></tr>
 <tr><td><code>{`-s &lt;file&gt;`}</code> / <code>{`-subscribers &lt;file&gt;`}</code></td><td>string</td><td>no</td><td>—</td><td>Subscribers YAML file</td></tr>
 <tr><td><code>{`-db &lt;path&gt;`}</code></td><td>string</td><td>no</td><td><code>{`./fpl.db`}</code></td><td>SQLite DB path; env: <code>{`FPL_DB`}</code></td></tr>
 <tr><td><code>{`-repetitions &lt;n&gt;`}</code></td><td>int</td><td>no</td><td>1</td><td>Number of full suite cycles</td></tr>
@@ -82,7 +82,7 @@ fluxproto-light run-suite -suite gnb-register-deregister \\
     -templates templates -c config/lab.yaml \\
     -s config/subscribers.yaml -duration 10m`} />
 <h2 id="flow">flow</h2>
-<p>Catalog operations for flow templates. Both subcommands sync the <code>{`-templates`}</code> dir into the DB before reading.</p>
+<p>Catalog operations for flows. Both subcommands sync the <code>{`-templates`}</code> dir into the DB before reading.</p>
 <h3 id="synopsis-4">Synopsis</h3>
 <CodeBlock lang="bash" code={`fluxproto-light flow list -templates templates
 fluxproto-light flow info registration -templates templates`} />
@@ -99,7 +99,7 @@ fluxproto-light flow info registration -templates templates`} />
 <CodeBlock lang="bash" code={`fluxproto-light flow list -templates templates
 fluxproto-light flow info uplane_traffic -templates templates`} />
 <h2 id="suite">suite</h2>
-<p>Catalog operations for suite templates. Same shape as <code>{`flow`}</code>.</p>
+<p>Catalog operations for suites. Same shape as <code>{`flow`}</code>.</p>
 <h3 id="synopsis-5">Synopsis</h3>
 <CodeBlock lang="bash" code={`fluxproto-light suite list -templates templates
 fluxproto-light suite info gnb-register-deregister -templates templates`} />
@@ -133,7 +133,7 @@ fluxproto-light report list-suites
 fluxproto-light report show-suite 7a1b...c3d
 fluxproto-light report 1f4d...8b9`} />
 <h2 id="subscriber">subscriber</h2>
-<p>Subscriber utilities — generate, provision into Open5GS, list, purge. See <Link to="/guides/subscribers">subscribers</Link>.</p>
+<p>Subscriber utilities — generate, provision into Open5GS, list, purge. See the <Link to="/guides/subscribers">Managing subscribers</Link> guide.</p>
 <h3 id="synopsis-7">Synopsis</h3>
 <CodeBlock lang="bash" code={`fluxproto-light subscriber generate -count 10 -mcc 901 -mnc 070
 fluxproto-light subscriber provision -file subscribers.yaml
@@ -161,7 +161,7 @@ fluxproto-light subscriber purge -host <ip> -yes`} />
 <tr><td><code>{`-yes`}</code></td><td>bool</td><td>false</td><td>Skip confirmation prompt (<code>{`purge`}</code> only)</td></tr></tbody>
 </table>
 <h2 id="server">server</h2>
-<p>User-plane (GTP-U) receiver. Two backends. See <Link to="/guides/user-plane-testing">user-plane-testing</Link>.</p>
+<p>User-plane (GTP-U) receiver. Two backends. See the <Link to="/guides/user-plane-testing">User-plane testing</Link> guide.</p>
 <h3 id="synopsis-8">Synopsis</h3>
 <CodeBlock lang="bash" code={`fluxproto-light server uspace -protocol udp -port-start 5001
 fluxproto-light server dpdk -protocol udp \\
@@ -192,20 +192,20 @@ fluxproto-light server dpdk -protocol udp \\
 <tr><td><code>{`-cpu &lt;n&gt;`}</code></td><td>int</td><td>no</td><td>0</td><td>CPU index</td></tr>
 <tr><td><code>{`-duration &lt;duration&gt;`}</code></td><td>duration</td><td>no</td><td>forever</td><td>Run for this then exit (≥ 5s)</td></tr>
 <tr><td><code>{`-payload-size &lt;n&gt;`}</code></td><td>int</td><td>no</td><td>0</td><td>Response payload size</td></tr>
-<tr><td><code>{`-keepalive &lt;duration&gt;`}</code></td><td>duration</td><td>no</td><td>0</td><td>TCP keepalive interval</td></tr>
+<tr><td><code>{`-keepalive &lt;duration&gt;`}</code></td><td>string</td><td>no</td><td>—</td><td>TCP keepalive interval</td></tr>
 <tr><td><code>{`-client-allow &lt;ip&gt;`}</code></td><td>string</td><td>no</td><td>—</td><td>Permitted client IP range start</td></tr>
 <tr><td><code>{`-client-num &lt;n&gt;`}</code></td><td>int</td><td>no</td><td>0</td><td>IPs in the client-allow range</td></tr>
 <tr><td><code>{`-gtp`}</code></td><td>bool</td><td>no</td><td>false</td><td>Enable GTP tunnel termination</td></tr>
 <tr><td><code>{`-metrics-port &lt;n&gt;`}</code></td><td>int</td><td>no</td><td>0</td><td>Prometheus metrics endpoint</td></tr></tbody>
 </table>
 <h2 id="check">check</h2>
-<p>Probe SCTP + NGSetup connectivity for every gNB→AMF pair in the env.</p>
+<p>Probe SCTP + NGSetup connectivity for every gNB→AMF pair in the environment.</p>
 <h3 id="synopsis-9">Synopsis</h3>
 <CodeBlock lang="bash" code={`fluxproto-light check -c config/lab.yaml`} />
 <h3 id="argument-reference-6">Argument reference</h3>
 <table>
 <thead><tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
-<tbody><tr><td><code>{`-c &lt;file&gt;`}</code> / <code>{`-config &lt;file&gt;`}</code></td><td>string</td><td>yes</td><td>Env YAML config file</td></tr>
+<tbody><tr><td><code>{`-c &lt;file&gt;`}</code> / <code>{`-config &lt;file&gt;`}</code></td><td>string</td><td>yes</td><td>Environment YAML config file</td></tr>
 <tr><td><code>{`-debug`}</code></td><td>bool</td><td>no</td><td>Debug-level logs</td></tr>
 <tr><td><code>{`-trace`}</code></td><td>bool</td><td>no</td><td>Trace-level logs</td></tr></tbody>
 </table>
@@ -222,22 +222,26 @@ fluxproto-light server dpdk -protocol udp \\
 <tr><td><code>{`-db_query_log`}</code></td><td>bool</td><td>false</td><td>Log every SQL query</td></tr>
 <tr><td><code>{`-v`}</code> / <code>{`-version`}</code></td><td>bool</td><td>—</td><td>Print version and exit</td></tr></tbody>
 </table>
-<p>See <Link to="/guides/daemon">daemon-mode</Link>.</p>
+<p>See the <Link to="/guides/daemon">Running the daemon</Link> guide.</p>
 <h2 id="logging-flags">Logging flags</h2>
-<p>Apply to every subcommand and to daemon mode.</p>
+<p>Two logging flags work on every subcommand and in daemon mode:</p>
 <table>
 <thead><tr><th>Flag</th><th>Description</th></tr></thead>
 <tbody><tr><td><code>{`-debug`}</code></td><td>Enable debug-level logging</td></tr>
-<tr><td><code>{`-trace`}</code></td><td>Enable trace-level logging (very verbose)</td></tr>
-<tr><td><code>{`-quiet`}</code></td><td>Suppress logs below warn level</td></tr>
+<tr><td><code>{`-trace`}</code></td><td>Enable trace-level logging (very verbose)</td></tr></tbody>
+</table>
+<p>The remaining logging flags are defined on daemon mode only. Passing them to a subcommand errors with <code>{`flag provided but not defined`}</code>.</p>
+<table>
+<thead><tr><th>Flag</th><th>Description</th></tr></thead>
+<tbody><tr><td><code>{`-quiet`}</code></td><td>Suppress logs below warn level</td></tr>
 <tr><td><code>{`-json`}</code></td><td>Emit logs as JSON instead of console format</td></tr>
-<tr><td><code>{`-logfile &lt;path&gt;`}</code></td><td>Write logs to a file (append-mode)</td></tr>
+<tr><td><code>{`-logfile &lt;path&gt;`}</code></td><td>Write logs to a file</td></tr>
 <tr><td><code>{`-log-caller`}</code></td><td>Include caller <code>{`file:line`}</code> in logs</td></tr></tbody>
 </table>
 <h2 id="notes">Notes</h2>
 <ul>
 <li><code>{`-flow def my-flow.yaml`}</code> (loading a flow by file path) is no longer supported. Walk the file's containing directory with <code>{`-templates`}</code>; the flow is then addressable by its <code>{`name:`}</code> field.</li>
-<li><code>{`run`}</code> (without <code>{`-flow`}</code> or <code>{`-suite`}</code>) was renamed to <code>{`run-flow`}</code> in #243. The error message points at the new spelling.</li>
+<li><code>{`run`}</code> was renamed to <code>{`run-flow`}</code>. The error message points at the new spelling.</li>
 <li>The CLI auto-syncs the templates dir into the DB on every <code>{`run-flow`}</code>, <code>{`run-suite`}</code>, and <code>{`flow|suite list|info`}</code>. The DB defaults to <code>{`./fpl.db`}</code>; override with <code>{`-db &lt;path&gt;`}</code> or <code>{`FPL_DB`}</code>.</li>
 </ul>
     </DocPage>

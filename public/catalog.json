@@ -1,0 +1,2966 @@
+{
+  "generatedAt": "2026-06-09",
+  "repoUrl": "https://github.com/dflux-io/fluxproto-light-templates",
+  "totals": {
+    "flows": 278,
+    "suites": 21
+  },
+  "byProtocol": {
+    "sbi": 97,
+    "ngap": 79,
+    "rest": 60,
+    "pfcp": 28,
+    "diameter": 14
+  },
+  "byNf": {
+    "gnb": 77,
+    "external": 60,
+    "udm": 49,
+    "smf": 35,
+    "ausf": 24,
+    "upf": 17,
+    "mme": 11,
+    "pgw": 2,
+    "amf": 2,
+    "af": 1
+  },
+  "byCategory": {
+    "negative": 116,
+    "functional": 100,
+    "-": 58,
+    "stability": 2,
+    "lifecycle": 1,
+    "robustness": 1
+  },
+  "flows": [
+    {
+      "name": "ausf_sor_protection_missing_ackind_rejected",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "ausf",
+      "category": "negative",
+      "description": "POST ue-sor omitting ackInd is rejected 400",
+      "path": "ausf/sor_protection_missing_ackind_rejected.yaml"
+    },
+    {
+      "name": "ausf_sor_protection_success",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "ausf",
+      "category": "functional",
+      "description": "POST ue-sor returns 200 with protected Steering-of-Roaming security info",
+      "path": "ausf/sor_protection_success.yaml"
+    },
+    {
+      "name": "ausf_sor_protection_unknown_supi_rejected",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "ausf",
+      "category": "negative",
+      "description": "POST ue-sor for an unknown SUPI is rejected; AUSF stays up",
+      "path": "ausf/sor_protection_unknown_supi_rejected.yaml"
+    },
+    {
+      "name": "ausf_ueauth_5g_aka_confirmation",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "ausf",
+      "category": "functional",
+      "description": "Initiate 5G-AKA then PUT the 5g-aka-confirmation with a RES* and read the auth result",
+      "path": "ausf/ueauth_5g_aka_confirmation.yaml"
+    },
+    {
+      "name": "ausf_ueauth_5g_aka_confirmation_delete",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "ausf",
+      "category": "functional",
+      "description": "Initiate 5G-AKA then DELETE the 5g-aka-confirmation resource (expect 204)",
+      "path": "ausf/ueauth_5g_aka_confirmation_delete.yaml"
+    },
+    {
+      "name": "ausf_ueauth_5g_aka_initiate_success",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "ausf",
+      "category": "functional",
+      "description": "POST ue-authentications for a provisioned SUPI returns 201 with a 5G-AKA auth context",
+      "path": "ausf/ueauth_5g_aka_initiate_success.yaml"
+    },
+    {
+      "name": "ausf_ueauth_bad_serving_network_name_rejected",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "ausf",
+      "category": "negative",
+      "description": "POST ue-authentications with an unauthorized servingNetworkName is rejected 403",
+      "path": "ausf/ueauth_bad_serving_network_name_rejected.yaml"
+    },
+    {
+      "name": "ausf_ueauth_confirmation_missing_res_star_rejected",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "ausf",
+      "category": "negative",
+      "description": "5g-aka-confirmation PUT omitting resStar is rejected 400",
+      "path": "ausf/ueauth_confirmation_missing_res_star_rejected.yaml"
+    },
+    {
+      "name": "ausf_ueauth_confirmation_unknown_ctx_rejected",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "ausf",
+      "category": "negative",
+      "description": "5g-aka-confirmation PUT against a non-existent authCtxId is rejected 404",
+      "path": "ausf/ueauth_confirmation_unknown_ctx_rejected.yaml"
+    },
+    {
+      "name": "ausf_ueauth_eap_malformed_payload_rejected",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "ausf",
+      "category": "negative",
+      "description": "eap-session POST with a junk eapPayload is rejected; AUSF stays up",
+      "path": "ausf/ueauth_eap_malformed_payload_rejected.yaml"
+    },
+    {
+      "name": "ausf_ueauth_malformed_suci_rejected",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "ausf",
+      "category": "negative",
+      "description": "POST ue-authentications with a malformed SUCI string is rejected 400",
+      "path": "ausf/ueauth_malformed_suci_rejected.yaml"
+    },
+    {
+      "name": "ausf_ueauth_missing_serving_network_name_rejected",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "ausf",
+      "category": "negative",
+      "description": "POST ue-authentications omitting servingNetworkName is rejected 400",
+      "path": "ausf/ueauth_missing_serving_network_name_rejected.yaml"
+    },
+    {
+      "name": "ausf_ueauth_oversized_body_rejected",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "ausf",
+      "category": "negative",
+      "description": "POST ue-authentications with a multi-MB padded body is rejected / tolerated, AUSF stays up",
+      "path": "ausf/ueauth_oversized_body_rejected.yaml"
+    },
+    {
+      "name": "ausf_ueauth_problem_details_fidelity_check",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "ausf",
+      "category": "negative",
+      "description": "A rejected initiate returns a well-formed problem+json that does not leak the SUPI",
+      "path": "ausf/ueauth_problem_details_fidelity_check.yaml"
+    },
+    {
+      "name": "ausf_ueauth_stale_ctx_liveness_rejected",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "ausf",
+      "category": "negative",
+      "description": "Confirmation after the context was deleted is rejected; AUSF stays up",
+      "path": "ausf/ueauth_stale_ctx_liveness_rejected.yaml"
+    },
+    {
+      "name": "ausf_ueauth_suci_concealed_profile_a_success",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "ausf",
+      "category": "functional",
+      "description": "POST ue-authentications with a Profile-A concealed SUCI returns 201 5G-AKA",
+      "path": "ausf/ueauth_suci_concealed_profile_a_success.yaml"
+    },
+    {
+      "name": "ausf_ueauth_unknown_user_rejected",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "ausf",
+      "category": "negative",
+      "description": "POST ue-authentications for an unprovisioned SUPI is rejected 404 USER_NOT_FOUND",
+      "path": "ausf/ueauth_unknown_user_rejected.yaml"
+    },
+    {
+      "name": "ausf_ueauth_unsupported_media_type_rejected",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "ausf",
+      "category": "negative",
+      "description": "POST ue-authentications with Content-Type text/plain is rejected 415",
+      "path": "ausf/ueauth_unsupported_media_type_rejected.yaml"
+    },
+    {
+      "name": "ausf_ueauth_wrong_res_star_failure",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "ausf",
+      "category": "negative",
+      "description": "Confirmation with a wrong RES* yields AUTHENTICATION_FAILURE, AUSF stays up",
+      "path": "ausf/ueauth_wrong_res_star_failure.yaml"
+    },
+    {
+      "name": "ausf_upu_protection_missing_mandatory_field_rejected",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "ausf",
+      "category": "negative",
+      "description": "POST ue-upu omitting upuDataList is rejected 400",
+      "path": "ausf/upu_protection_missing_mandatory_field_rejected.yaml"
+    },
+    {
+      "name": "ausf_upu_protection_success",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "ausf",
+      "category": "functional",
+      "description": "POST ue-upu returns 200 with protected UE-Parameters-Update security info",
+      "path": "ausf/upu_protection_success.yaml"
+    },
+    {
+      "name": "ausf_upu_protection_unknown_supi_rejected",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "ausf",
+      "category": "negative",
+      "description": "POST ue-upu for an unknown SUPI is rejected; AUSF stays up",
+      "path": "ausf/upu_protection_unknown_supi_rejected.yaml"
+    },
+    {
+      "name": "auth_failure_mac",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "Auth preamble then AuthenticationFailure cause",
+      "path": "gnb/auth_failure_mac.yaml"
+    },
+    {
+      "name": "auth_failure_sync",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "Auth preamble then AuthenticationFailure cause",
+      "path": "gnb/auth_failure_sync.yaml"
+    },
+    {
+      "name": "auth_response_wrong_res_star",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "AuthenticationResponse with a corrupted RES* (XRES* mismatch) (YAML)",
+      "path": "gnb/auth_response_wrong_res_star.yaml"
+    },
+    {
+      "name": "configuration_update",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "functional",
+      "description": "Registration + AMF-initiated Generic UE Configuration Update (YAML)",
+      "path": "gnb/configuration_update.yaml"
+    },
+    {
+      "name": "deregistration",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "functional",
+      "description": "Registration + UE-initiated deregistration from the 5G network (YAML)",
+      "path": "gnb/deregistration.yaml"
+    },
+    {
+      "name": "deregistration_after_release",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "functional",
+      "description": "Tolerant cleanup finalizer — register, release session, de-register (YAML)",
+      "path": "gnb/deregistration_after_release.yaml"
+    },
+    {
+      "name": "deregistration_switchoff",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "UE-initiated switch-off de-registration with no DeregistrationAccept (YAML)",
+      "path": "gnb/deregistration_switchoff.yaml"
+    },
+    {
+      "name": "diameter_gx_ccr_cca_init",
+      "source": "template",
+      "type": "client",
+      "protocol": "diameter",
+      "nf": "pgw",
+      "category": "functional",
+      "description": "Gx CCR/CCA INITIAL 4-step echo against fgp",
+      "path": "diameter/gx/ccr_cca_init.yaml"
+    },
+    {
+      "name": "diameter_gx_ccr_cca_terminate",
+      "source": "template",
+      "type": "client",
+      "protocol": "diameter",
+      "nf": "pgw",
+      "category": "functional",
+      "description": "Gx CCR/CCA TERMINATION 4-step echo against fgp",
+      "path": "diameter/gx/ccr_cca_terminate.yaml"
+    },
+    {
+      "name": "diameter_rx_aar_aaa_success",
+      "source": "template",
+      "type": "client",
+      "protocol": "diameter",
+      "nf": "af",
+      "category": "functional",
+      "description": "Rx AAR/AAA 4-step echo against fgp",
+      "path": "diameter/rx/aar_aaa_success.yaml"
+    },
+    {
+      "name": "diameter_s6a_air_aia_success",
+      "source": "template",
+      "type": "client",
+      "protocol": "diameter",
+      "nf": "mme",
+      "category": "functional",
+      "description": "S6a AIR/AIA 4-step echo against fgp",
+      "path": "diameter/s6a/air_aia_success.yaml"
+    },
+    {
+      "name": "diameter_s6a_clr_cla_relay",
+      "source": "template",
+      "type": "client",
+      "protocol": "diameter",
+      "nf": "mme",
+      "category": "functional",
+      "description": "S6a CLR/CLA 4-step echo (relay) against fgp",
+      "path": "diameter/s6a/clr_cla_relay.yaml"
+    },
+    {
+      "name": "diameter_s6a_idr_ida_relay",
+      "source": "template",
+      "type": "client",
+      "protocol": "diameter",
+      "nf": "mme",
+      "category": "functional",
+      "description": "S6a IDR/IDA 4-step echo (relay) against fgp",
+      "path": "diameter/s6a/idr_ida_relay.yaml"
+    },
+    {
+      "name": "diameter_s6a_nor_noa_relay",
+      "source": "template",
+      "type": "client",
+      "protocol": "diameter",
+      "nf": "mme",
+      "category": "functional",
+      "description": "S6a NOR/NOA 4-step echo (relay) against fgp",
+      "path": "diameter/s6a/nor_noa_relay.yaml"
+    },
+    {
+      "name": "diameter_s6a_pur_pua_success",
+      "source": "template",
+      "type": "client",
+      "protocol": "diameter",
+      "nf": "mme",
+      "category": "functional",
+      "description": "S6a PUR/PUA 4-step echo against fgp",
+      "path": "diameter/s6a/pur_pua_success.yaml"
+    },
+    {
+      "name": "diameter_s6a_rx_combined",
+      "source": "template",
+      "type": "client",
+      "protocol": "diameter",
+      "nf": "mme",
+      "category": "lifecycle",
+      "description": "Multi-app S6a+Rx 4-step echo on one SCTP association",
+      "path": "diameter/multi/s6a_rx_combined.yaml"
+    },
+    {
+      "name": "diameter_s6a_rx_fgp_drops_aar",
+      "source": "template",
+      "type": "client",
+      "protocol": "diameter",
+      "nf": "mme",
+      "category": "negative",
+      "description": "Multi-app S6a+Rx with Rx drop — S6a completes, AAR times out",
+      "path": "diameter/multi/s6a_rx_fgp_drops_aar.yaml"
+    },
+    {
+      "name": "diameter_s6a_ulr_route_record_loop",
+      "source": "template",
+      "type": "client",
+      "protocol": "diameter",
+      "nf": "mme",
+      "category": "negative",
+      "description": "S6a ULR/ULA error — DIAMETER_LOOP_DETECTED (3005)",
+      "path": "diameter/s6a/s6a_ulr_route_record_loop.yaml"
+    },
+    {
+      "name": "diameter_s6a_ulr_ula_success",
+      "source": "template",
+      "type": "client",
+      "protocol": "diameter",
+      "nf": "mme",
+      "category": "functional",
+      "description": "S6a ULR/ULA 4-step echo against fgp",
+      "path": "diameter/s6a/ulr_ula_success.yaml"
+    },
+    {
+      "name": "diameter_s6a_ulr_ula_user_unknown",
+      "source": "template",
+      "type": "client",
+      "protocol": "diameter",
+      "nf": "mme",
+      "category": "negative",
+      "description": "S6a ULR/ULA error — DIAMETER_ERROR_USER_UNKNOWN (5001)",
+      "path": "diameter/s6a/ulr_ula_user_unknown.yaml"
+    },
+    {
+      "name": "duplicate_registration",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "Registration + immediate re-registration with same SUCI — test AMF handling (YAML)",
+      "path": "gnb/duplicate_registration.yaml"
+    },
+    {
+      "name": "emergency_registration",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "functional",
+      "description": "Initial registration with 5GS registration type = emergency; assert deterministic AMF reaction (YAML)",
+      "path": "gnb/emergency_registration.yaml"
+    },
+    {
+      "name": "error_indication",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "Send a UE-associated NGAP ErrorIndication and assert AMF tolerance (YAML)",
+      "path": "gnb/error_indication.yaml"
+    },
+    {
+      "name": "error_indication_non_ue_associated_after_setup",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "Send a non-UE-associated ErrorIndication with no UE context; assert AMF tolerance (YAML)",
+      "path": "gnb/error_indication_non_ue_associated_after_setup.yaml"
+    },
+    {
+      "name": "error_indication_unknown_ue_ids",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "Send a UE-associated ErrorIndication with unknown UE-NGAP-IDs; assert AMF liveness (YAML)",
+      "path": "gnb/error_indication_unknown_ue_ids.yaml"
+    },
+    {
+      "name": "fgp_diameter_policy_allow_s6a_lifecycle",
+      "source": "template",
+      "type": "client",
+      "protocol": "diameter",
+      "nf": "mme",
+      "category": "functional",
+      "description": "FGP S6a allow-rule lifecycle — default-deny PUR=5003, install allow-s6a, PUR=2001, delete, PUR=5003.",
+      "path": "fgp/diameter/policy_allow_s6a_lifecycle.yaml"
+    },
+    {
+      "name": "handover_cancel",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "functional",
+      "description": "N2 handover preparation aborted by source-gNB HandoverCancel (YAML)",
+      "path": "gnb/handover_cancel.yaml"
+    },
+    {
+      "name": "handover_source",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "functional",
+      "description": "N2 inter-gNB handover from the source gNB perspective (YAML)",
+      "path": "gnb/handover_source.yaml"
+    },
+    {
+      "name": "identity_request",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "functional",
+      "description": "Registration with AMF-initiated Identity Request / SUCI IdentityResponse (YAML)",
+      "path": "gnb/identity_request.yaml"
+    },
+    {
+      "name": "identity_response_wrong_type",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "Answer an AMF IDENTITY REQUEST with a wrong (5G-S-TMSI) identity type (YAML)",
+      "path": "gnb/identity_response_wrong_type.yaml"
+    },
+    {
+      "name": "initial_context_setup_failure_unsupported_security",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "Reply InitialContextSetupFailure to the AMF's context setup; assert graceful release (YAML)",
+      "path": "gnb/initial_context_setup_failure_unsupported_security.yaml"
+    },
+    {
+      "name": "malformed_auth_response_mid_procedure",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "Malformed (byte-flipped) AuthenticationResponse mid-procedure (YAML)",
+      "path": "gnb/malformed_auth_response_mid_procedure.yaml"
+    },
+    {
+      "name": "malformed_nas",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "robustness",
+      "description": "Send InitialUEMessage with garbage NAS PDU — test AMF robustness (YAML)",
+      "path": "gnb/malformed_nas.yaml"
+    },
+    {
+      "name": "mobility_registration_updating",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "functional",
+      "description": "mobility registration updating with the stored 5G-GUTI; assert AMF engages (YAML)",
+      "path": "gnb/mobility_registration_updating.yaml"
+    },
+    {
+      "name": "multinf_ngap_plus_diameter",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "functional",
+      "description": "Mixed NGAP + Diameter burst on a single UE (Phase 3/4 smoke)",
+      "path": "multinf/ngap_plus_diameter.yaml"
+    },
+    {
+      "name": "n2_handover_cancel_no_preparation",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "HandoverCancel with no prepared handover; assert graceful ack/error (YAML)",
+      "path": "gnb/n2_handover_cancel_no_preparation.yaml"
+    },
+    {
+      "name": "n2_handover_preparation_failure_unknown_target",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "HandoverRequired to a non-existent target; assert HandoverPreparationFailure (YAML)",
+      "path": "gnb/n2_handover_preparation_failure_unknown_target.yaml"
+    },
+    {
+      "name": "n2_handover_required_no_pdu_session",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "HandoverRequired with no PDU session; assert graceful prep failure (YAML)",
+      "path": "gnb/n2_handover_required_no_pdu_session.yaml"
+    },
+    {
+      "name": "n2_handover_required_stale_amf_ue_ngap_id",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "HandoverRequired with a stale AMF-UE-NGAP-ID; assert graceful prep failure (YAML)",
+      "path": "gnb/n2_handover_required_stale_amf_ue_ngap_id.yaml"
+    },
+    {
+      "name": "ng_reset",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "functional",
+      "description": "Registration + gNB-initiated global NG Reset for error recovery (YAML)",
+      "path": "gnb/ng_reset.yaml"
+    },
+    {
+      "name": "ng_reset_partial",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "functional",
+      "description": "Registration + gNB-initiated partial (UE-associated) NG Reset (YAML)",
+      "path": "gnb/ng_reset_partial.yaml"
+    },
+    {
+      "name": "ng_reset_then_recover",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "functional",
+      "description": "Register, global NG Reset, then re-register a fresh UE to prove post-reset recovery (YAML)",
+      "path": "gnb/ng_reset_then_recover.yaml"
+    },
+    {
+      "name": "ng_setup",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "functional",
+      "description": "NG Setup — establish NGAP signalling connection between gNB and AMF (YAML)",
+      "path": "gnb/ng_setup.yaml"
+    },
+    {
+      "name": "ng_setup_failure",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "NG Setup against a PLMN/slice-mismatched AMF — expect NGSetupFailure with a cause (YAML)",
+      "path": "gnb/ng_setup_failure.yaml"
+    },
+    {
+      "name": "ng_setup_missing_supported_ta",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "NG Setup omitting the mandatory SupportedTAList; assert AMF rejects/does not accept (YAML)",
+      "path": "gnb/ng_setup_missing_supported_ta.yaml"
+    },
+    {
+      "name": "nrf_bstr_get",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "GET bootstrapping; assert _links + status + nrfInstanceId.",
+      "path": "nrf/bstr_get.yaml"
+    },
+    {
+      "name": "nrf_bstr_oauth_required_still_public",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "Under -oauth2 mode, bootstrap stays 200 (no auth) and NFM stays 401.",
+      "path": "nrf/bstr_oauth_required_still_public.yaml"
+    },
+    {
+      "name": "nrf_bstr_response_shape_strict",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "Strict shape — UUID nrfInstanceId, Nnrf_* oauth keys, /v1 hrefs.",
+      "path": "nrf/bstr_response_shape_strict.yaml"
+    },
+    {
+      "name": "nrf_conc_register",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "One distinct registration; burst N=100 for CONC-01.",
+      "path": "nrf/conc_register.yaml"
+    },
+    {
+      "name": "nrf_conc_register_discover",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "Register an SMF then discover SMFs; burst N=100 for CONC-04.",
+      "path": "nrf/conc_register_discover.yaml"
+    },
+    {
+      "name": "nrf_conc_register_same",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "PUT a fixed shared UUID; burst N=100 for CONC-02.",
+      "path": "nrf/conc_register_same.yaml"
+    },
+    {
+      "name": "nrf_conc_subscribe",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "One subscription POST; burst N=100 for CONC-06 (distinct IDs).",
+      "path": "nrf/conc_subscribe.yaml"
+    },
+    {
+      "name": "nrf_disc_cache_control",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "Discovery response has Cache-Control: max-age=N (N > 0).",
+      "path": "nrf/disc_cache_control.yaml"
+    },
+    {
+      "name": "nrf_disc_empty_result",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "Filter matches zero producers → 200 + nfInstances:[].",
+      "path": "nrf/disc_empty_result.yaml"
+    },
+    {
+      "name": "nrf_disc_filter_full_matrix",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "target-nf-instance-id + target-nf-set-id + exclude-nfinst-list filters.",
+      "path": "nrf/disc_filter_full_matrix.yaml"
+    },
+    {
+      "name": "nrf_disc_filter_matrix",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "target-nf-type + service-names filter matrix; monotonic narrowing.",
+      "path": "nrf/disc_filter_matrix.yaml"
+    },
+    {
+      "name": "nrf_disc_ignored_query_params",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "Unknown query params returned in body.ignoredQueryParams.",
+      "path": "nrf/disc_ignored_query_params.yaml"
+    },
+    {
+      "name": "nrf_disc_invalid_target_nf_type",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "target-nf-type=BOGUS → 400 + ProblemDetails.",
+      "path": "nrf/disc_invalid_target_nf_type.yaml"
+    },
+    {
+      "name": "nrf_disc_missing_target_nf_type",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "GET /nf-instances with no target-nf-type → 400 + ProblemDetails.",
+      "path": "nrf/disc_missing_target_nf_type.yaml"
+    },
+    {
+      "name": "nrf_disc_routing_indicator",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "Register 3 UDMs with distinct routingIndicators; discover by routing-indicator returns the matching one (DISC-08).",
+      "path": "nrf/disc_routing_indicator.yaml"
+    },
+    {
+      "name": "nrf_heartbeat_patch_resets_clock",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "PATCH refreshes the heartbeat expiry so the NF survives a monitor tick that would otherwise suspend it (LONG-01 / NFM-13).",
+      "path": "nrf/heartbeat_patch_resets_clock.yaml"
+    },
+    {
+      "name": "nrf_heartbeat_timeout_fsm",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "Register, stop heart-beating, observe REGISTERED → SUSPENDED → DEREGISTERED (LONG-04).",
+      "path": "nrf/heartbeat_timeout_fsm.yaml"
+    },
+    {
+      "name": "nrf_mtls_handshake_ok",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "Valid client cert + ClientAuth=require → 200 (MTLS-05).",
+      "path": "nrf/mtls_handshake_ok.yaml"
+    },
+    {
+      "name": "nrf_mtls_missing_client_cert",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "No client cert under ClientAuth=require → handshake rejected (MTLS-06).",
+      "path": "nrf/mtls_missing_client_cert.yaml"
+    },
+    {
+      "name": "nrf_nfm_delete_unknown",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "DELETE non-existent nfInstanceId → 404 + ProblemDetails (NOT 204).",
+      "path": "nrf/nfm_delete_unknown.yaml"
+    },
+    {
+      "name": "nrf_nfm_get_unknown",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "GET non-existent nfInstanceId → 404 + ProblemDetails.",
+      "path": "nrf/nfm_get_unknown.yaml"
+    },
+    {
+      "name": "nrf_nfm_list_filtered",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "List collection with nf-type filter + limit boundaries.",
+      "path": "nrf/nfm_list_filtered.yaml"
+    },
+    {
+      "name": "nrf_nfm_patch_all_fields",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "PATCH replace on each allowed top-level field; GET asserts each persists.",
+      "path": "nrf/nfm_patch_all_fields.yaml"
+    },
+    {
+      "name": "nrf_nfm_patch_invalid_path",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "PATCH with bogus path / op → 400 + ProblemDetails.",
+      "path": "nrf/nfm_patch_invalid_path.yaml"
+    },
+    {
+      "name": "nrf_nfm_patch_replace_immutable",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "PATCH replace /nfInstanceId → 400 (immutable identity field).",
+      "path": "nrf/nfm_patch_replace_immutable.yaml"
+    },
+    {
+      "name": "nrf_nfm_register_201_location",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "Verify 201+Location on first PUT, 200 on second PUT same UUID.",
+      "path": "nrf/nfm_register_201_location.yaml"
+    },
+    {
+      "name": "nrf_nfm_register_bad_heartbeat",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "heartBeatTimer 5 (below min) and 100000 (above max) → 400 each.",
+      "path": "nrf/nfm_register_bad_heartbeat.yaml"
+    },
+    {
+      "name": "nrf_nfm_register_full_profile",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "Register full NFProfile; GET round-trips every client-controlled field.",
+      "path": "nrf/nfm_register_full_profile.yaml"
+    },
+    {
+      "name": "nrf_nfm_register_invalid_nftype",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "nfType outside the NFType enum → 400 + ProblemDetails.",
+      "path": "nrf/nfm_register_invalid_nftype.yaml"
+    },
+    {
+      "name": "nrf_nfm_register_missing_required",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "PUT omitting nfType / nfStatus → 400 each + ProblemDetails.",
+      "path": "nrf/nfm_register_missing_required.yaml"
+    },
+    {
+      "name": "nrf_nfm_register_then_deregister",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "Register → fetch → heartbeat → deregister an SMF profile.",
+      "path": "nrf/nfm_register_then_deregister.yaml"
+    },
+    {
+      "name": "nrf_nfm_update_via_put",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "Re-PUT same UUID with dropped field; GET must show full replace, not merge.",
+      "path": "nrf/nfm_update_via_put.yaml"
+    },
+    {
+      "name": "nrf_notify_receiver",
+      "source": "template",
+      "type": "server",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "Receive + assert the NRF's NF_REGISTERED status notification (SUB-05 / NOTIFY-01).",
+      "path": "nrf/notify_receiver.yaml"
+    },
+    {
+      "name": "nrf_oauth_invalid_grant_type",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "grant_type=password → 400 unsupported_grant_type; empty → 400 invalid_request.",
+      "path": "nrf/oauth_invalid_grant_type.yaml"
+    },
+    {
+      "name": "nrf_oauth_invalid_scope",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "scope=BOGUS → 400 invalid_scope.",
+      "path": "nrf/oauth_invalid_scope.yaml"
+    },
+    {
+      "name": "nrf_oauth_jwt_structure",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "Issued access_token has JWT shape (header.payload.signature; starts with eyJ).",
+      "path": "nrf/oauth_jwt_structure.yaml"
+    },
+    {
+      "name": "nrf_oauth_missing_client_id",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "Omit nfInstanceId → 400; omit nfType → 400 (both invalid_request).",
+      "path": "nrf/oauth_missing_client_id.yaml"
+    },
+    {
+      "name": "nrf_oauth_required_mode",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "Under -oauth2 — NFM 401 (no auth), bstr 200, token issued, NFM 200 with bearer (OAUTH-ENF-01).",
+      "path": "nrf/oauth_required_mode.yaml"
+    },
+    {
+      "name": "nrf_oauth_token",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "Register SMF, issue OAuth2 client_credentials token, cleanup.",
+      "path": "nrf/oauth_token.yaml"
+    },
+    {
+      "name": "nrf_oauth_token_expired",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "Token exp claim is future at issue, past after the 30s window (OAUTH-08 / LONG-03).",
+      "path": "nrf/oauth_token_expired.yaml"
+    },
+    {
+      "name": "nrf_oauth_token_headers",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "Token positive (headers) + negative (unregistered NF).",
+      "path": "nrf/oauth_token_headers.yaml"
+    },
+    {
+      "name": "nrf_oauth_token_serial_burst",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "Issue 5 tokens serially for one consumer; assert each is non-empty + distinct from prior.",
+      "path": "nrf/oauth_token_serial_burst.yaml"
+    },
+    {
+      "name": "nrf_persistence_multi_nf_list",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "After restart, list returns exactly 5 NFs and each survives by UUID (PERSIST-04 post-restart).",
+      "path": "nrf/persistence_multi_nf_list.yaml"
+    },
+    {
+      "name": "nrf_persistence_multi_nf_register",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "Register 5 mixed-type NFs under fixed UUIDs (PERSIST-04 pre-restart).",
+      "path": "nrf/persistence_multi_nf_register.yaml"
+    },
+    {
+      "name": "nrf_persistence_nfm_register",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "Register one SMF under a fixed UUID (PERSIST-01 pre-restart).",
+      "path": "nrf/persistence_nfm_register.yaml"
+    },
+    {
+      "name": "nrf_persistence_nfm_verify_registered",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "GET the fixed-UUID SMF after restart, assert profile survived (PERSIST-01 post-restart).",
+      "path": "nrf/persistence_nfm_verify_registered.yaml"
+    },
+    {
+      "name": "nrf_persistence_oauth_consumer_registered",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "Register a consumer AMF under a fixed UUID (PERSIST-03 pre-restart).",
+      "path": "nrf/persistence_oauth_consumer_registered.yaml"
+    },
+    {
+      "name": "nrf_persistence_oauth_token_after_restart",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "Issue a token for the fixed consumer UUID after restart (PERSIST-03 post-restart).",
+      "path": "nrf/persistence_oauth_token_after_restart.yaml"
+    },
+    {
+      "name": "nrf_persistence_sub_create",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "Create a subscription (PERSIST-02 pre-restart); harness captures the server-assigned ID.",
+      "path": "nrf/persistence_sub_create.yaml"
+    },
+    {
+      "name": "nrf_problem_json_shape",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "10 negative paths — every 4xx body must be RFC 7807 ProblemDetails.",
+      "path": "nrf/problem_json_shape.yaml"
+    },
+    {
+      "name": "nrf_sub_create_bad_callback",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "POST subscription with malformed callback URI → 400 + ProblemDetails.",
+      "path": "nrf/sub_create_bad_callback.yaml"
+    },
+    {
+      "name": "nrf_sub_create_patch_delete",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "POST subscription → PATCH validityTime → DELETE.",
+      "path": "nrf/sub_create_patch_delete.yaml"
+    },
+    {
+      "name": "nrf_sub_delete_unknown",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "DELETE unknown subscriptionId → 404 + ProblemDetails.",
+      "path": "nrf/sub_delete_unknown.yaml"
+    },
+    {
+      "name": "nrf_sub_get",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "POST subscription → GET → assert body fields round-trip.",
+      "path": "nrf/sub_get.yaml"
+    },
+    {
+      "name": "nrf_tls_handshake_bad_ca",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "Foreign-CA client rejects the server cert → x509 unknown authority (MTLS-02).",
+      "path": "nrf/tls_handshake_bad_ca.yaml"
+    },
+    {
+      "name": "nrf_tls_handshake_bad_san",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "Server cert SAN mismatch → x509 host-validation error (MTLS-03).",
+      "path": "nrf/tls_handshake_bad_san.yaml"
+    },
+    {
+      "name": "nrf_tls_handshake_expired_cert",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "Expired server cert → x509 expiry error (MTLS-04).",
+      "path": "nrf/tls_handshake_expired_cert.yaml"
+    },
+    {
+      "name": "nrf_tls_handshake_ok",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "-",
+      "description": "Trusted-CA TLS handshake → 200 on bootstrapping (MTLS-01).",
+      "path": "nrf/tls_handshake_ok.yaml"
+    },
+    {
+      "name": "paging_no_response_retransmission",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "stability",
+      "description": "Go CM-IDLE, withhold ServiceRequest, observe whether the AMF retransmits Paging (YAML)",
+      "path": "gnb/paging_no_response_retransmission.yaml"
+    },
+    {
+      "name": "paging_response",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "stability",
+      "description": "Registration + CM-IDLE transition + wait for AMF Paging + ServiceRequest reconnection (YAML)",
+      "path": "gnb/paging_response.yaml"
+    },
+    {
+      "name": "path_switch",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "functional",
+      "description": "Target-gNB PathSwitchRequest finalizing an Xn handover (YAML)",
+      "path": "gnb/path_switch.yaml"
+    },
+    {
+      "name": "pdu_session_amf_initiated_modify",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "functional",
+      "description": "Establish a PDU session, wait for PDUSessionModifyRequest, reply ModifyResponse (YAML)",
+      "path": "gnb/pdu_session_amf_initiated_modify.yaml"
+    },
+    {
+      "name": "pdu_session_duplicate_id_establishment",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "Establish PDU session id=1, then re-request the same id; assert AMF rejects/replays (YAML)",
+      "path": "gnb/pdu_session_duplicate_id_establishment.yaml"
+    },
+    {
+      "name": "pdu_session_modify_partial_reject",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "Reply to PDUSessionModifyRequest with a FailedToModify list (partial reject) (YAML)",
+      "path": "gnb/pdu_session_modify_partial_reject.yaml"
+    },
+    {
+      "name": "pdu_session_reject",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "Registration + PDU session request with invalid DNN — expect rejection (YAML)",
+      "path": "gnb/pdu_session_reject.yaml"
+    },
+    {
+      "name": "pdu_session_reject_slice",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "PDU session request for an unsubscribed slice (sst 3) — expect 5GSM reject, not accept (YAML)",
+      "path": "gnb/pdu_session_reject_slice.yaml"
+    },
+    {
+      "name": "pdu_session_release",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "functional",
+      "description": "Registration + PDU session setup + UE-initiated session release (YAML)",
+      "path": "gnb/pdu_session_release.yaml"
+    },
+    {
+      "name": "pdu_session_release_for_unknown_session",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "Release a non-existent PDU session id; assert AMF rejects/ignores (YAML)",
+      "path": "gnb/pdu_session_release_for_unknown_session.yaml"
+    },
+    {
+      "name": "pdu_session_release_response_wrong_session_id",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "Reply to a release command with a mismatched PDU session id; assert AMF detects/tolerates (YAML)",
+      "path": "gnb/pdu_session_release_response_wrong_session_id.yaml"
+    },
+    {
+      "name": "pdu_session_resource_notify_qos_flow_release",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "functional",
+      "description": "Establish a PDU session, then send PDUSessionResourceNotify (released); assert AMF tolerance (YAML)",
+      "path": "gnb/pdu_session_resource_notify_qos_flow_release.yaml"
+    },
+    {
+      "name": "pdu_session_setup",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "functional",
+      "description": "Registration + PDU session establishment with GTP-U tunnel setup (YAML)",
+      "path": "gnb/pdu_session_setup.yaml"
+    },
+    {
+      "name": "pdu_session_setup_ipv6",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "functional",
+      "description": "PDU session establishment with PDU session type IPv6; accept or reject both valid (YAML)",
+      "path": "gnb/pdu_session_setup_ipv6.yaml"
+    },
+    {
+      "name": "periodic_registration_updating",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "functional",
+      "description": "periodic registration updating with the stored 5G-GUTI; assert AMF engages (YAML)",
+      "path": "gnb/periodic_registration_updating.yaml"
+    },
+    {
+      "name": "pfcp_sm_setup_client",
+      "source": "template",
+      "type": "client",
+      "protocol": "pfcp",
+      "nf": "smf",
+      "category": "functional",
+      "description": "SMF establishes a PFCP association then a session against UPF",
+      "path": "pfcp/sm_setup_client.yaml"
+    },
+    {
+      "name": "pfcp_sm_setup_server",
+      "source": "template",
+      "type": "server",
+      "protocol": "pfcp",
+      "nf": "upf",
+      "category": "functional",
+      "description": "UPF accepts an SMF association + session establishment",
+      "path": "pfcp/sm_setup_server.yaml"
+    },
+    {
+      "name": "post_smc_backwards_count_uplink_nas",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "Secured uplink NAS with NAS COUNT below the last accepted value (YAML)",
+      "path": "gnb/post_smc_backwards_count_uplink_nas.yaml"
+    },
+    {
+      "name": "ran_config_update",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "functional",
+      "description": "NGSetup + gNB-initiated RAN Configuration Update procedure (YAML)",
+      "path": "gnb/ran_config_update.yaml"
+    },
+    {
+      "name": "registration",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "functional",
+      "description": "5G UE initial registration with authentication and security activation (YAML)",
+      "path": "gnb/registration.yaml"
+    },
+    {
+      "name": "registration_amf",
+      "source": "template",
+      "type": "server",
+      "protocol": "ngap",
+      "nf": "amf",
+      "category": "functional",
+      "description": "AMF-side stub: receives InitialUEMessage, responds with UEContextReleaseCommand (YAML)",
+      "path": "amf/registration_amf.yaml"
+    },
+    {
+      "name": "registration_full_amf",
+      "source": "template",
+      "type": "server",
+      "protocol": "ngap",
+      "nf": "amf",
+      "category": "functional",
+      "description": "AMF-side full registration: 5G-AKA challenge, security activation, registration accept (YAML)",
+      "path": "amf/registration_full_amf.yaml"
+    },
+    {
+      "name": "registration_guti_unknown",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "InitialUEMessage RegistrationRequest with a bogus 5G-GUTI — expect IdentityRequest or RegistrationReject (YAML)",
+      "path": "gnb/registration_guti_unknown.yaml"
+    },
+    {
+      "name": "registration_malformed",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "InitialUEMessage with a byte-corrupted RegistrationRequest — test AMF graceful rejection / robustness (YAML)",
+      "path": "gnb/registration_malformed.yaml"
+    },
+    {
+      "name": "registration_replay_old_security_context",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "Replay a secured uplink NAS at a stale (rewound) NAS COUNT (YAML)",
+      "path": "gnb/registration_replay_old_security_context.yaml"
+    },
+    {
+      "name": "registration_simple",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "functional",
+      "description": "gNB-side stub: send InitialUEMessage, expect UEContextReleaseCommand, confirm release (YAML)",
+      "path": "gnb/registration_simple.yaml"
+    },
+    {
+      "name": "rest_fgp_admin_add_pcc_rule_client",
+      "source": "template",
+      "type": "client",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "functional",
+      "description": "Client POST to FGP admin API to install a PCC rule",
+      "path": "rest/fgp_admin_client.yaml"
+    },
+    {
+      "name": "rest_fgp_admin_server",
+      "source": "template",
+      "type": "server",
+      "protocol": "rest",
+      "nf": "external",
+      "category": "functional",
+      "description": "Mock FGP admin API — accepts any pcc-rules POST and replies 201",
+      "path": "rest/fgp_admin_server.yaml"
+    },
+    {
+      "name": "sbi_nausf_authenticate_client",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "ausf",
+      "category": "functional",
+      "description": "Client POST against AUSF Nausf_UEAuthentication_Authenticate",
+      "path": "sbi/nausf_authenticate_client.yaml"
+    },
+    {
+      "name": "sbi_nausf_authenticate_server",
+      "source": "template",
+      "type": "server",
+      "protocol": "sbi",
+      "nf": "ausf",
+      "category": "functional",
+      "description": "Server response template for Nausf_UEAuthentication_Authenticate",
+      "path": "sbi/nausf_authenticate_server.yaml"
+    },
+    {
+      "name": "sbi_nudm_sdm_get_client",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "functional",
+      "description": "Client GET against UDM Nudm_SDM_GetSubscriptionData",
+      "path": "sbi/nudm_sdm_get_client.yaml"
+    },
+    {
+      "name": "sbi_nudm_sdm_get_server",
+      "source": "template",
+      "type": "server",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "functional",
+      "description": "Server response template for Nudm_SDM_GetSubscriptionData",
+      "path": "sbi/nudm_sdm_get_server.yaml"
+    },
+    {
+      "name": "security_mode_bidding_down",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "Full registration to SecurityModeCommand then SecurityModeComplete omitting replayed NAS — expect reject/release (YAML)",
+      "path": "gnb/security_mode_bidding_down.yaml"
+    },
+    {
+      "name": "service_request",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "functional",
+      "description": "Registration + CM-IDLE transition + Service Request reconnection (YAML)",
+      "path": "gnb/service_request.yaml"
+    },
+    {
+      "name": "service_request_emergency",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "functional",
+      "description": "ServiceRequest (service type emergency) from CM-IDLE; assert AMF reaction (YAML)",
+      "path": "gnb/service_request_emergency.yaml"
+    },
+    {
+      "name": "service_request_high_priority",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "functional",
+      "description": "ServiceRequest (service type high-priority access) from CM-IDLE; assert AMF reaction (YAML)",
+      "path": "gnb/service_request_high_priority.yaml"
+    },
+    {
+      "name": "service_request_malformed",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "CM-IDLE Service Request with a bit-flipped short-MAC — expect AMF refusal, no context re-activation (YAML)",
+      "path": "gnb/service_request_malformed.yaml"
+    },
+    {
+      "name": "service_request_signalling",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "functional",
+      "description": "ServiceRequest (service type signalling) from CM-IDLE; assert AMF reaction (YAML)",
+      "path": "gnb/service_request_signalling.yaml"
+    },
+    {
+      "name": "service_request_with_uplink_data_status",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "functional",
+      "description": "ServiceRequest (service type data + Uplink Data Status) from CM-IDLE; assert AMF reaction (YAML)",
+      "path": "gnb/service_request_with_uplink_data_status.yaml"
+    },
+    {
+      "name": "smc_complete_unciphered_when_cipher_selected",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "SecurityModeComplete sent unciphered though a cipher was selected (YAML)",
+      "path": "gnb/smc_complete_unciphered_when_cipher_selected.yaml"
+    },
+    {
+      "name": "smc_null_integrity_rejected_nonemergency",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "Register with null-only UE security capabilities; assert AMF reaction (YAML)",
+      "path": "gnb/smc_null_integrity_rejected_nonemergency.yaml"
+    },
+    {
+      "name": "smc_replay_stale_count",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "Re-emit a secured uplink NAS at a stale NAS COUNT after security activation (YAML)",
+      "path": "gnb/smc_replay_stale_count.yaml"
+    },
+    {
+      "name": "smc_wrong_mac_rejected",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "SecurityModeComplete with a corrupted MAC (integrity failure) (YAML)",
+      "path": "gnb/smc_wrong_mac_rejected.yaml"
+    },
+    {
+      "name": "smf_nsmf_create_smcontext_bad_snssai",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "smf",
+      "category": "negative",
+      "description": "AMF CreateSMContext with unsupported S-NSSAI — expect 4xx rejection",
+      "path": "smf/nsmf_create_smcontext_bad_snssai.yaml"
+    },
+    {
+      "name": "smf_nsmf_create_smcontext_duplicate_pdu_session_id",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "smf",
+      "category": "negative",
+      "description": "AMF CreateSMContext twice with same pduSessionId — second rejected",
+      "path": "smf/nsmf_create_smcontext_duplicate_pdu_session_id.yaml"
+    },
+    {
+      "name": "smf_nsmf_create_smcontext_happy",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "smf",
+      "category": "functional",
+      "description": "AMF CreateSMContext against SMF — expect 201 Created with smContextRef",
+      "path": "smf/nsmf_create_smcontext_happy.yaml"
+    },
+    {
+      "name": "smf_nsmf_create_smcontext_malformed_json",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "smf",
+      "category": "negative",
+      "description": "AMF sends truncated JSON to SMF CreateSMContext — expect 400 rejection",
+      "path": "smf/nsmf_create_smcontext_malformed_json.yaml"
+    },
+    {
+      "name": "smf_nsmf_create_smcontext_missing_mandatory_ie",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "smf",
+      "category": "negative",
+      "description": "AMF CreateSMContext missing mandatory IEs — expect 4xx rejection",
+      "path": "smf/nsmf_create_smcontext_missing_mandatory_ie.yaml"
+    },
+    {
+      "name": "smf_nsmf_create_smcontext_replay",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "smf",
+      "category": "negative",
+      "description": "AMF replays identical CreateSMContext — SMF handles deterministically, stays up",
+      "path": "smf/nsmf_create_smcontext_replay.yaml"
+    },
+    {
+      "name": "smf_nsmf_create_smcontext_unauthorized_token",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "smf",
+      "category": "negative",
+      "description": "AMF CreateSMContext with forged OAuth2 token — expect 401/403/4xx rejection",
+      "path": "smf/nsmf_create_smcontext_unauthorized_token.yaml"
+    },
+    {
+      "name": "smf_nsmf_create_smcontext_unknown_dnn",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "smf",
+      "category": "negative",
+      "description": "AMF CreateSMContext with unknown DNN — expect 4xx DNN_DENIED rejection",
+      "path": "smf/nsmf_create_smcontext_unknown_dnn.yaml"
+    },
+    {
+      "name": "smf_nsmf_create_smcontext_unsupported_media_type",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "smf",
+      "category": "negative",
+      "description": "AMF CreateSMContext with text/plain Content-Type — expect 415 rejection",
+      "path": "smf/nsmf_create_smcontext_unsupported_media_type.yaml"
+    },
+    {
+      "name": "smf_nsmf_create_smcontext_unsupported_request_type",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "smf",
+      "category": "negative",
+      "description": "AMF CreateSMContext with invalid requestType enum — expect 4xx rejection",
+      "path": "smf/nsmf_create_smcontext_unsupported_request_type.yaml"
+    },
+    {
+      "name": "smf_nsmf_release_smcontext_happy",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "smf",
+      "category": "functional",
+      "description": "AMF Create then Release SM context — expect 204/200 on release",
+      "path": "smf/nsmf_release_smcontext_happy.yaml"
+    },
+    {
+      "name": "smf_nsmf_release_smcontext_malformed",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "smf",
+      "category": "negative",
+      "description": "AMF Release SM context with truncated JSON — expect 4xx rejection",
+      "path": "smf/nsmf_release_smcontext_malformed.yaml"
+    },
+    {
+      "name": "smf_nsmf_release_smcontext_unknown_ref",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "smf",
+      "category": "negative",
+      "description": "AMF Release SM context with bogus ref — expect 404/4xx rejection",
+      "path": "smf/nsmf_release_smcontext_unknown_ref.yaml"
+    },
+    {
+      "name": "smf_nsmf_retrieve_smcontext_happy",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "smf",
+      "category": "functional",
+      "description": "AMF Create then Retrieve SM context — expect 200 OK on retrieve",
+      "path": "smf/nsmf_retrieve_smcontext_happy.yaml"
+    },
+    {
+      "name": "smf_nsmf_retrieve_smcontext_unknown_ref",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "smf",
+      "category": "negative",
+      "description": "AMF Retrieve SM context with bogus ref — expect 404/4xx rejection",
+      "path": "smf/nsmf_retrieve_smcontext_unknown_ref.yaml"
+    },
+    {
+      "name": "smf_nsmf_smcontext_oversized_payload",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "smf",
+      "category": "negative",
+      "description": "AMF CreateSMContext with oversized body — expect 4xx rejection, SMF stays up",
+      "path": "smf/nsmf_smcontext_oversized_payload.yaml"
+    },
+    {
+      "name": "smf_nsmf_update_smcontext_deactivate_ulcl",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "smf",
+      "category": "functional",
+      "description": "AMF Update SM context upCnxState=DEACTIVATED — expect 200 OK",
+      "path": "smf/nsmf_update_smcontext_deactivate_ulcl.yaml"
+    },
+    {
+      "name": "smf_nsmf_update_smcontext_ho_path_switch",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "smf",
+      "category": "functional",
+      "description": "AMF Update SM context for HO path switch — expect 200 OK",
+      "path": "smf/nsmf_update_smcontext_ho_path_switch.yaml"
+    },
+    {
+      "name": "smf_nsmf_update_smcontext_malformed_json",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "smf",
+      "category": "negative",
+      "description": "AMF Update SM context with truncated JSON — expect 4xx rejection",
+      "path": "smf/nsmf_update_smcontext_malformed_json.yaml"
+    },
+    {
+      "name": "smf_nsmf_update_smcontext_missing_mandatory_ie",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "smf",
+      "category": "negative",
+      "description": "AMF Update SM context with empty body — expect 4xx rejection",
+      "path": "smf/nsmf_update_smcontext_missing_mandatory_ie.yaml"
+    },
+    {
+      "name": "smf_nsmf_update_smcontext_modification_request",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "smf",
+      "category": "functional",
+      "description": "AMF Update SM context with UE PDU-session-modification — expect 200 OK",
+      "path": "smf/nsmf_update_smcontext_modification_request.yaml"
+    },
+    {
+      "name": "smf_nsmf_update_smcontext_n2_info_happy",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "smf",
+      "category": "functional",
+      "description": "AMF Create then Update (N2 info) SM context — expect 200 OK on modify",
+      "path": "smf/nsmf_update_smcontext_n2_info_happy.yaml"
+    },
+    {
+      "name": "smf_nsmf_update_smcontext_unauthorized",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "smf",
+      "category": "negative",
+      "description": "AMF Update SM context with forged token — expect 401/403/4xx rejection",
+      "path": "smf/nsmf_update_smcontext_unauthorized.yaml"
+    },
+    {
+      "name": "smf_nsmf_update_smcontext_unknown_ref",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "smf",
+      "category": "negative",
+      "description": "AMF Update SM context with bogus ref — expect 404/4xx rejection",
+      "path": "smf/nsmf_update_smcontext_unknown_ref.yaml"
+    },
+    {
+      "name": "smf_pfcp_association_release",
+      "source": "template",
+      "type": "client",
+      "protocol": "pfcp",
+      "nf": "smf",
+      "category": "functional",
+      "description": "SMF releases a PFCP association — expect Cause Request accepted",
+      "path": "smf/pfcp_association_release.yaml"
+    },
+    {
+      "name": "smf_pfcp_association_setup_happy",
+      "source": "template",
+      "type": "client",
+      "protocol": "pfcp",
+      "nf": "smf",
+      "category": "functional",
+      "description": "SMF establishes a PFCP association with UPF — expect Cause Request accepted",
+      "path": "smf/pfcp_association_setup_happy.yaml"
+    },
+    {
+      "name": "smf_pfcp_association_update",
+      "source": "template",
+      "type": "client",
+      "protocol": "pfcp",
+      "nf": "smf",
+      "category": "functional",
+      "description": "SMF updates an existing PFCP association — expect Cause Request accepted",
+      "path": "smf/pfcp_association_update.yaml"
+    },
+    {
+      "name": "smf_pfcp_heartbeat_liveness",
+      "source": "template",
+      "type": "client",
+      "protocol": "pfcp",
+      "nf": "smf",
+      "category": "functional",
+      "description": "SMF heartbeats UPF over N4 — expect Heartbeat response with recovery timestamp",
+      "path": "smf/pfcp_heartbeat_liveness.yaml"
+    },
+    {
+      "name": "smf_pfcp_session_deletion_happy",
+      "source": "template",
+      "type": "client",
+      "protocol": "pfcp",
+      "nf": "smf",
+      "category": "functional",
+      "description": "SMF deletes an established PFCP session — expect Cause Request accepted",
+      "path": "smf/pfcp_session_deletion_happy.yaml"
+    },
+    {
+      "name": "smf_pfcp_session_est_missing_mandatory_ie",
+      "source": "template",
+      "type": "client",
+      "protocol": "pfcp",
+      "nf": "smf",
+      "category": "negative",
+      "description": "SMF establishment without CP F-SEID — expect Cause Mandatory IE missing",
+      "path": "smf/pfcp_session_est_missing_mandatory_ie.yaml"
+    },
+    {
+      "name": "smf_pfcp_session_est_no_association",
+      "source": "template",
+      "type": "client",
+      "protocol": "pfcp",
+      "nf": "smf",
+      "category": "negative",
+      "description": "SMF establishment without prior association — expect Cause No established PFCP Association",
+      "path": "smf/pfcp_session_est_no_association.yaml"
+    },
+    {
+      "name": "smf_pfcp_session_establishment_happy",
+      "source": "template",
+      "type": "client",
+      "protocol": "pfcp",
+      "nf": "smf",
+      "category": "functional",
+      "description": "SMF associates then establishes a PFCP session — expect Cause Request accepted",
+      "path": "smf/pfcp_session_establishment_happy.yaml"
+    },
+    {
+      "name": "smf_pfcp_session_mod_unknown_seid",
+      "source": "template",
+      "type": "client",
+      "protocol": "pfcp",
+      "nf": "smf",
+      "category": "negative",
+      "description": "SMF modification with bogus SEID — expect Cause Session context not found",
+      "path": "smf/pfcp_session_mod_unknown_seid.yaml"
+    },
+    {
+      "name": "smf_pfcp_session_modification_happy",
+      "source": "template",
+      "type": "client",
+      "protocol": "pfcp",
+      "nf": "smf",
+      "category": "functional",
+      "description": "SMF modifies an established PFCP session — expect Cause Request accepted",
+      "path": "smf/pfcp_session_modification_happy.yaml"
+    },
+    {
+      "name": "udm_ee_create_delete_subscription_ok",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "functional",
+      "description": "POST ee-subscriptions (201) then DELETE the created subscription (204)",
+      "path": "udm/ee_create_delete_subscription_ok.yaml"
+    },
+    {
+      "name": "udm_ee_create_subscription_invalid_event_type",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "negative",
+      "description": "POST ee-subscriptions with an invalid eventType is rejected with 400",
+      "path": "udm/ee_create_subscription_invalid_event_type.yaml"
+    },
+    {
+      "name": "udm_ee_delete_subscription_unknown",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "negative",
+      "description": "DELETE an unknown ee-subscription id is rejected with 404",
+      "path": "udm/ee_delete_subscription_unknown.yaml"
+    },
+    {
+      "name": "udm_pp_create_data_entry_ok",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "functional",
+      "description": "PUT pp-data-store/{afInstanceId} returns 201/200/204",
+      "path": "udm/pp_create_data_entry_ok.yaml"
+    },
+    {
+      "name": "udm_pp_update_malformed_patch",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "negative",
+      "description": "PATCH pp-data with non-JSON raw_body is rejected with 400",
+      "path": "udm/pp_update_malformed_patch.yaml"
+    },
+    {
+      "name": "udm_pp_update_ok",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "functional",
+      "description": "PATCH pp-data for a provisioned UE returns 200/204",
+      "path": "udm/pp_update_ok.yaml"
+    },
+    {
+      "name": "udm_pp_update_unknown_ue",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "negative",
+      "description": "PATCH pp-data for an unprovisioned UE is rejected with 404",
+      "path": "udm/pp_update_unknown_ue.yaml"
+    },
+    {
+      "name": "udm_sbi_accept_not_acceptable",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "negative",
+      "description": "GET am-data with Accept application/xml — UDM answers spec-correctly and stays live",
+      "path": "udm/sbi_accept_not_acceptable.yaml"
+    },
+    {
+      "name": "udm_sbi_oversized_body_liveness",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "negative",
+      "description": "POST oversized sdm-subscription body, then UDM still serves GET am-data (stays live)",
+      "path": "udm/sbi_oversized_body_liveness.yaml"
+    },
+    {
+      "name": "udm_sbi_unknown_api_version",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "negative",
+      "description": "GET am-data on a nonexistent apiVersion (v99) is rejected with 4xx",
+      "path": "udm/sbi_unknown_api_version.yaml"
+    },
+    {
+      "name": "udm_sbi_unsupported_method_on_resource",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "negative",
+      "description": "POST to the GET-only am-data resource is rejected with 405/4xx",
+      "path": "udm/sbi_unsupported_method_on_resource.yaml"
+    },
+    {
+      "name": "udm_sdm_get_am_data_malformed_supi",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "negative",
+      "description": "GET am-data with a malformed SUPI segment is rejected with 4xx",
+      "path": "udm/sdm_get_am_data_malformed_supi.yaml"
+    },
+    {
+      "name": "udm_sdm_get_am_data_missing_plmnid",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "negative",
+      "description": "GET am-data with no plmn-id query — UDM responds spec-correctly and stays live",
+      "path": "udm/sdm_get_am_data_missing_plmnid.yaml"
+    },
+    {
+      "name": "udm_sdm_get_am_data_ok",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "functional",
+      "description": "GET am-data for a provisioned SUPI returns 200 with AccessAndMobilitySubscriptionData",
+      "path": "udm/sdm_get_am_data_ok.yaml"
+    },
+    {
+      "name": "udm_sdm_get_am_data_unknown_supi",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "negative",
+      "description": "GET am-data for a non-provisioned SUPI is rejected with 404",
+      "path": "udm/sdm_get_am_data_unknown_supi.yaml"
+    },
+    {
+      "name": "udm_sdm_get_datasets_invalid_dataset_name",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "negative",
+      "description": "GET datasets with an out-of-enum dataset-names is rejected with 400",
+      "path": "udm/sdm_get_datasets_invalid_dataset_name.yaml"
+    },
+    {
+      "name": "udm_sdm_get_datasets_ok",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "functional",
+      "description": "GET multiple datasets (AM,SMF_SEL,SM) for a provisioned SUPI returns 200",
+      "path": "udm/sdm_get_datasets_ok.yaml"
+    },
+    {
+      "name": "udm_sdm_get_nssai_ok",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "functional",
+      "description": "GET nssai for a provisioned SUPI returns 200",
+      "path": "udm/sdm_get_nssai_ok.yaml"
+    },
+    {
+      "name": "udm_sdm_get_sm_data_ok",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "functional",
+      "description": "GET sm-data for a provisioned SUPI returns 200",
+      "path": "udm/sdm_get_sm_data_ok.yaml"
+    },
+    {
+      "name": "udm_sdm_get_sm_data_unknown_dnn",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "negative",
+      "description": "GET sm-data with an unsubscribed DNN is rejected with 404",
+      "path": "udm/sdm_get_sm_data_unknown_dnn.yaml"
+    },
+    {
+      "name": "udm_sdm_get_smf_select_data_ok",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "functional",
+      "description": "GET smf-select-data for a provisioned SUPI returns 200",
+      "path": "udm/sdm_get_smf_select_data_ok.yaml"
+    },
+    {
+      "name": "udm_sdm_modify_subscription_ok",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "functional",
+      "description": "POST sdm-subscriptions (201) then PATCH the subscription (200/204)",
+      "path": "udm/sdm_modify_subscription_ok.yaml"
+    },
+    {
+      "name": "udm_sdm_subscribe_malformed_body",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "negative",
+      "description": "POST sdm-subscriptions with non-JSON raw_body is rejected with 400",
+      "path": "udm/sdm_subscribe_malformed_body.yaml"
+    },
+    {
+      "name": "udm_sdm_subscribe_missing_callback",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "negative",
+      "description": "POST sdm-subscriptions without callbackReference is rejected with 400",
+      "path": "udm/sdm_subscribe_missing_callback.yaml"
+    },
+    {
+      "name": "udm_sdm_subscribe_unsubscribe_ok",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "functional",
+      "description": "POST sdm-subscriptions (201) then DELETE the created subscription (204)",
+      "path": "udm/sdm_subscribe_unsubscribe_ok.yaml"
+    },
+    {
+      "name": "udm_sdm_subscribe_wrong_content_type",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "negative",
+      "description": "POST sdm-subscriptions with Content-Type application/xml is rejected with 4xx",
+      "path": "udm/sdm_subscribe_wrong_content_type.yaml"
+    },
+    {
+      "name": "udm_sdm_unsubscribe_unknown_subscription",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "negative",
+      "description": "DELETE an unknown sdm-subscription id is rejected with 404",
+      "path": "udm/sdm_unsubscribe_unknown_subscription.yaml"
+    },
+    {
+      "name": "udm_ueau_confirm_auth_missing_fields",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "negative",
+      "description": "POST auth-events with an incomplete AuthEvent is rejected with 400",
+      "path": "udm/ueau_confirm_auth_missing_fields.yaml"
+    },
+    {
+      "name": "udm_ueau_confirm_auth_ok",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "functional",
+      "description": "POST auth-events recording a successful authentication returns 201",
+      "path": "udm/ueau_confirm_auth_ok.yaml"
+    },
+    {
+      "name": "udm_ueau_confirm_auth_replay",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "negative",
+      "description": "POST auth-events twice with the same AuthEvent — UDM stays live and answers both",
+      "path": "udm/ueau_confirm_auth_replay.yaml"
+    },
+    {
+      "name": "udm_ueau_delete_auth_ok",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "functional",
+      "description": "PUT auth-events/{id} clearing the stored auth status returns 2xx",
+      "path": "udm/ueau_delete_auth_ok.yaml"
+    },
+    {
+      "name": "udm_ueau_generate_auth_data_malformed_suci",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "negative",
+      "description": "POST generate-auth-data with a malformed SUCI path is rejected with 4xx",
+      "path": "udm/ueau_generate_auth_data_malformed_suci.yaml"
+    },
+    {
+      "name": "udm_ueau_generate_auth_data_missing_serving_network",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "negative",
+      "description": "POST generate-auth-data without servingNetworkName is rejected with 400",
+      "path": "udm/ueau_generate_auth_data_missing_serving_network.yaml"
+    },
+    {
+      "name": "udm_ueau_generate_auth_data_ok",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "functional",
+      "description": "POST generate-auth-data for a provisioned SUPI returns 200 with a vector",
+      "path": "udm/ueau_generate_auth_data_ok.yaml"
+    },
+    {
+      "name": "udm_ueau_generate_auth_data_serving_network_not_authorized",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "negative",
+      "description": "POST generate-auth-data with an unauthorized servingNetworkName is rejected with 403",
+      "path": "udm/ueau_generate_auth_data_serving_network_not_authorized.yaml"
+    },
+    {
+      "name": "udm_ueau_generate_auth_data_unknown_supi",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "negative",
+      "description": "POST generate-auth-data for an unprovisioned SUPI is rejected with 4xx",
+      "path": "udm/ueau_generate_auth_data_unknown_supi.yaml"
+    },
+    {
+      "name": "udm_uecm_amf_3gpp_dereg_ok",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "functional",
+      "description": "PUT amf-3gpp-access then POST dereg-amf returns 204",
+      "path": "udm/uecm_amf_3gpp_dereg_ok.yaml"
+    },
+    {
+      "name": "udm_uecm_amf_3gpp_get_no_context",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "negative",
+      "description": "GET amf-3gpp-access with no registered context is rejected with 404",
+      "path": "udm/uecm_amf_3gpp_get_no_context.yaml"
+    },
+    {
+      "name": "udm_uecm_amf_3gpp_get_ok",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "functional",
+      "description": "PUT amf-3gpp-access registration then GET returns 200 with the stored registration",
+      "path": "udm/uecm_amf_3gpp_get_ok.yaml"
+    },
+    {
+      "name": "udm_uecm_amf_3gpp_register_missing_guami",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "negative",
+      "description": "PUT amf-3gpp-access without guami is rejected with 400",
+      "path": "udm/uecm_amf_3gpp_register_missing_guami.yaml"
+    },
+    {
+      "name": "udm_uecm_amf_3gpp_register_ok",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "functional",
+      "description": "PUT amf-3gpp-access registration returns 201/200/204",
+      "path": "udm/uecm_amf_3gpp_register_ok.yaml"
+    },
+    {
+      "name": "udm_uecm_amf_3gpp_register_unknown_supi",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "negative",
+      "description": "PUT amf-3gpp-access for an unprovisioned SUPI is rejected with 4xx",
+      "path": "udm/uecm_amf_3gpp_register_unknown_supi.yaml"
+    },
+    {
+      "name": "udm_uecm_amf_3gpp_update_ok",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "functional",
+      "description": "PUT amf-3gpp-access then PATCH the registration returns 200/204",
+      "path": "udm/uecm_amf_3gpp_update_ok.yaml"
+    },
+    {
+      "name": "udm_uecm_get_registrations_ok",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "functional",
+      "description": "GET {ueId}/registrations returns 200 with the UE's registration context",
+      "path": "udm/uecm_get_registrations_ok.yaml"
+    },
+    {
+      "name": "udm_uecm_smf_dereg_ok",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "functional",
+      "description": "PUT smf-registrations/{id} then DELETE returns 204",
+      "path": "udm/uecm_smf_dereg_ok.yaml"
+    },
+    {
+      "name": "udm_uecm_smf_dereg_unknown_session",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "negative",
+      "description": "DELETE smf-registrations for an unregistered PDU session is rejected with 404",
+      "path": "udm/uecm_smf_dereg_unknown_session.yaml"
+    },
+    {
+      "name": "udm_uecm_smf_register_ok",
+      "source": "template",
+      "type": "client",
+      "protocol": "sbi",
+      "nf": "udm",
+      "category": "functional",
+      "description": "PUT smf-registrations/{pduSessionId} returns 201/200/204",
+      "path": "udm/uecm_smf_register_ok.yaml"
+    },
+    {
+      "name": "ue_context_modification_failure_rx_reject",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "Wait for AMF UEContextModificationRequest and reply UEContextModificationFailure (YAML)",
+      "path": "gnb/ue_context_modification_failure_rx_reject.yaml"
+    },
+    {
+      "name": "ue_context_modification_request_rx_handle_and_respond",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "functional",
+      "description": "Wait for AMF UEContextModificationRequest and reply UEContextModificationResponse (YAML)",
+      "path": "gnb/ue_context_modification_request_rx_handle_and_respond.yaml"
+    },
+    {
+      "name": "ue_context_release_complete_without_command_unsolicited",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "Send an unsolicited UEContextReleaseComplete; assert AMF handles it gracefully (YAML)",
+      "path": "gnb/ue_context_release_complete_without_command_unsolicited.yaml"
+    },
+    {
+      "name": "ue_context_release_request_gnb_initiated",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "functional",
+      "description": "Registration + gNB-initiated UEContextReleaseRequest, complete the release (YAML)",
+      "path": "gnb/ue_context_release_request_gnb_initiated.yaml"
+    },
+    {
+      "name": "ue_context_release_request_unknown_amf_ue_ngap_id",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "gNB release request with a bogus AMF-UE-NGAP-ID; assert AMF detects/ignores (YAML)",
+      "path": "gnb/ue_context_release_request_unknown_amf_ue_ngap_id.yaml"
+    },
+    {
+      "name": "ue_context_resume",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "functional",
+      "description": "Registration, suspend to RRC_INACTIVE, then gNB-initiated resume (YAML)",
+      "path": "gnb/ue_context_resume.yaml"
+    },
+    {
+      "name": "ue_context_resume_request_without_prior_suspend",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "Resume a UE that was never suspended; assert AMF rejects (or does not wrongly resume) (YAML)",
+      "path": "gnb/ue_context_resume_request_without_prior_suspend.yaml"
+    },
+    {
+      "name": "ue_context_suspend",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "functional",
+      "description": "Registration + gNB-initiated UE context suspend to RRC_INACTIVE (YAML)",
+      "path": "gnb/ue_context_suspend.yaml"
+    },
+    {
+      "name": "upf_pfcp_association_release",
+      "source": "template",
+      "type": "client",
+      "protocol": "pfcp",
+      "nf": "upf",
+      "category": "functional",
+      "description": "SMF establishes then releases a PFCP association against a real UPF (N4)",
+      "path": "upf/pfcp_association_release.yaml"
+    },
+    {
+      "name": "upf_pfcp_association_setup",
+      "source": "template",
+      "type": "client",
+      "protocol": "pfcp",
+      "nf": "upf",
+      "category": "functional",
+      "description": "SMF establishes a PFCP association against a real UPF (N4)",
+      "path": "upf/pfcp_association_setup.yaml"
+    },
+    {
+      "name": "upf_pfcp_association_setup_unknown_feature",
+      "source": "template",
+      "type": "client",
+      "protocol": "pfcp",
+      "nf": "upf",
+      "category": "negative",
+      "description": "Association Setup with reserved CP feature bits; UPF tolerates and negotiates",
+      "path": "upf/pfcp_association_setup_unknown_feature.yaml"
+    },
+    {
+      "name": "upf_pfcp_association_update",
+      "source": "template",
+      "type": "client",
+      "protocol": "pfcp",
+      "nf": "upf",
+      "category": "functional",
+      "description": "SMF updates an established PFCP association against a real UPF (N4)",
+      "path": "upf/pfcp_association_update.yaml"
+    },
+    {
+      "name": "upf_pfcp_heartbeat",
+      "source": "template",
+      "type": "client",
+      "protocol": "pfcp",
+      "nf": "upf",
+      "category": "functional",
+      "description": "SMF liveness-probes a real UPF via PFCP Heartbeat (N4)",
+      "path": "upf/pfcp_heartbeat.yaml"
+    },
+    {
+      "name": "upf_pfcp_heartbeat_no_association",
+      "source": "template",
+      "type": "client",
+      "protocol": "pfcp",
+      "nf": "upf",
+      "category": "negative",
+      "description": "Stray PFCP Heartbeat with no association; UPF tolerates and stays up",
+      "path": "upf/pfcp_heartbeat_no_association.yaml"
+    },
+    {
+      "name": "upf_pfcp_heartbeat_recovery_stable",
+      "source": "template",
+      "type": "client",
+      "protocol": "pfcp",
+      "nf": "upf",
+      "category": "negative",
+      "description": "UPF Recovery Time Stamp stays stable across heartbeats (no spurious restart)",
+      "path": "upf/pfcp_heartbeat_recovery_stable.yaml"
+    },
+    {
+      "name": "upf_pfcp_session_delete",
+      "source": "template",
+      "type": "client",
+      "protocol": "pfcp",
+      "nf": "upf",
+      "category": "functional",
+      "description": "SMF establishes then deletes a PFCP session against a real UPF (N4)",
+      "path": "upf/pfcp_session_delete.yaml"
+    },
+    {
+      "name": "upf_pfcp_session_delete_unknown_fseid",
+      "source": "template",
+      "type": "client",
+      "protocol": "pfcp",
+      "nf": "upf",
+      "category": "negative",
+      "description": "Session Deletion with an unknown SEID; UPF must reject (Cause 65)",
+      "path": "upf/pfcp_session_delete_unknown_fseid.yaml"
+    },
+    {
+      "name": "upf_pfcp_session_establish",
+      "source": "template",
+      "type": "client",
+      "protocol": "pfcp",
+      "nf": "upf",
+      "category": "functional",
+      "description": "SMF establishes a PFCP session (uplink PDR+FAR) against a real UPF (N4)",
+      "path": "upf/pfcp_session_establish.yaml"
+    },
+    {
+      "name": "upf_pfcp_session_establish_invalid_pdr",
+      "source": "template",
+      "type": "client",
+      "protocol": "pfcp",
+      "nf": "upf",
+      "category": "negative",
+      "description": "Session Establishment with a dangling FAR reference; UPF must reject",
+      "path": "upf/pfcp_session_establish_invalid_pdr.yaml"
+    },
+    {
+      "name": "upf_pfcp_session_establish_missing_fseid",
+      "source": "template",
+      "type": "client",
+      "protocol": "pfcp",
+      "nf": "upf",
+      "category": "negative",
+      "description": "Session Establishment omitting mandatory CP F-SEID; UPF must reject",
+      "path": "upf/pfcp_session_establish_missing_fseid.yaml"
+    },
+    {
+      "name": "upf_pfcp_session_establish_no_association",
+      "source": "template",
+      "type": "client",
+      "protocol": "pfcp",
+      "nf": "upf",
+      "category": "negative",
+      "description": "Session Establishment with no association; UPF must reject (Cause 72)",
+      "path": "upf/pfcp_session_establish_no_association.yaml"
+    },
+    {
+      "name": "upf_pfcp_session_modify",
+      "source": "template",
+      "type": "client",
+      "protocol": "pfcp",
+      "nf": "upf",
+      "category": "functional",
+      "description": "SMF establishes then modifies a PFCP session against a real UPF (N4)",
+      "path": "upf/pfcp_session_modify.yaml"
+    },
+    {
+      "name": "upf_pfcp_session_modify_remove_nonexistent_rule",
+      "source": "template",
+      "type": "client",
+      "protocol": "pfcp",
+      "nf": "upf",
+      "category": "negative",
+      "description": "Session Modification removing absent rules; UPF reacts spec-correctly",
+      "path": "upf/pfcp_session_modify_remove_nonexistent_rule.yaml"
+    },
+    {
+      "name": "upf_pfcp_session_modify_unknown_fseid",
+      "source": "template",
+      "type": "client",
+      "protocol": "pfcp",
+      "nf": "upf",
+      "category": "negative",
+      "description": "Session Modification with an unknown SEID; UPF must reject (Cause 65)",
+      "path": "upf/pfcp_session_modify_unknown_fseid.yaml"
+    },
+    {
+      "name": "uplane_traffic",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "functional",
+      "description": "Registration + PDU session + user-plane GTP-U traffic generation (YAML)",
+      "path": "gnb/uplane_traffic.yaml"
+    },
+    {
+      "name": "uplink_nas_after_context_release_stale_ids",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "UL NAS with stale ids after context release; assert AMF discards/stays up (YAML)",
+      "path": "gnb/uplink_nas_after_context_release_stale_ids.yaml"
+    },
+    {
+      "name": "uplink_nas_before_security_activation",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "Protection-required NAS sent PLAIN before security activation (YAML)",
+      "path": "gnb/uplink_nas_before_security_activation.yaml"
+    },
+    {
+      "name": "xn_path_switch_failure_unknown_source_amf_id",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "PathSwitchRequest (unknown source AMF-UE-NGAP-ID); assert graceful AMF reaction (YAML)",
+      "path": "gnb/xn_path_switch_failure_unknown_source_amf_id.yaml"
+    },
+    {
+      "name": "xn_path_switch_unknown_pdu_session",
+      "source": "template",
+      "type": "client",
+      "protocol": "ngap",
+      "nf": "gnb",
+      "category": "negative",
+      "description": "PathSwitchRequest (unknown PDU session id); assert graceful AMF reaction (YAML)",
+      "path": "gnb/xn_path_switch_unknown_pdu_session.yaml"
+    }
+  ],
+  "suites": [
+    {
+      "name": "ausf-compliance",
+      "source": "template",
+      "steps": 6,
+      "description": "One-UE-per-flow Nausf SBI conformance pass for a 5G AUSF (Open5GS).",
+      "path": "suites/ausf_compliance.yaml"
+    },
+    {
+      "name": "ausf-security",
+      "source": "template",
+      "steps": 17,
+      "description": "One-UE-per-flow abnormal/malformed/unauthorized Nausf probes; assert correct rejection and AUSF liveness.",
+      "path": "suites/ausf_security.yaml"
+    },
+    {
+      "name": "gnb-compliance",
+      "source": "template",
+      "steps": 21,
+      "description": "One-UE-per-flow 5G NGAP/NAS conformance pass for a gNB against a 5G core.",
+      "path": "suites/gnb_compliance.yaml"
+    },
+    {
+      "name": "gnb-compliance-ext",
+      "source": "template",
+      "steps": 9,
+      "description": "Extended one-UE-per-flow functional conformance probes (single-registration) for a gNB.",
+      "path": "suites/gnb_compliance_ext.yaml"
+    },
+    {
+      "name": "gnb-register-deregister",
+      "source": "template",
+      "steps": 2,
+      "description": "Demo — register a small batch of UEs, then deregister.",
+      "path": "suites/gnb_register_deregister.yaml"
+    },
+    {
+      "name": "gnb-security",
+      "source": "template",
+      "steps": 12,
+      "description": "One-UE-per-flow abnormal/malformed/security probes; assert correct rejection and AMF liveness.",
+      "path": "suites/gnb_security.yaml"
+    },
+    {
+      "name": "gnb-security-ext",
+      "source": "template",
+      "steps": 17,
+      "description": "Second-wave one-UE-per-flow abnormal/malformed/security probes; assert correct rejection and AMF liveness.",
+      "path": "suites/gnb_security_ext.yaml"
+    },
+    {
+      "name": "nrf_bstr",
+      "source": "template",
+      "steps": 3,
+      "description": "Nnrf_Bootstrapping — smoke + public-access invariant + strict shape.",
+      "path": "nrf/nrf_bstr.yaml"
+    },
+    {
+      "name": "nrf_disc",
+      "source": "template",
+      "steps": 8,
+      "description": "Nnrf_NFDiscovery — filter matrix + ignored params + edge cases + negatives.",
+      "path": "nrf/nrf_disc.yaml"
+    },
+    {
+      "name": "nrf_nfm",
+      "source": "template",
+      "steps": 13,
+      "description": "Nnrf_NFManagement — register / get / patch / delete + edge cases + negatives.",
+      "path": "nrf/nrf_nfm.yaml"
+    },
+    {
+      "name": "nrf_oauth",
+      "source": "template",
+      "steps": 7,
+      "description": "Nnrf_AccessToken — happy path + headers + negatives + structural JWT.",
+      "path": "nrf/nrf_oauth.yaml"
+    },
+    {
+      "name": "nrf_oauth_enforced",
+      "source": "template",
+      "steps": 1,
+      "description": "OAuth2 enforcement on protected endpoints (requires NRF -oauth2).",
+      "path": "nrf/nrf_oauth_enforced.yaml"
+    },
+    {
+      "name": "nrf_problem",
+      "source": "template",
+      "steps": 1,
+      "description": "ProblemDetails contract — every 4xx must be RFC 7807.",
+      "path": "nrf/nrf_problem.yaml"
+    },
+    {
+      "name": "nrf_smoke",
+      "source": "template",
+      "steps": 5,
+      "description": "One happy-path per Nnrf service. CI gate — must stay green on main.",
+      "path": "nrf/nrf_smoke.yaml"
+    },
+    {
+      "name": "nrf_sub",
+      "source": "template",
+      "steps": 4,
+      "description": "NFM Subscriptions — lifecycle + GET + negatives.",
+      "path": "nrf/nrf_sub.yaml"
+    },
+    {
+      "name": "smf-compliance",
+      "source": "template",
+      "steps": 14,
+      "description": "One-flow-per-procedure Nsmf_PDUSession (SBI/N11) + N4/PFCP conformance pass for an SMF against Open5GS.",
+      "path": "suites/smf_compliance.yaml"
+    },
+    {
+      "name": "smf-security",
+      "source": "template",
+      "steps": 20,
+      "description": "One-flow-per-probe abnormal/malformed/unauthorized SBI + PFCP probes; assert correct rejection and SMF/UPF liveness.",
+      "path": "suites/smf_security.yaml"
+    },
+    {
+      "name": "udm-compliance",
+      "source": "template",
+      "steps": 20,
+      "description": "One-request-per-flow Nudm SBI conformance pass for fpl as SBI consumer against an Open5GS UDM.",
+      "path": "suites/udm_compliance.yaml"
+    },
+    {
+      "name": "udm-security",
+      "source": "template",
+      "steps": 27,
+      "description": "One-request-per-flow abnormal/malformed/security probes; assert correct rejection (or tolerance) and UDM liveness.",
+      "path": "suites/udm_security.yaml"
+    },
+    {
+      "name": "upf-compliance",
+      "source": "template",
+      "steps": 7,
+      "description": "One-session-per-flow PFCP (N4) conformance pass for an SMF/CP against a real UPF.",
+      "path": "suites/upf_compliance.yaml"
+    },
+    {
+      "name": "upf-security",
+      "source": "template",
+      "steps": 10,
+      "description": "One-flow-per-probe abnormal/malformed PFCP probes; assert correct Cause and UPF liveness.",
+      "path": "suites/upf_security.yaml"
+    }
+  ]
+}

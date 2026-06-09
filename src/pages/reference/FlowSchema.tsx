@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom';
 
 export default function FlowSchema() {
   return (
-    <DocPage slug="reference/flow-schema" lede="Authoritative schema for kind: flow YAML. Every field, every action type, every check op. For prose on the authoring model, see writing-flows and explanation/flow-authoring-model.">
+    <DocPage slug="reference/flow-schema" lede="Authoritative schema for kind: flow YAML. Every field, every action type, every check op.">
+<p>This page is the field-by-field reference. For prose on the authoring model, see <Link to="/guides/writing">Writing flows and suites</Link> and <Link to="/concepts/flows">Flows</Link>. The cited template files live in the <a href="https://github.com/dflux-io/fluxproto-light-templates">fluxproto-light-templates</a> repository.</p>
 <h2 id="synopsis">Synopsis</h2>
 <CodeBlock lang="yaml" code={`kind: flow
 name: registration
@@ -40,7 +41,7 @@ any_state_transitions:
 <tr><td><code>{`category`}</code></td><td>enum</td><td>no</td><td>—</td><td><code>{`functional`}</code>, <code>{`negative`}</code>, <code>{`robustness`}</code>, <code>{`stability`}</code>, <code>{`lifecycle`}</code>, <code>{`load`}</code>, <code>{`stress`}</code>. Filters in catalog views.</td></tr>
 <tr><td><code>{`type`}</code></td><td>enum</td><td>yes</td><td>—</td><td><code>{`client`}</code> or <code>{`server`}</code>. Client flows fire <code>{`Start`}</code>; server flows wait for first RX.</td></tr>
 <tr><td><code>{`protocol`}</code></td><td>enum</td><td>yes</td><td>—</td><td><code>{`ngap`}</code>, <code>{`sbi`}</code>, <code>{`diameter`}</code>, <code>{`rest`}</code>, <code>{`pfcp`}</code>. Routes inbound demux + the default send protocol.</td></tr>
-<tr><td><code>{`nf`}</code></td><td>enum</td><td>yes</td><td>—</td><td><code>{`gnb`}</code>, <code>{`amf`}</code>, <code>{`smf`}</code>, <code>{`ausf`}</code>, <code>{`udm`}</code>, <code>{`pcf`}</code>, <code>{`nrf`}</code>, <code>{`upf`}</code>, <code>{`mme`}</code>, <code>{`pgw`}</code>, <code>{`af`}</code>, <code>{`external`}</code>. Validated against the env.</td></tr>
+<tr><td><code>{`nf`}</code></td><td>enum</td><td>yes</td><td>—</td><td><code>{`gnb`}</code>, <code>{`amf`}</code>, <code>{`smf`}</code>, <code>{`ausf`}</code>, <code>{`udm`}</code>, <code>{`pcf`}</code>, <code>{`nrf`}</code>, <code>{`upf`}</code>, <code>{`mme`}</code>, <code>{`pgw`}</code>, <code>{`pcrf`}</code>, <code>{`af`}</code>, <code>{`external`}</code>. Validated against the environment.</td></tr>
 <tr><td><code>{`initial_state`}</code></td><td>string</td><td>yes</td><td>—</td><td>Name of the state the FSM starts in.</td></tr>
 <tr><td><code>{`final_states`}</code></td><td>[]string</td><td>yes</td><td>—</td><td>Terminal state names; reaching one ends the flow.</td></tr>
 <tr><td><code>{`states`}</code></td><td>map</td><td>yes</td><td>—</td><td>Map of state name → <code>{`State`}</code>.</td></tr>
@@ -56,8 +57,10 @@ any_state_transitions:
 <table>
 <thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead>
 <tbody><tr><td><code>{`duration`}</code></td><td>duration</td><td>How long to wait before firing</td></tr>
-<tr><td><code>{`target`}</code></td><td>string</td><td>Target state</td></tr></tbody>
+<tr><td><code>{`target`}</code></td><td>string</td><td>Target state</td></tr>
+<tr><td><code>{`actions`}</code></td><td>[]Action</td><td>Run on the timeout transition before <code>{`target`}</code> is applied, with the same execution semantics as <code>{`transitions[].actions`}</code>. Lets a flow express "wait N then send X" for token-expiry or post-idle re-probe tests.</td></tr></tbody>
 </table>
+<p>For the conceptual model behind states and transitions, see <Link to="/concepts/flows/states">States and transitions</Link>.</p>
 <h2 id="transition-shape">Transition shape</h2>
 <table>
 <thead><tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
@@ -77,7 +80,7 @@ event:
 # AND-compound — fires only when every listed event has arrived
 event:
   and: [InitialContextSetupRequest, RegistrationAccept]`} />
-<p>Authors may prefix any event name with the protocol (<code>{`ngap.X`}</code>, <code>{`diameter.X`}</code>, <code>{`sbi.X`}</code>) for visual disambiguation in multi-protocol flows. The matcher strips one leading prefix on either side before comparing.</p>
+<p>Authors may prefix any event name with the protocol (<code>{`ngap.X`}</code>, <code>{`diameter.X`}</code>, <code>{`sbi.X`}</code>) for visual disambiguation in multi-protocol flows. The matcher strips a known protocol prefix on either side before comparing; an unknown prefix such as <code>{`weird.X`}</code> is left intact and will not match a bare event.</p>
 <p>Synthetic events:</p>
 <table>
 <thead><tr><th>Event</th><th>Source</th><th>Notes</th></tr></thead>
@@ -87,7 +90,7 @@ event:
 <tr><td><code>{`UplaneComplete`}</code></td><td>engine</td><td>Fired after a <code>{`uplane_start`}</code> action finishes its run</td></tr></tbody>
 </table>
 <h2 id="action-types">Action types</h2>
-<p>Six action types ship today. All actions execute in YAML order within a transition.</p>
+<p>Six action types ship today. All actions execute in YAML order within a transition. For when to reach for each, see <Link to="/concepts/flows/actions">Actions and checks</Link>.</p>
 <h3 id="send"><code>{`send`}</code></h3>
 <p>Emit a message on the wire. Required when the transition needs to TX.</p>
 <table>
@@ -109,7 +112,7 @@ event:
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
 <tbody><tr><td><code>{`type`}</code></td><td><code>{`check`}</code></td><td>yes</td><td>—</td></tr>
 <tr><td><code>{`field`}</code></td><td>string</td><td>yes</td><td>Field path; <code>{`ue.X`}</code> reads UE context, otherwise reads the most recent RX message</td></tr>
-<tr><td><code>{`op`}</code></td><td>enum</td><td>yes</td><td>One of <code>{`equals`}</code>, <code>{`not_empty`}</code>, <code>{`greater_than`}</code>, <code>{`less_than`}</code>, <code>{`greater_or_equal`}</code>, <code>{`less_or_equal`}</code>, <code>{`contains`}</code>, <code>{`exists`}</code></td></tr>
+<tr><td><code>{`op`}</code></td><td>enum</td><td>yes</td><td>One of <code>{`equals`}</code>, <code>{`not_empty`}</code>, <code>{`greater_than`}</code>, <code>{`less_than`}</code>, <code>{`greater_or_equal`}</code>, <code>{`less_or_equal`}</code>, <code>{`contains`}</code>, <code>{`not_contains`}</code>, <code>{`exists`}</code></td></tr>
 <tr><td><code>{`expected`}</code></td><td>any</td><td>depends</td><td>Required for ops that compare against a value</td></tr></tbody>
 </table>
 <h3 id="extract"><code>{`extract`}</code></h3>
@@ -127,9 +130,10 @@ event:
 <table>
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
 <tbody><tr><td><code>{`type`}</code></td><td><code>{`extract`}</code></td><td>yes</td><td>—</td></tr>
-<tr><td><code>{`field`}</code></td><td>string</td><td>one of</td><td>Shorthand: field path</td></tr>
-<tr><td><code>{`store`}</code></td><td>string</td><td>one of</td><td>Shorthand: target key in <code>{`ue.Params`}</code></td></tr>
-<tr><td><code>{`extracts`}</code></td><td>list</td><td>one of</td><td>List form: multiple <code>{`{field, store}`}</code> pairs</td></tr></tbody>
+<tr><td><code>{`field`}</code></td><td>string</td><td>one of</td><td>Shorthand: field path to read from the inbound message. Pair with <code>{`store`}</code>.</td></tr>
+<tr><td><code>{`value`}</code></td><td>string</td><td>one of</td><td>Shorthand: a template-derived value, used instead of <code>{`field`}</code>. Set <code>{`field`}</code> or <code>{`value`}</code>, never both.</td></tr>
+<tr><td><code>{`store`}</code></td><td>string</td><td>yes (shorthand)</td><td>Shorthand: target key in <code>{`ue.Params`}</code></td></tr>
+<tr><td><code>{`extracts`}</code></td><td>list</td><td>one of</td><td>List form: multiple <code>{`{field|value, store}`}</code> entries</td></tr></tbody>
 </table>
 <h3 id="uplane_start"><code>{`uplane_start`}</code></h3>
 <p>Arm the user-plane traffic generator after the NGAP send that surfaced the UPF tunnel parameters. Reads parameters from the gNB's <code>{`uplane:`}</code> config block. Allowed between sends.</p>
@@ -148,6 +152,7 @@ event:
 <tr><td><code>{`greater_or_equal`}</code></td><td>yes</td><td>Field ≥ expected</td></tr>
 <tr><td><code>{`less_or_equal`}</code></td><td>yes</td><td>Field ≤ expected</td></tr>
 <tr><td><code>{`contains`}</code></td><td>yes</td><td>Field's string form contains the expected substring</td></tr>
+<tr><td><code>{`not_contains`}</code></td><td>yes</td><td>Field's string form does not contain the expected substring</td></tr>
 <tr><td><code>{`exists`}</code></td><td>no</td><td>Field resolves (regardless of value)</td></tr></tbody>
 </table>
 <h2 id="template-expressions">Template expressions</h2>

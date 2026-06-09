@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom';
 
 export default function ConfiguringEnvironments() {
   return (
-    <DocPage slug="guides/configuring-environments" lede="An environment is a YAML file that declares the network functions (NFs) fluxproto-light simulates or talks to, plus the wire-level transports those NFs use. CLI runs load it via -c <file>; daemon runs store one per database row. This guide covers the top-level shape and each protocol's transport block.">
+    <DocPage slug="guides/configuring-environments" lede="An environment is a YAML file that declares the network functions (NFs) fluxproto-light simulates or talks to, plus the wire-level transports those NFs use. CLI runs load it via -c <file>; daemon runs persist each environment as a stored config. This guide covers the top-level shape and each protocol's transport block. For the full field-by-field reference, see the environment schema.">
 <h2 id="top-level-shape">Top-level shape</h2>
 <CodeBlock lang="yaml" code={`nfs:
   - name: <unique nf name>
-    role: gnb | amf | smf | ausf | udm | pcf | nrf | upf | mme | pgw | af | external
+    role: gnb | amf | smf | ausf | udm | pcf | nrf | upf | mme | pgw | af | pcrf | external
     plmn: { mcc: "...", mnc: "..." }
     transport: <transport id>
     gnb: { ... }     # only when role: gnb
@@ -47,7 +47,7 @@ diameter_dictionary_path: <optional path to extra Diameter AVP XML>`} />
       target_addr: "8.8.8.8"
     auto_reply:
       handover_request: true`} />
-<p><code>{`uplane:`}</code> arms a user-plane traffic generator — see <Link to="/guides/user-plane-testing">user-plane-testing</Link>. <code>{`auto_reply.handover_request: true`}</code> makes the gNB stub-reply to inbound <code>{`HandoverRequest`}</code> so the source-side handover flow can complete (used by <code>{`templates/gnb/handover_source.yaml`}</code>).</p>
+<p><code>{`uplane:`}</code> arms a user-plane traffic generator — see <Link to="/guides/user-plane-testing">user-plane testing</Link>. <code>{`auto_reply.handover_request: true`}</code> makes the gNB stub-reply to inbound <code>{`HandoverRequest`}</code> so the source-side handover flow can complete (used by <code>{`templates/gnb/handover_source.yaml`}</code>).</p>
 <h2 id="amf-properties">AMF properties</h2>
 <p>Set when <code>{`role: amf`}</code>. Identity for AMF-mode (server) NGAP. The listen endpoint lives on the NGAP transport (<code>{`mode: server`}</code>); this block carries what the AMF advertises in <code>{`NGSetupResponse`}</code>.</p>
 <CodeBlock lang="yaml" code={`- name: amf-server
@@ -116,7 +116,12 @@ diameter_dictionary_path: <optional path to extra Diameter AVP XML>`} />
 <li>Gx: <code>{`16777238`}</code> (3GPP TS 29.212)</li>
 <li>Rx: <code>{`16777236`}</code> (3GPP TS 29.214)</li>
 </ul>
-<p><code>{`connection_mode`}</code> (Oracle DSR vocabulary): <code>{`initiator`}</code> (we dial), <code>{`responder`}</code> (we wait), <code>{`both`}</code> (we dial <em>and</em> accept; RFC 6733 §5.6.4 election resolves duplicates). When <code>{`local.listen`}</code> is set the node accepts inbound connections in addition to dialing.</p>
+<p><code>{`connection_mode`}</code> sets the local node's role toward this peer:</p>
+<ul>
+<li><code>{`initiator`}</code> — dial the peer (default).</li>
+<li><code>{`responder`}</code> — wait for the peer to dial. Requires <code>{`local.listen`}</code>.</li>
+<li><code>{`both`}</code> — dial and accept inbound connections.</li>
+</ul>
 <p><code>{`local_action`}</code> follows RFC 6733 §6.1: <code>{`local`}</code>, <code>{`relay`}</code>, <code>{`proxy`}</code>, <code>{`redirect`}</code>. Default is <code>{`relay`}</code>.</p>
 <h2 id="sbi-transport">SBI transport</h2>
 <p>SBI is HTTP/2 (3GPP TS 29.500-series). One binding is one mode — client (<code>{`base_url`}</code>) or server (<code>{`listen`}</code>).</p>
@@ -189,7 +194,7 @@ pfcp-listen:
       value: "127.0.0.1"`} />
 <p><code>{`node_id.type`}</code>: <code>{`ipv4`}</code>, <code>{`ipv6`}</code>, <code>{`fqdn`}</code>. The node ID is what the binding advertises in <code>{`AssociationSetupRequest`}</code>/<code>{`Response`}</code> and other node-level messages.</p>
 <h2 id="multi-nf-environments">Multi-NF environments</h2>
-<p>A single env can declare every NF the daemon needs. Example: simulate a gNB pair plus an MME plus a remote UDM in one config (see <code>{`config/lab-multinf.yaml`}</code>).</p>
+<p>A single environment can declare every NF the daemon needs. Example: simulate a gNB pair plus an MME plus a remote UDM in one config (see <code>{`config/lab-multinf.yaml`}</code>).</p>
 <CodeBlock lang="yaml" code={`nfs:
   - name: gnb-1
     role: gnb
@@ -206,12 +211,18 @@ transports:
   ngap-out: { protocol: ngap, ngap: { ... } }
   diameter-mme: { protocol: diameter, diameter: { ... } }
   sbi-udm: { protocol: sbi, sbi: { ... } }`} />
-<p>Multi-protocol flows (<code>{`templates/multinf/`}</code>) drive multiple transports on a single UE — see <Link to="/guides/multi-protocol-flows">multi-protocol-flows</Link>.</p>
+<p>Multi-protocol flows (<code>{`templates/multinf/`}</code>) drive multiple transports on a single UE — see <Link to="/guides/multi-protocol-flows">multi-protocol flows</Link>.</p>
 <h2 id="troubleshooting">Troubleshooting</h2>
-<p><strong><code>{`transport %q not found`}</code></strong> — an NF references a transport ID that isn't in <code>{`transports:`}</code>. Typo or stale ID.</p>
-<p><strong><code>{`fsm %q references nf %q which is not declared`}</code></strong> — the flow's <code>{`nf:`}</code> field doesn't match any NF in the env. Either add an NF of that role or load the matching flow.</p>
+<p><strong><code>{`transport %q not declared in transports:`}</code></strong> — an NF references a transport ID that isn't in <code>{`transports:`}</code>. Typo or stale ID.</p>
+<p><strong><code>{`flow %q targets nf=%q but env declares no NF of that role`}</code></strong> — the flow's <code>{`nf:`}</code> field names a role with no matching NF in the environment. Matching is by role, not by name. Add an NF of that role.</p>
 <p><strong>Diameter peer hangs on CER</strong> — <code>{`destination_host`}</code> and <code>{`destination_realm`}</code> must match what the remote advertises in CEA. The shipped <code>{`lab-diameter.yaml`}</code> has comments showing what the remote-side <code>{`origin_host`}</code>/<code>{`origin_realm`}</code> need to be.</p>
-<p><strong>Gx/Rx flows can't find AVPs</strong> — extend the embedded dictionary via <code>{`diameter_dictionary_path:`}</code> if the AMF/PCRF ships custom AVPs not in the upstream <code>{`fluxproto/diameter`}</code> set.</p>
+<p><strong>Gx/Rx flows can't find AVPs</strong> — extend the embedded dictionary via <code>{`diameter_dictionary_path:`}</code> if the PCRF ships custom AVPs not in the bundled Diameter set.</p>
+<h2 id="where-to-go-next">Where to go next</h2>
+<ul>
+<li><Link to="/reference/config-schema">Environment schema</Link> — the full field-by-field reference for every block above.</li>
+<li><Link to="/guides/multi-protocol-flows">Multi-protocol flows</Link> — drive several transports from one environment.</li>
+<li><Link to="/guides/user-plane-testing">User-plane testing</Link> — arm the gNB <code>{`uplane:`}</code> traffic generator.</li>
+</ul>
     </DocPage>
   );
 }

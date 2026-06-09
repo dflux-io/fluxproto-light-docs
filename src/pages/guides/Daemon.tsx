@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 export default function Daemon() {
   return (
-    <DocPage slug="guides/daemon" lede="fluxproto-light with no subcommand runs as a daemon: HTTP API on port 8199, optional embedded web UI, optional Prometheus metrics, optional pprof. Schedule recurring runs over REST, browse historical reports in the web UI, drive flows from a CI agent against a long-lived test plane. This guide covers startup, login, and configuration.">
+    <DocPage slug="guides/daemon" lede="fluxproto-light with no subcommand runs as a daemon: HTTP API on port 8199, optional embedded web UI, optional Prometheus metrics, optional pprof. Schedule recurring runs over REST, browse historical reports in the web UI, drive flows from a CI agent against a long-lived test plane. This guide covers startup, login, configuration, and scheduling jobs.">
 <h2 id="starting-the-daemon">Starting the daemon</h2>
 <CodeBlock lang="bash" code={`./bin/fluxproto-light                    # API only on :8199
 ./bin/fluxproto-light -port 8199 -web    # API + web UI on :8199
@@ -24,24 +24,24 @@ export default function Daemon() {
 <h2 id="first-login">First login</h2>
 <p>The daemon seeds a single admin user on first start:</p>
 <ul>
-<li>Username: <code>{`root`}</code></li>
-<li>Password: <code>{`toor`}</code></li>
+<li>Username: <code>{`admin`}</code></li>
+<li>Password: <code>{`admin`}</code></li>
 </ul>
 <p>The first thing the daemon makes you do is change that password — every authenticated endpoint except <code>{`/auth/me`}</code> and <code>{`/auth/change-password`}</code> returns HTTP 423 Locked until you do.</p>
 <CodeBlock lang="bash" code={`# Log in
 curl -X POST http://localhost:8199/api/v1/auth/login \\
     -H 'Content-Type: application/json' \\
-    -d '{"username":"root","password":"toor"}'
+    -d '{"username":"admin","password":"admin"}'
 # → { "token": "<jwt>", "must_change_password": true, "user": {...}, "expires_at": "..." }
 
 # Change the password
 curl -X POST http://localhost:8199/api/v1/auth/change-password \\
     -H "Authorization: Bearer $TOKEN" \\
     -H 'Content-Type: application/json' \\
-    -d '{"current_password":"toor","new_password":"<your new password>"}'`} />
-<p>After that, the JWT is good for 24 hours. The signing secret is generated once per daemon start and lives in memory only — a daemon restart invalidates every token.</p>
+    -d '{"current_password":"admin","new_password":"<your new password>"}'`} />
+<p>After that, you log in normally and use the returned token on every request.</p>
 <h2 id="jwt-bearer-tokens">JWT bearer tokens</h2>
-<p>Every authenticated request needs <code>{`Authorization: Bearer &lt;token&gt;`}</code>. The token's claims include <code>{`user_id`}</code>, <code>{`username`}</code>, and <code>{`role`}</code> (<code>{`admin`}</code> or <code>{`viewer`}</code>).</p>
+<p>Every authenticated request needs <code>{`Authorization: Bearer &lt;token&gt;`}</code>. The token's claims include <code>{`user_id`}</code>, <code>{`username`}</code>, and <code>{`role`}</code> (<code>{`admin`}</code> or <code>{`user`}</code>). Each token is good for 24 hours. The signing secret is generated fresh on every daemon start and held only in memory, so restarting the daemon invalidates every outstanding token and you log in again.</p>
 <CodeBlock lang="bash" code={`curl -H "Authorization: Bearer $TOKEN" \\
     http://localhost:8199/api/v1/flows`} />
 <h2 id="daemon-flags">Daemon flags</h2>
@@ -66,18 +66,18 @@ FPL_DB="postgres://user:pass@host:5432/fluxproto?sslmode=disable" \\
     ./bin/fluxproto-light`} />
 <p>The daemon auto-releases any subscribers locked from a previous crash on startup, so a hard kill won't leave orphaned locks.</p>
 <h2 id="web-ui">Web UI</h2>
-<p><code>{`-web`}</code> mounts the embedded React frontend on the API port. Routes are served by <code>{`chi`}</code>'s SPA handler — the daemon falls through to <code>{`index.html`}</code> for any non-API path so deep-linked URLs work on reload. To run a live-reload dev frontend instead of the embedded build, see <code>{`make run`}</code> in the Makefile.</p>
-<p>If the binary was built without <code>{`make web`}</code>, the embedded frontend is empty and <code>{`-web`}</code> is a no-op (the daemon logs a warning at startup).</p>
+<p><code>{`-web`}</code> mounts the embedded web UI on the API port. The daemon serves it as a single-page app: any non-API path falls through to the app shell, so deep-linked URLs work on reload.</p>
+<p>If your build of the binary doesn't include the bundled frontend, <code>{`-web`}</code> is a no-op and the daemon logs a warning at startup.</p>
 <h2 id="settings-schedules-environments">Settings, schedules, environments</h2>
 <p>The daemon exposes the persistent configuration surface over <code>{`/api/v1/`}</code>:</p>
 <ul>
 <li><code>{`/settings`}</code> — runtime tuning (shutdown timeout, default workload caps). <code>{`GET`}</code> is open to any authed user; <code>{`PUT`}</code> requires <code>{`admin`}</code>.</li>
 <li><code>{`/environments`}</code> — stored config YAMLs, addressable by ID. CRUD via REST; <code>{`POST /execute`}</code> references one by ID.</li>
-<li><code>{`/schedules`}</code> — cron-style scheduled runs. See <Link to="/guides/daemon">scheduling-jobs</Link>.</li>
+<li><code>{`/schedules`}</code> — cron-style scheduled runs. See <a href="#scheduling-jobs">scheduling jobs</a> below.</li>
 <li><code>{`/users`}</code> — user management (admin-only).</li>
 </ul>
 <h2 id="metrics">Metrics</h2>
-<p>Set <code>{`-metrics_port`}</code> and the daemon exposes a Prometheus <code>{`/metrics`}</code> endpoint with every <code>{`fpl_*`}</code> metric the engine produces. See <Link to="/reference/metrics">reference/metrics.md</Link> for the full list. The standard <code>{`process_*`}</code> and <code>{`go_*`}</code> collectors are also registered.</p>
+<p>Set <code>{`-metrics_port`}</code> and the daemon exposes a Prometheus <code>{`/metrics`}</code> endpoint with every <code>{`fpl_*`}</code> metric the engine produces. See <Link to="/reference/metrics">the metrics reference</Link> for the full list. The standard <code>{`process_*`}</code> and <code>{`go_*`}</code> collectors are also registered.</p>
 <h2 id="profiling">Profiling</h2>
 <p>Set <code>{`-pprof_port`}</code> for <code>{`net/http/pprof`}</code>. Routes:</p>
 <ul>
@@ -87,21 +87,22 @@ FPL_DB="postgres://user:pass@host:5432/fluxproto?sslmode=disable" \\
 <li><code>{`/debug/pprof/goroutine`}</code> — goroutines</li>
 </ul>
 <h2 id="shutdown">Shutdown</h2>
-<p><code>{`SIGINT`}</code> or <code>{`SIGTERM`}</code> triggers a graceful shutdown. The daemon drains the subscriber pool (in-flight acquirers get <code>{`ErrPoolDraining`}</code>), waits for in-flight executions up to <code>{`shutdown_timeout`}</code> (default 10s, tunable via the <code>{`/settings`}</code> endpoint), and stops the HTTP/metrics/pprof listeners.</p>
+<p><code>{`SIGINT`}</code> or <code>{`SIGTERM`}</code> triggers a graceful shutdown. The daemon stops handing out subscribers (any request waiting on one is rejected), waits for in-flight executions up to <code>{`shutdown_timeout`}</code> (default 10s, tunable via the <code>{`/settings`}</code> endpoint), and then stops the HTTP, metrics, and pprof listeners.</p>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <p><strong><code>{`423 Locked`}</code> on every API call</strong> — the user has <code>{`must_change_password: true`}</code>. Hit <code>{`/auth/change-password`}</code> first.</p>
-<p><strong>Web UI loads but API calls 401</strong> — the JWT has expired (24h TTL) or the daemon was restarted (the secret is in-memory). Log in again.</p>
-<p><strong>Postgres connection fails on startup</strong> — the DSN parser is strict. Use the standard <code>{`postgres://user:pass@host:port/db?sslmode=disable`}</code> form, URL-encode special characters in the password.</p>
+<p><strong>Web UI loads but API calls 401</strong> — the token has expired or the daemon was restarted. Log in again.</p>
+<p><strong>Postgres connection fails on startup</strong> — use the standard <code>{`postgres://user:pass@host:port/db?sslmode=disable`}</code> connection-string form, and URL-encode any special characters in the password.</p>
 <p><strong>Stale subscriber locks</strong> — should auto-release on startup, but you can force-release via <code>{`subscriber list`}</code> and <code>{`subscriber purge`}</code> against the DB if needed (see <Link to="/guides/subscribers">subscribers</Link>).</p>
 <p><strong>Metrics endpoint 404</strong> — <code>{`-metrics_port`}</code> defaults to <code>{`-1`}</code> (off). Set it to enable.</p>
-<p>The daemon runs a cron-style scheduler for recurring or one-shot flow executions. Schedules are managed via the REST API; today there's no CLI shortcut for create/update — you POST JSON to the daemon. Each scheduled fire produces a normal <code>{`ReportEntity`}</code> indistinguishable from a manual <code>{`run-flow`}</code> (apart from the <code>{`schedule_id`}</code> stamp on the report).</p>
-<h2 id="schedule-types">Schedule types</h2>
+<h2 id="scheduling-jobs">Scheduling jobs</h2>
+<p>The daemon runs a cron-style scheduler for recurring or one-shot flow executions. Manage schedules through the REST API or the web UI's Schedules page; there is no CLI subcommand for create or update. Each scheduled fire produces a normal report, indistinguishable from a manual run apart from the <code>{`schedule_id`}</code> stamped on it.</p>
+<h3 id="schedule-types">Schedule types</h3>
 <ul>
 <li><code>{`once`}</code> — fires exactly once at <code>{`run_at`}</code> (RFC 3339 timestamp).</li>
 <li><code>{`cron`}</code> — fires on a 5-field standard cron expression (<code>{`m h dom mon dow`}</code>) in the schedule's <code>{`timezone:`}</code> (default <code>{`UTC`}</code>).</li>
 </ul>
-<p>There is also an internal <code>{`immediate`}</code> type used for the "Run now" button — clients trigger it via <code>{`POST /api/v1/schedules/{id}/run`}</code> rather than constructing it themselves.</p>
-<h2 id="create-a-schedule">Create a schedule</h2>
+<p>A third <code>{`immediate`}</code> type backs the "Run now" button. You don't construct it yourself; trigger it via <code>{`POST /api/v1/schedules/{id}/run`}</code>.</p>
+<h3 id="create-a-schedule">Create a schedule</h3>
 <CodeBlock lang="bash" code={`curl -X POST http://daemon/api/v1/schedules \\
     -H "Authorization: Bearer $TOKEN" \\
     -H "Content-Type: application/json" \\
@@ -119,8 +120,8 @@ FPL_DB="postgres://user:pass@host:5432/fluxproto?sslmode=disable" \\
       "trace": false,
       "enabled": true
     }'`} />
-<p>The cron expression follows the standard 5-field syntax (minute hour day-of-month month day-of-week). The parser is <code>{`github.com/robfig/cron/v3`}</code> with the standard <code>{`Minute | Hour | Dom | Month | Dow`}</code> set — no seconds field, no descriptors.</p>
-<p>Field reference for <code>{`CreateScheduleRequest`}</code>:</p>
+<p>The cron expression follows the standard 5-field syntax (minute hour day-of-month month day-of-week). There is no seconds field and no named descriptors such as <code>{`@daily`}</code>.</p>
+<p>Request fields:</p>
 <table>
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Notes</th></tr></thead>
 <tbody><tr><td><code>{`name`}</code></td><td>string</td><td>yes</td><td>Human-readable label</td></tr>
@@ -138,37 +139,35 @@ FPL_DB="postgres://user:pass@host:5432/fluxproto?sslmode=disable" \\
 <tr><td><code>{`timezone`}</code></td><td>string</td><td>no</td><td>IANA tz name; default <code>{`UTC`}</code></td></tr>
 <tr><td><code>{`enabled`}</code></td><td>bool</td><td>no</td><td>Default <code>{`true`}</code>. Disabled schedules don't fire.</td></tr></tbody>
 </table>
-<h2 id="list-schedules">List schedules</h2>
+<h3 id="list-schedules">List schedules</h3>
 <CodeBlock lang="bash" code={`curl -H "Authorization: Bearer $TOKEN" \\
     'http://daemon/api/v1/schedules?type=cron&enabled=true'`} />
 <p>Both query params are optional filters.</p>
-<h2 id="get-one">Get one</h2>
+<h3 id="get-one">Get one</h3>
 <CodeBlock lang="bash" code={`curl -H "Authorization: Bearer $TOKEN" \\
     http://daemon/api/v1/schedules/<id>`} />
-<h2 id="update-one">Update one</h2>
-<p><code>{`PUT`}</code> accepts the same body shape as <code>{`POST`}</code> and replaces every field. Internally the daemon cancels the old heap entry and re-enqueues — keeps the heap and DB in sync without surgery.</p>
+<h3 id="update-one">Update one</h3>
+<p><code>{`PUT`}</code> accepts the same body shape as <code>{`POST`}</code> and replaces every field. The daemon reschedules the next fire to match the new definition.</p>
 <CodeBlock lang="bash" code={`curl -X PUT http://daemon/api/v1/schedules/<id> \\
     -H "Authorization: Bearer $TOKEN" \\
     -H "Content-Type: application/json" \\
     -d '{ ... }'`} />
-<h2 id="delete">Delete</h2>
+<h3 id="delete">Delete</h3>
 <CodeBlock lang="bash" code={`curl -X DELETE -H "Authorization: Bearer $TOKEN" \\
     http://daemon/api/v1/schedules/<id>`} />
-<p>Returns 204 on success. If the schedule is mid-fire, the cancel is best-effort against the in-memory heap; the running execution completes and its report persists.</p>
-<h2 id="run-now">Run now</h2>
+<p>Returns 204 on success. Deleting a schedule stops future fires. If a fire is already in progress, that execution runs to completion and its report persists.</p>
+<h3 id="run-now">Run now</h3>
 <CodeBlock lang="bash" code={`curl -X POST -H "Authorization: Bearer $TOKEN" \\
     http://daemon/api/v1/schedules/<id>/run`} />
 <p>Creates an immediate one-shot execution copying the parent's <code>{`flow_id`}</code> / <code>{`environment_id`}</code> / <code>{`params`}</code> / workload knobs. Doesn't change the parent's state — the trigger is recorded as a separate execution. Response includes the new execution ID and the queue position.</p>
-<h2 id="what-runs-at-fire-time">What runs at fire time</h2>
-<p>The scheduler dispatches into the same engine the CLI uses. The fire produces a <code>{`ReportEntity`}</code> with <code>{`schedule_id`}</code> set to the schedule's ID, so you can filter reports by schedule:</p>
+<h3 id="what-runs-at-fire-time">What runs at fire time</h3>
+<p>The scheduler dispatches into the same engine the CLI uses. The fire produces a report with <code>{`schedule_id`}</code> set to the schedule's ID, so you can filter reports by schedule:</p>
 <CodeBlock lang="bash" code={`curl -H "Authorization: Bearer $TOKEN" \\
     'http://daemon/api/v1/reports?schedule_id=<id>'`} />
-<p>Cron schedules also get their <code>{`next_run_at`}</code> recomputed after each fire and persisted, so the heap survives daemon restarts.</p>
-<h2 id="failure-modes">Failure modes</h2>
-<p>If a cron fire fails to compute the next run (the expression became invalid mid-life — shouldn't happen, but the parser is strict), the scheduler disables the schedule and stamps <code>{`last_status: cron_parse_error`}</code> on it. Re-enable by <code>{`PUT`}</code>-ing a corrected expression.</p>
+<p>After each fire, a cron schedule's <code>{`next_run_at`}</code> is recomputed and persisted, so pending schedules survive daemon restarts.</p>
+<h3 id="failure-modes">Failure modes</h3>
+<p>If a cron fire can't compute its next run because the expression is invalid, the scheduler disables the schedule and stamps <code>{`last_status: cron_parse_error`}</code> on it. Re-enable by <code>{`PUT`}</code>-ing a corrected expression.</p>
 <p>If the environment a schedule references is deleted, the next fire fails with <code>{`environment not found`}</code> and the schedule's <code>{`last_status`}</code> records that. Disable or reassign to recover.</p>
-<h2 id="status">Status</h2>
-<p>The schedule API is currently the only surface for managing recurrences. There is no CLI subcommand for create/update — use the REST API or the web UI's Schedules page.</p>
     </DocPage>
   );
 }

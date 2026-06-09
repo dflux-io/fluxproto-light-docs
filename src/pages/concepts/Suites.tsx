@@ -18,7 +18,15 @@ steps:
     flow: deregistration
     repetitions: 5
     always_run: true`} />
-<p>Each step picks a flow by name and configures its workload. Per-step settings mirror the engine workload — <code>{`repetitions`}</code>, <code>{`rate`}</code>, <code>{`duration`}</code>, <code>{`timeout`}</code>, <code>{`params`}</code>, <code>{`trace`}</code>, <code>{`gen_subscriber`}</code> — plus two suite-only fields (<code>{`stop_on_failure`}</code>, <code>{`always_run`}</code>) that govern step ordering.</p>
+<p>Each step picks a flow by name and configures its workload. Per-step settings mirror the engine workload — <code>{`repetitions`}</code>, <code>{`rate`}</code>, <code>{`duration`}</code>, <code>{`timeout`}</code>, <code>{`params`}</code>, <code>{`trace`}</code>, <code>{`gen_subscriber`}</code>. Six more fields are suite-only:</p>
+<ul>
+<li><code>{`stop_on_failure`}</code> and <code>{`always_run`}</code> govern step ordering (covered below).</li>
+<li><code>{`checks`}</code> assert aggregate-metric thresholds against the step's metrics after it runs — for example <code>{`p99_latency_ms < 100`}</code>. A failed check marks the step as not passed.</li>
+<li><code>{`success_when`}</code> overrides per-UE pass/fail with a final-state criterion — <code>{`at_least_one_final_state`}</code>, <code>{`exactly_n_final_state`}</code>, or <code>{`all_final_state`}</code>. Use it for rate-limit and lockout tests where "at least one UE hit the locked state" is the success condition.</li>
+<li><code>{`background_flows`}</code> names server-mode flows to start in parallel with the step's main flow, sharing the suite's event bus.</li>
+</ul>
+<p>The last field, <code>{`carry_params`}</code>, passes state between steps — see <a href="#carrying-state">Carrying state across steps</a>.</p>
+<p>For the full field list and types, see the <Link to="/reference/suite-schema">suite schema reference</Link>.</p>
 <h2 id="cycles">Cycles</h2>
 <p>The suite runner repeats the full step list N times — each repetition is a <em>cycle</em>. The CLI exposes the outer-loop knobs:</p>
 <CodeBlock lang="bash" code={`fluxproto-light run-suite -suite gnb-register-deregister \\
@@ -28,15 +36,15 @@ steps:
 <p><code>{`-rate`}</code> is rejected at the suite level — suites are strictly serial in v1. Per-step rate lives in the suite YAML.</p>
 <p>Each cycle produces:</p>
 <ul>
-<li>One <code>{`SuiteReportEntity`}</code> (cycle-level summary)</li>
-<li>One child <code>{`ReportEntity`}</code> per executed step (the same shape as a standalone <code>{`run-flow`}</code> report)</li>
+<li>A cycle-level report summarizing the whole step list.</li>
+<li>One per-step report for each executed step — the same shape as a standalone <code>{`run-flow`}</code> report.</li>
 </ul>
-<p>One cycle of a typical provision/load/cleanup suite, end to end:</p>
+<p>One cycle of a typical register/load/cleanup suite, end to end:</p>
 <Mermaid code={`flowchart LR
-    Start([Cycle start]) --> S1["install_pcc<br/><span style='font-size:10px'>flow: install_rule</span>"]
+    Start([Cycle start]) --> S1["register<br/><span style='font-size:10px'>flow: registration</span>"]
     S1 -->|pass| S2["load_test<br/><span style='font-size:10px'>flow: pdu_session_setup<br/>repetitions: 100</span>"]
     S1 -->|fail + stop_on_failure| Cleanup
-    S2 -->|pass| Cleanup["cleanup<br/><span style='font-size:10px'>flow: delete_rule<br/>always_run: true</span>"]
+    S2 -->|pass| Cleanup["cleanup<br/><span style='font-size:10px'>flow: deregistration<br/>always_run: true</span>"]
     S2 -->|fail + stop_on_failure| Cleanup
     Cleanup --> End([Cycle done])
 
@@ -47,7 +55,7 @@ steps:
     class Cleanup finally
     class Start,End edge`} />
 <h2 id="stop_on_failure">stop_on_failure</h2>
-<p>Default <code>{`true`}</code>. If a step's <code>{`EngineResult.AllPassed`}</code> is false, the cycle aborts before the next non-<code>{`always_run`}</code> step. The aborted cycle's <code>{`SuiteResult.Aborted`}</code> is true; CI gets a non-zero exit.</p>
+<p>Default <code>{`true`}</code>. If a step does not pass, the cycle aborts before the next non-<code>{`always_run`}</code> step. The aborted cycle is marked aborted in its report, and CI gets a non-zero exit.</p>
 <p>Override with <code>{`stop_on_failure: false`}</code> for steps that are expected to fail intermittently:</p>
 <CodeBlock lang="yaml" code={`- name: noisy_negative_test
   flow: malformed_nas
@@ -55,15 +63,16 @@ steps:
 - name: real_thing
   flow: registration`} />
 <h2 id="always_run">always_run</h2>
-<p>A step marked <code>{`always_run: true`}</code> executes even after the cycle aborted earlier. The try/finally pattern: install policy → run load → tear down policy, where teardown runs even if load failed.</p>
+<p>A step marked <code>{`always_run: true`}</code> executes even after the cycle aborted earlier. This is the try/finally pattern: register UEs, run load, then deregister — and the deregistration runs even if the load step failed.</p>
 <CodeBlock lang="yaml" code={`steps:
-  - name: install_pcc
-    flow: rest_fgp_admin_add_pcc_rule_client
+  - name: register
+    flow: registration
+    repetitions: 100
   - name: load_test
     flow: pdu_session_setup
     repetitions: 100
   - name: cleanup
-    flow: rest_fgp_admin_delete_pcc_rule_client
+    flow: deregistration
     always_run: true`} />
 <p><code>{`always_run`}</code> still respects context cancellation (Ctrl+C, deadline) — if you really need to abort, the cleanup step is skipped.</p>
 <h2 id="subscribers-across-steps">Subscribers across steps</h2>
@@ -81,14 +90,22 @@ steps:
 <li>The composition is just "run these in any order, gate on each independently".</li>
 <li>The steps don't share a meaningful cycle.</li>
 </ul>
-<h2 id="what-you-dont-write">What you don't write</h2>
-<p>Notably absent from the suite model: no inter-step state passing in v1. You can't extract a value from one step and feed it to the next. If you need that level of composition, write one bigger flow that drives the cross-step procedure directly — flows can mutate UE state across multiple states cleanly.</p>
+<h2 id="carrying-state">Carrying state across steps</h2>
+<p>Set <code>{`carry_params: true`}</code> on a step to export its UE's final params map to the next step. The downstream step layers its own <code>{`params`}</code> over the carried values, so an explicit YAML key always wins over a stale carried one. Use this when one step produces a value the next step needs — for example, step 1 extracts a <code>{`version_id`}</code> and step 2 issues a request against it.</p>
+<CodeBlock lang="yaml" code={`steps:
+  - name: create
+    flow: nrf_nfm_register_then_deregister
+    carry_params: true
+  - name: update
+    flow: nrf_sub_create_patch_delete`} />
+<p><code>{`carry_params`}</code> is valid only when the exporting step runs a single UE (<code>{`repetitions`}</code> of 1 or less) — with more, the engine has no way to choose which UE's params to keep.</p>
+<p>For procedures that need richer cross-step coupling, you can still write one larger flow that drives the whole sequence as a single state machine.</p>
 <h2 id="where-to-go-next">Where to go next</h2>
 <ul>
-<li><Link to="/guides/writing">Writing suites guide</Link> — full how-to</li>
-<li><Link to="/guides/running">Running suites guide</Link> — invocation, exit codes</li>
-<li><Link to="/reference/suite-schema">Suite schema reference</Link> — every field</li>
-<li><Link to="/reference/catalogs">Suite catalog</Link> — what ships</li>
+<li><Link to="/reference/suite-schema">Suite schema reference</Link> — every field, with types and defaults</li>
+<li><Link to="/reference/catalogs">Flow and suite catalog</Link> — what ships</li>
+<li><Link to="/guides/writing">Writing flows guide</Link> — author the flows a suite composes</li>
+<li><Link to="/guides/running">Running flows guide</Link> — invocation and exit codes</li>
 </ul>
     </DocPage>
   );

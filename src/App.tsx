@@ -9,12 +9,16 @@ const Index = lazy(() => import('./pages/Index'));
 const Glossary = lazy(() => import('./pages/Glossary'));
 
 const Introduction = lazy(() => import('./pages/introduction/Introduction'));
+const Why = lazy(() => import('./pages/introduction/Why'));
 const Quickstart = lazy(() => import('./pages/introduction/Quickstart'));
 
 const Architecture = lazy(() => import('./pages/concepts/Architecture'));
 const Flows = lazy(() => import('./pages/concepts/Flows'));
+const FlowStates = lazy(() => import('./pages/concepts/FlowStates'));
+const FlowActions = lazy(() => import('./pages/concepts/FlowActions'));
 const Suites = lazy(() => import('./pages/concepts/Suites'));
 const Environments = lazy(() => import('./pages/concepts/Environments'));
+const ConceptSubscribers = lazy(() => import('./pages/concepts/Subscribers'));
 const UserPlane = lazy(() => import('./pages/concepts/UserPlane'));
 
 const FirstYamlFlow = lazy(() => import('./pages/tutorials/FirstYamlFlow'));
@@ -68,12 +72,16 @@ export default function App() {
           <Route path="/glossary" element={<Glossary />} />
 
           <Route path="/introduction" element={<Introduction />} />
+          <Route path="/introduction/why" element={<Why />} />
           <Route path="/introduction/quickstart" element={<Quickstart />} />
 
           <Route path="/concepts/architecture" element={<Architecture />} />
           <Route path="/concepts/flows" element={<Flows />} />
+          <Route path="/concepts/flows/states" element={<FlowStates />} />
+          <Route path="/concepts/flows/actions" element={<FlowActions />} />
           <Route path="/concepts/suites" element={<Suites />} />
           <Route path="/concepts/environments" element={<Environments />} />
+          <Route path="/concepts/subscribers" element={<ConceptSubscribers />} />
           <Route path="/concepts/user-plane" element={<UserPlane />} />
 
           <Route path="/tutorials/first-yaml-flow" element={<FirstYamlFlow />} />

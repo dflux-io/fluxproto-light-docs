@@ -15,10 +15,10 @@ export default function Architecture() {
   FPL -- SBI HTTP/2 --> AUSF
   FPL -- REST HTTP/2 --> Vendor[Vendor admin API]
   FPL -- PFCP UDP --> UPF
-  FPL -- GTP-U N3 --> UPF
-  FPL -- Postgres / SQLite --> DB[(Reports + catalog)]
+  FPL -- N3 GTP-U --> UPF
+  FPL -- SQLite --> DB[(Reports + catalog)]
   FPL -- /metrics --> Prom[Prometheus]
-  AMF -- N3 GTP-U --> Receiver[fpl server uspace / dpdk]`} />
+  FPL -- N3 GTP-U --> Receiver[fpl server uspace / dpdk]`} />
 <p>fluxproto-light sits between a CI agent (or an engineer at a terminal) and one or more 5G/4G NFs under test. It carries no production traffic — it's a tester's instrument.</p>
 <p>The receiver-side <code>{`server uspace`}</code> / <code>{`server dpdk`}</code> lives outside the main binary's daemon role; it terminates GTP-U traffic on the data network so user-plane tests can close the loop without an external traffic terminator.</p>
 <h2 id="cli-vs-daemon">CLI vs daemon</h2>
@@ -27,9 +27,9 @@ export default function Architecture() {
 <thead><tr><th></th><th>CLI</th><th>Daemon</th></tr></thead>
 <tbody><tr><td>Lifecycle</td><td>One-shot</td><td>Long-lived</td></tr>
 <tr><td>Trigger</td><td><code>{`fluxproto-light run-flow …`}</code></td><td><code>{`fluxproto-light`}</code> (no subcommand)</td></tr>
-<tr><td>Reads env from</td><td>YAML file (<code>{`-c &lt;file&gt;`}</code>)</td><td>Database row (managed via REST API)</td></tr>
-<tr><td>Reports</td><td>Persisted to local SQLite (<code>{`./fpl.db`}</code>)</td><td>Persisted to SQLite or Postgres</td></tr>
-<tr><td>Auth</td><td>None</td><td>JWT bearer; admin/viewer roles</td></tr>
+<tr><td>Reads environment from</td><td>YAML file (<code>{`-c <file>`}</code>)</td><td>Database row (managed via REST API)</td></tr>
+<tr><td>Reports</td><td>Persisted to local SQLite (<code>{`./fpl.db`}</code>)</td><td>Persisted to SQLite</td></tr>
+<tr><td>Auth</td><td>None</td><td>JWT bearer; admin/user roles</td></tr>
 <tr><td>Web UI</td><td>No</td><td>Embedded React UI (<code>{`-web`}</code>)</td></tr>
 <tr><td>Scheduler</td><td>No</td><td>Cron-style schedules</td></tr>
 <tr><td>Metrics</td><td>In-process counters only</td><td>Prometheus <code>{`/metrics`}</code> endpoint</td></tr>
@@ -44,9 +44,10 @@ export default function Architecture() {
 <li>The React/Vite web UI (when built with <code>{`make web`}</code>)</li>
 <li>Default Diameter dictionaries, NAS5G codec, and SCTP/UDP/TCP transport plumbing</li>
 </ul>
-<p>There are no shared libraries to ship, no runtime config beyond the env YAML and the optional database. Cross-compile with <code>{`GOOS=… GOARCH=… make`}</code>.</p>
+<p>There are no shared libraries to ship, and no runtime configuration beyond the environment YAML and the local database. Cross-compile with <code>{`GOOS=… GOARCH=… make`}</code>.</p>
 <h2 id="storage">Storage</h2>
-<p>Default backend is SQLite at <code>{`./fpl.db`}</code>. Pointing <code>{`FPL_DB`}</code> at a Postgres DSN switches backends without changing any other behaviour — useful when multiple daemon instances should share execution history (multi-region test plane, dev clusters with rotating CI runners). The schema migrates forward automatically on connect.</p>
+<p>Reports and the synced flow catalog persist to a local SQLite file. Both CLI and daemon default to <code>{`./fpl.db`}</code> in the working directory. The schema migrates forward automatically on connect.</p>
+<p>For CLI subcommands, point the database somewhere else by passing <code>{`-db <path>`}</code> or by setting the <code>{`FPL_DB`}</code> environment variable to a file path. <code>{`FPL_DB`}</code> selects a SQLite file location — it is not a connection string, and the daemon does not read it.</p>
 <h2 id="process-model-what-runs-in-the-daemon">Process model — what runs in the daemon</h2>
 <p>When the daemon starts, it brings up:</p>
 <ul>
