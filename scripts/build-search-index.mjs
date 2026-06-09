@@ -37,8 +37,10 @@ function loadManifest() {
   for (const m of src.matchAll(re)) {
     pages.set(m[1], { slug: m[1], title: m[2], group: m[3] });
   }
-  // Plus the index page (manually defined in manifest.ts)
-  pages.set('', { slug: '', title: 'fluxproto-light docs', group: '' });
+  // Plus the index page (manually defined in manifest.ts) — title derives from
+  // the manifest's projectName so this script stays project-agnostic.
+  const projectName = src.match(/const projectName = '([^']+)'/)?.[1] ?? 'docs';
+  pages.set('', { slug: '', title: `${projectName} docs`, group: '' });
   return pages;
 }
 
