@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Search, X, FileText, Hash } from 'lucide-react';
 import type MiniSearch from 'minisearch';
 import { getIndex, snippet, type IndexEntry } from '../lib/search';
+import { manifest } from '../manifest';
 
 interface SearchModalProps {
   open: boolean;
@@ -205,7 +206,7 @@ export default function SearchModal({ open, onClose }: SearchModalProps) {
             <Hint label="↵" desc="open" />
             <Hint label="esc" desc="close" />
           </div>
-          <span>fluxproto-light docs</span>
+          <span>{manifest.projectName} docs</span>
         </div>
       </div>
     </div>

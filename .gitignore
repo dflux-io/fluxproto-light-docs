@@ -13,3 +13,4 @@ public/robots.txt
 
 # stray SQLite the binary drops when generating the catalog
 fpl.db
+public/llms.txt

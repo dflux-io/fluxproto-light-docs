@@ -1,0 +1,244 @@
+{
+  "generatedAt": "2026-06-09",
+  "name": "fluxproto-light",
+  "tagline": "5G protocol testing tool",
+  "usage": [],
+  "sections": [
+    {
+      "title": "Daemon Options",
+      "items": [
+        {
+          "syntax": "-host <addr>",
+          "desc": "Listen address (default: 0.0.0.0)"
+        },
+        {
+          "syntax": "-port <port>",
+          "desc": "Listen port (default: 8199)"
+        },
+        {
+          "syntax": "-web",
+          "desc": "Enable web UI"
+        },
+        {
+          "syntax": "-metrics_port <port>",
+          "desc": "Prometheus metrics port"
+        },
+        {
+          "syntax": "-pprof_port <port>",
+          "desc": "pprof profiling port"
+        }
+      ]
+    },
+    {
+      "title": "run-flow / run-suite shared options",
+      "items": [
+        {
+          "syntax": "-templates <dir>",
+          "desc": "Required. Templates dir (recursively walked, kind:flow|suite per YAML)."
+        },
+        {
+          "syntax": "-c, -config <file>",
+          "desc": "Config YAML file"
+        },
+        {
+          "syntax": "-s, -subscribers <file>",
+          "desc": "Subscribers YAML file"
+        },
+        {
+          "syntax": "-gen-subscriber",
+          "desc": "Synthesize a subscriber per UE in memory; skip pool/DB"
+        },
+        {
+          "syntax": "-db <path>",
+          "desc": "SQLite DB path (default: ./fpl.db, env: FPL_DB)"
+        },
+        {
+          "syntax": "-trace",
+          "desc": "Enable TX/RX hex dump and JSON trace output"
+        }
+      ]
+    },
+    {
+      "title": "run-flow Options",
+      "items": [
+        {
+          "syntax": "-flow <name>",
+          "desc": "Flow to execute (looked up by name in DB after templates load)"
+        },
+        {
+          "syntax": "-repetitions <n>",
+          "desc": "Number of flow starts (default: 1)"
+        },
+        {
+          "syntax": "-rate <n>",
+          "desc": "Flow starts per second (default: 0 = burst all at once)"
+        },
+        {
+          "syntax": "-duration <duration>",
+          "desc": "Stop spawning after this duration (e.g., 5m)"
+        },
+        {
+          "syntax": "-timeout <duration>",
+          "desc": "Per-flow timeout (default: 30s)"
+        }
+      ]
+    },
+    {
+      "title": "run-suite Options",
+      "items": [
+        {
+          "syntax": "-suite <name>",
+          "desc": "Suite to execute (looked up by name in DB after templates load)"
+        },
+        {
+          "syntax": "-repetitions <n>",
+          "desc": "Number of full suite cycles (default: 1)"
+        },
+        {
+          "syntax": "-duration <duration>",
+          "desc": "Run cycles back-to-back until this elapses"
+        },
+        {
+          "syntax": "-timeout <duration>",
+          "desc": "Per-cycle timeout (default: 30s)"
+        },
+        {
+          "syntax": "(Suite-level -rate is not supported — suites are serial; per-step rate is in YAML)",
+          "desc": ""
+        }
+      ]
+    },
+    {
+      "title": "Flow Options",
+      "items": [
+        {
+          "syntax": "flow list -templates <dir>",
+          "desc": "Sync templates dir into DB and list flows"
+        },
+        {
+          "syntax": "flow info <name> -templates <dir>",
+          "desc": "Sync templates dir and show flow YAML"
+        }
+      ]
+    },
+    {
+      "title": "Suite Options",
+      "items": [
+        {
+          "syntax": "suite list -templates <dir>",
+          "desc": "Sync templates dir into DB and list suites"
+        },
+        {
+          "syntax": "suite info <name> -templates <dir>",
+          "desc": "Sync templates dir and show suite YAML"
+        }
+      ]
+    },
+    {
+      "title": "Report Options",
+      "items": [
+        {
+          "syntax": "report list",
+          "desc": "List recent execution reports"
+        },
+        {
+          "syntax": "report <ID>",
+          "desc": "Show full report detail (accepts report or execution ID)"
+        }
+      ]
+    },
+    {
+      "title": "Subscriber Options",
+      "items": [
+        {
+          "syntax": "subscriber generate",
+          "desc": "Generate subscriber credentials to YAML"
+        },
+        {
+          "syntax": "subscriber provision",
+          "desc": "Provision subscribers into Open5GS"
+        },
+        {
+          "syntax": "subscriber list",
+          "desc": "List subscribers in Open5GS"
+        },
+        {
+          "syntax": "subscriber purge",
+          "desc": "Delete all subscribers from Open5GS"
+        }
+      ]
+    },
+    {
+      "title": "Server Options",
+      "items": [
+        {
+          "syntax": "server uspace",
+          "desc": "Run uplane receiver via kernel sockets"
+        },
+        {
+          "syntax": "server dpdk",
+          "desc": "Run uplane receiver via DPDK (embedded fpl-dpdk-c)"
+        },
+        {
+          "syntax": "Run 'server -h' for backend-specific flags",
+          "desc": ""
+        }
+      ]
+    },
+    {
+      "title": "Check Options",
+      "items": [
+        {
+          "syntax": "check -c <file>",
+          "desc": "Test SCTP transport connectivity to AMFs"
+        }
+      ]
+    },
+    {
+      "title": "Logging Options",
+      "items": [
+        {
+          "syntax": "-debug",
+          "desc": "Enable debug logging"
+        },
+        {
+          "syntax": "-trace",
+          "desc": "Enable trace logging (verbose)"
+        },
+        {
+          "syntax": "-quiet",
+          "desc": "Suppress logs below warn level"
+        },
+        {
+          "syntax": "-json",
+          "desc": "Output logs as JSON (default: console)"
+        },
+        {
+          "syntax": "-logfile <path>",
+          "desc": "Write logs to file"
+        },
+        {
+          "syntax": "-log-caller",
+          "desc": "Include caller (file:line) in logs"
+        },
+        {
+          "syntax": "-db_query_log",
+          "desc": "Log all SQL queries"
+        }
+      ]
+    }
+  ],
+  "examples": [
+    "fluxproto-light",
+    "fluxproto-light -port 8080 -web -debug",
+    "fluxproto-light run-flow -flow registration -templates template -c config/lab.yaml -s config/subscribers.yaml -trace",
+    "fluxproto-light run-flow -flow uplane_traffic -templates template -c config/lab.yaml -s config/subscribers.yaml",
+    "fluxproto-light run-suite -suite fgp-load-test -templates template -c config/lab.yaml -repetitions 3",
+    "fluxproto-light report list",
+    "fluxproto-light report list-suites",
+    "fluxproto-light report show-suite <suite-execution-id>",
+    "fluxproto-light report <report-id>",
+    "fluxproto-light subscriber generate -count 10 -mcc 901 -mnc 070",
+    "fluxproto-light server uspace -protocol udp -port-start 5001"
+  ]
+}
